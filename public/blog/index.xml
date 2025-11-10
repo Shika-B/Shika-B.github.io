@@ -6,15 +6,8 @@
     <description>Recent content in Blog on Slow Data</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 10 Nov 2025 02:47:29 +0100</lastBuildDate>
+    <lastBuildDate>Sun, 09 Nov 2025 13:44:57 +0100</lastBuildDate>
     <atom:link href="http://localhost:1313/blog/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Matrix reconstruction and denoising</title>
-      <link>http://localhost:1313/blog/matrix_reconstruction/</link>
-      <pubDate>Mon, 10 Nov 2025 02:47:29 +0100</pubDate>
-      <guid>http://localhost:1313/blog/matrix_reconstruction/</guid>
-      <description></description>
-    </item>
     <item>
       <title>Lagrangian Duality, KKT conditions and LP duality</title>
       <link>http://localhost:1313/blog/lagrangian_duality/</link>

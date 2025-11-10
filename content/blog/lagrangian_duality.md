@@ -27,7 +27,7 @@ Note: This framework also encompasses *equality* constraints $h(x) = 0$ if whene
 
 
 It is mathematical common sense that unconstrained optimization problems are simpler to solve than their constrained counterparts. So we may be tempted to transform the problem into
-$$\inf_x f(x) + \sum_{i = 1}^m J(g_i(x)) + \sum_{j = 1}^n I(h_j(x)) \leq 0$$
+$$\inf_x f(x) + \sum_{i = 1}^m J(g_i(x)) + \sum_{j = 1}^n I(h_j(x))$$
 
 where 
 $$J(x) = \begin{cases} 0 \text{ if } x \leq 0 \\ +\infty \text{ otherwise} \end{cases} \text{ and } I(x) = \begin{cases} 0 \text{ if } x = 0 \\ +\infty \text{ otherwise} \end{cases} $$ 
@@ -73,7 +73,7 @@ The reverse inequality can be false, and we say *strong* Lagrangian duality hold
 {{< details title="Click for counter-example to strong duality">}}
 Take for instance the convex problem (!)
 $$\begin{align*}
-    &\inf_{x, y > 0} \frac{e^{-x}}{y} \\
+    &\inf_{x, y > 0} e^{-x} \\
     &\text{subject to } \frac{x^2}{y} \leq 0
 \end{align*}$$
 It is obvious that $p^* = 1$, and $\mathcal{L}(x, y, \lambda) = e^{-x} + \lambda \frac{x^2}{y}$ whose infimum on $x, y > 0$ is $0$, for any $\lambda \geq 0$, i.e. $d^* = 0$
@@ -121,7 +121,7 @@ If $\mu > 0$, by taking $\lambda = \frac{\tilde{\lambda}}{\mu}, \nu = \frac{\til
 
 The case $\mu = 0$ cannot happen. Indeed, by writing the condition for $\mathcal{A}$ at the point $x^0$ satisfying Slater's condition, we have 
 
-$$\sum_{i = 1}^m \tilde{\lambda}_i f_i(x^0) + \nu^T (Ax - b) \geq \alpha \geq \mu p^* = 0$$
+$$\sum_{i = 1}^m \tilde{\lambda}_i f_i(x^0) + \nu^T (Ax^0 - b) \geq \alpha \geq \mu p^* = 0$$
 that $\tilde{\lambda} = 0$ since $f_i(x^0) < 0$.
 
 As $(\tilde{\lambda}, \tilde{\nu}, \mu) \neq 0$, we must have $\tilde{\nu} \neq 0$. From $v^T(Ax^0 - b) \geq 0$, and $x^0$ being in the interior of the domain of definition, we must have some point $x$ such that $v^T(Ax - b) \leq 0$, unless $v^T A = 0$, contradicting $\text{rank } A = p$.
@@ -137,7 +137,7 @@ Strong Lagrangian duality allows us to derive general necessary conditions for a
 > Let $x^*$ be an optimal point for a smooth $(P)$ and assume that the duality gap for $(P)$ is zero. Then the KKT conditions state that there exists $\lambda^*, \mu^*$ such that:
 > - The gradient of the Lagrangian w.r.t $x$ is zero at $(x^*, \lambda^*, \mu^*)$:
 > $$ \nabla f(x^*) + \sum_{i = 1}^m \lambda_i^* \nabla g_i(x^*) + \sum_{j = 1}^n \mu_j^* \nabla h_j(x) = 0 $$
-> - $\lambda^* \succeq 0$ and $\lambda_i^* g_i(x^*) = 0$ for each $1 \leq i \leq n$
+> - $\lambda^* \succeq 0$ and $\lambda_i^* g_i(x^*) = 0$ for each $1 \leq i \leq m$
 
 Pick $(\lambda^*, \mu^*)$ a dual optimal point. The gradient vanishing is given by the fact $x^*$ solves $(P)$, $\lambda^* \succeq 0$ follows from constraints and $\lambda_i^* g_i(x^*)$ follows from $f(x^*) = \mathcal{L}(x^*, \lambda^*, \mu^*)$ and the combination of $\lambda^*_i \leq 0$ and $g_i(x^*) \leq 0$.
 
@@ -146,7 +146,7 @@ Note that in the unconstrained case, the conditions reduce to being a critical p
 
 > __KKT conditions__ (convex case)
 >
-> If $(P)$ is assumed to be smooth convex (i.e. $f, g_1, \ldots, g_n$ are smooth convex maps and $h_j$ are affine), the necessary conditions are sufficient: 
+> If $(P)$ is assumed to be smooth convex (i.e. $f, g_1, \ldots, g_m$ are smooth convex maps and $h_j$ are affine), the necessary conditions are sufficient: 
 >  
 > For any primal feasible point $x^*$, if there exists $(\lambda^*, \mu^*)$ satisfying the two points above then $x^*$ is primal optimal and $(\lambda^*, \mu^*)$ is dual optimal. Moreover the duality gap is automatically zero.
 

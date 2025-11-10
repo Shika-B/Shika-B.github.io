@@ -49,7 +49,7 @@ where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ 
   <meta itemprop="description" content="Optimization context Let’s imagine for a moment we are trying to solve a class of constrained optimization problems of the form $$\begin{align*}&amp;\inf_x f(x) \\&amp;\text{subject to } &amp;g_i(x) \leq 0 \text{ for } 1 \leq i \leq m \\&amp;&amp;h_j(x) = 0, \text{ for } 1 \leq j \leq n\end{align*} $$ where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. How should we do it?">
   <meta itemprop="datePublished" content="2025-11-09T13:44:57+01:00">
   <meta itemprop="dateModified" content="2025-11-09T13:44:57+01:00">
-  <meta itemprop="wordCount" content="1831">
+  <meta itemprop="wordCount" content="1829">
   <meta itemprop="keywords" content="Math,Optimization,KKT,Convex Optimization,Linear Programming">
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
@@ -259,7 +259,7 @@ $$<p>
 where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. How should we do it?</p>
 <p>It is mathematical common sense that unconstrained optimization problems are simpler to solve than their constrained counterparts. So we may be tempted to transform the problem into
 </p>
-$$\inf_x f(x) + \sum_{i = 1}^m J(g_i(x)) + \sum_{j = 1}^n I(h_j(x)) \leq 0$$<p>where
+$$\inf_x f(x) + \sum_{i = 1}^m J(g_i(x)) + \sum_{j = 1}^n I(h_j(x))$$<p>where
 </p>
 $$J(x) = \begin{cases} 0 \text{ if } x \leq 0 \\ +\infty \text{ otherwise} \end{cases} \text{ and } I(x) = \begin{cases} 0 \text{ if } x = 0 \\ +\infty \text{ otherwise} \end{cases} $$<p>Unfortunately, $I$ and $J$ are not smooth—indeed, they are not even continuous—so smooth optimization methods cannot be applied, leaving us at a dead end. Something a little smarter would be to replace $I$ and $J$ by $J_{\lambda_i}, I_{\mu_j}$, where
 </p>
@@ -307,7 +307,7 @@ The reverse inequality can be false, and we say <em>strong</em> Lagrangian duali
     <div><p>Take for instance the convex problem (!)
 </p>
 $$\begin{align*}
-    &\inf_{x, y > 0} \frac{e^{-x}}{y} \\
+    &\inf_{x, y > 0} e^{-x} \\
     &\text{subject to } \frac{x^2}{y} \leq 0
 \end{align*}$$<p>
 It is obvious that $p^* = 1$, and $\mathcal{L}(x, y, \lambda) = e^{-x} + \lambda \frac{x^2}{y}$ whose infimum on $x, y > 0$ is $0$, for any $\lambda \geq 0$, i.e. $d^* = 0$</p>
@@ -343,7 +343,7 @@ separates $\mathcal{A}$ and $\mathcal{B}$, i.e. $\mathcal{A} \subset \{\varphi \
 Condition for $\mathcal{B}$ gives $\mu t \leq \alpha$ for any $t < p^*$, i.e. $\mu p^* \leq \alpha$.</p>
 <p>If $\mu > 0$, by taking $\lambda = \frac{\tilde{\lambda}}{\mu}, \nu = \frac{\tilde{\nu}}{\mu}$ we get that $\mathcal{L}(x, \lambda, \nu) \geq p^*$, which gives by taking minimum over $x$ that $d^* \geq p^*$, i.e. $d^* = p^*$ by weak duality, and $(\lambda, \mu)$ is an optimal dual point.</p>
 <p>The case $\mu = 0$ cannot happen. Indeed, by writing the condition for $\mathcal{A}$ at the point $x^0$ satisfying Slater&rsquo;s condition, we have</p>
-$$\sum_{i = 1}^m \tilde{\lambda}_i f_i(x^0) + \nu^T (Ax - b) \geq \alpha \geq \mu p^* = 0$$<p>
+$$\sum_{i = 1}^m \tilde{\lambda}_i f_i(x^0) + \nu^T (Ax^0 - b) \geq \alpha \geq \mu p^* = 0$$<p>
 that $\tilde{\lambda} = 0$ since $f_i(x^0) < 0$.</p>
 <p>As $(\tilde{\lambda}, \tilde{\nu}, \mu) \neq 0$, we must have $\tilde{\nu} \neq 0$. From $v^T(Ax^0 - b) \geq 0$, and $x^0$ being in the interior of the domain of definition, we must have some point $x$ such that $v^T(Ax - b) \leq 0$, unless $v^T A = 0$, contradicting $\text{rank } A = p$.</p>
 </div>
@@ -356,14 +356,14 @@ that $\tilde{\lambda} = 0$ since $f_i(x^0) < 0$.</p>
 <ul>
 <li>The gradient of the Lagrangian w.r.t $x$ is zero at $(x^*, \lambda^*, \mu^*)$:
 $$ \nabla f(x^*) + \sum_{i = 1}^m \lambda_i^* \nabla g_i(x^*) + \sum_{j = 1}^n \mu_j^* \nabla h_j(x) = 0 $$</li>
-<li>$\lambda^* \succeq 0$ and $\lambda_i^* g_i(x^*) = 0$ for each $1 \leq i \leq n$</li>
+<li>$\lambda^* \succeq 0$ and $\lambda_i^* g_i(x^*) = 0$ for each $1 \leq i \leq m$</li>
 </ul>
 </blockquote>
 <p>Pick $(\lambda^*, \mu^*)$ a dual optimal point. The gradient vanishing is given by the fact $x^*$ solves $(P)$, $\lambda^* \succeq 0$ follows from constraints and $\lambda_i^* g_i(x^*)$ follows from $f(x^*) = \mathcal{L}(x^*, \lambda^*, \mu^*)$ and the combination of $\lambda^*_i \leq 0$ and $g_i(x^*) \leq 0$.</p>
 <p>Note that in the unconstrained case, the conditions reduce to being a critical point.</p>
 <blockquote>
 <p><strong>KKT conditions</strong> (convex case)</p>
-<p>If $(P)$ is assumed to be smooth convex (i.e. $f, g_1, \ldots, g_n$ are smooth convex maps and $h_j$ are affine), the necessary conditions are sufficient:</p>
+<p>If $(P)$ is assumed to be smooth convex (i.e. $f, g_1, \ldots, g_m$ are smooth convex maps and $h_j$ are affine), the necessary conditions are sufficient:</p>
 <p>For any primal feasible point $x^*$, if there exists $(\lambda^*, \mu^*)$ satisfying the two points above then $x^*$ is primal optimal and $(\lambda^*, \mu^*)$ is dual optimal. Moreover the duality gap is automatically zero.</p>
 </blockquote>
 <p>Since $\lambda^* \succeq 0$, the map $x \mapsto \mathcal{L}(\lambda^*, \mu^*, x)$ is convex and the first KKT condition shows that its gradient vanishes at $x^*$, i.e. it is a minimum. Then $\mathcal{L}(\lambda^*, \mu^*, x^*) = f(x^*)$ as $x^*$ is feasible and satisfies the second KKT condition. This equality enforces that the duality gap is zero and in particular that $x^*$ and $(\lambda^*, \mu^*)$ are primal and dual optimal points respectively.</p>
