@@ -44,28 +44,28 @@ $$\mathcal{L}(x, \lambda, \mu) = f(x) + \sum_{i = 1}^m \lambda_i \cdot g_i(x) + 
 is called the Lagrangian of the optimization problem (P). Letting the domain of the optimization problem be $K = \{x \mid \forall i, j, g_i(x) \leq 0, h_j(x) = 0\}$, we have
 > The Lagrangian embeds all the data of $(P)$, in that:
 > - For any fixed parameter $x$, we have 
-> $$\sup_{\lambda \geq 0, \mu} \mathcal{L}(x, \lambda, \mu) = \begin{cases} f(x) \text{ if } x \in K \\ + \infty \text{ otherwise} \end{cases}$$
+> $$\sup_{\lambda \succeq 0, \mu} \mathcal{L}(x, \lambda, \mu) = \begin{cases} f(x) \text{ if } x \in K \\ + \infty \text{ otherwise} \end{cases}$$
 > - It follows that $(P)$ is equivalent to solving
->  $$\inf_x \sup_{\lambda \geq 0, \mu} \mathcal{L}(x, \lambda, \mu)$$
+>  $$\inf_x \sup_{\lambda \succeq 0, \mu} \mathcal{L}(x, \lambda, \mu)$$
 
 But how does this help us? We began with one optimization problem, and now seem to have two nested ones. Well, the advantage is that these new problems are unconstrained! Also, suppose for a moment that we were able to switch the $\inf$ and the $\sup$ in the last equation. Then we would be solving for
-$$\sup_{\lambda \geq 0, \mu} \inf_x \mathcal{L}(x, \lambda, \mu)$$
+$$\sup_{\lambda \succeq 0, \mu} \inf_x \mathcal{L}(x, \lambda, \mu)$$
 The function $\inf_x \mathcal{L}(x, \cdot, \cdot)$ is a pointwise infimum of affine maps, meaning it is concave: the supremum problem becomes easy to solve. We are only left with a single (parametrized) infimization unconstrained problem, which is arguably a lot better than what we started with. 
 
 We made a crucial assumption, let's go back to it:
-$$ \inf_x \sup_{\lambda \geq 0, \mu} \mathcal{L}(x, \lambda, \mu) =^{???!}\sup_{\lambda \geq 0, \mu} \inf_x \mathcal{L}(x, \lambda, \mu) $$
+$$ \inf_x \sup_{\lambda \succeq 0, \mu} \mathcal{L}(x, \lambda, \mu) =^{???!}\sup_{\lambda \succeq 0, \mu} \inf_x \mathcal{L}(x, \lambda, \mu) $$
 
 This second problem is called the dual problem of $(P)$.
 > Given a problem $(P)$, we say that the problem 
-> $$ (D) \  \ \sup_{\lambda \geq 0, \mu} \inf_x \mathcal{L}(x, \lambda, \mu) $$
+> $$ (D) \  \ \sup_{\lambda \succeq 0, \mu} \inf_x \mathcal{L}(x, \lambda, \mu) $$
 > is the dual of $(P)$.
 
 Denote by $p^*$ and $d^*$ the optimal value of $(P)$ and $(D)$ respectively. Since
-$$\inf_x \sup_{\lambda \geq 0, \mu} \mathcal{L}(x, \lambda, \mu) = p^*$$
-we have, for given $\lambda \geq 0$ and $\mu$,
+$$\inf_x \sup_{\lambda \succeq 0, \mu} \mathcal{L}(x, \lambda, \mu) = p^*$$
+we have, for given $\lambda \succeq 0$ and $\mu$,
 $$\inf_x \mathcal{L}(x, \lambda, \mu) \leq p^*$$
 and thus 
-$$\sup_{\lambda \geq 0} \inf_x \mathcal{L}(x, \lambda, \mu) = d^* \leq p^*$$
+$$\sup_{\lambda \succeq 0} \inf_x \mathcal{L}(x, \lambda, \mu) = d^* \leq p^*$$
 
 The inequality $d^* \leq p^*$ is known as *weak* Lagrangian duality and it is often useful to get lower bounds on certain classes of optimization problems. 
 The reverse inequality can be false, and we say *strong* Lagrangian duality holds when it is true, i.e. $p^* = d^*$. The difference $p^* - d^*$ is called the *duality gap*.
@@ -76,7 +76,7 @@ $$\begin{align*}
     &\inf_{x, y > 0} e^{-x} \\
     &\text{subject to } \frac{x^2}{y} \leq 0
 \end{align*}$$
-It is obvious that $p^* = 1$, and $\mathcal{L}(x, y, \lambda) = e^{-x} + \lambda \frac{x^2}{y}$ whose infimum on $x, y > 0$ is $0$, for any $\lambda \geq 0$, i.e. $d^* = 0$
+It is obvious that $p^* = 1$, and $\mathcal{L}(x, y, \lambda) = e^{-x} + \lambda \frac{x^2}{y}$ whose infimum on $x, y > 0$ is $0$, for any $\lambda \succeq 0$, i.e. $d^* = 0$
 
 {{< /details >}}
 
