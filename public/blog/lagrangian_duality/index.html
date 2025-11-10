@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lagrangian Duality, KKT conditions and LP duality | Slow Data</title>
+<meta name="title" content="Lagrangian Duality, KKT conditions and LP duality" />
+<meta name="description" content="Optimization context
+Let&rsquo;s imagine for a moment we are trying to solve a class of constrained optimization problems of the form
+
+$$\begin{align*}
+    &\inf_x f(x) \\
+    &\text{subject to } &g_i(x) \leq 0 \text{ for } 1 \leq i \leq m \\
+                        &&h_j(x) = 0, \text{ for } 1 \leq j \leq n
+\end{align*} 
+$$
+where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. How should we do it?" />
+<meta name="keywords" content="Math,Optimization,KKT,Convex optimization,Linear Programming," />
+
+
+<meta property="og:url" content="http://localhost:1313/blog/lagrangian_duality/">
+  <meta property="og:site_name" content="Slow Data">
+  <meta property="og:title" content="Lagrangian Duality, KKT conditions and LP duality">
+  <meta property="og:description" content="Optimization context Let’s imagine for a moment we are trying to solve a class of constrained optimization problems of the form $$\begin{align*}&amp;\inf_x f(x) \\&amp;\text{subject to } &amp;g_i(x) \leq 0 \text{ for } 1 \leq i \leq m \\&amp;&amp;h_j(x) = 0, \text{ for } 1 \leq j \leq n\end{align*} $$ where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. How should we do it?">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="blog">
+    <meta property="article:published_time" content="2025-11-09T13:44:57+01:00">
+    <meta property="article:modified_time" content="2025-11-09T13:44:57+01:00">
+    <meta property="article:tag" content="Math">
+    <meta property="article:tag" content="Optimization">
+    <meta property="article:tag" content="KKT">
+    <meta property="article:tag" content="Convex Optimization">
+    <meta property="article:tag" content="Linear Programming">
+
+
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Lagrangian Duality, KKT conditions and LP duality">
+  <meta name="twitter:description" content="Optimization context Let’s imagine for a moment we are trying to solve a class of constrained optimization problems of the form $$\begin{align*}&amp;\inf_x f(x) \\&amp;\text{subject to } &amp;g_i(x) \leq 0 \text{ for } 1 \leq i \leq m \\&amp;&amp;h_j(x) = 0, \text{ for } 1 \leq j \leq n\end{align*} $$ where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. How should we do it?">
+
+
+
+
+  <meta itemprop="name" content="Lagrangian Duality, KKT conditions and LP duality">
+  <meta itemprop="description" content="Optimization context Let’s imagine for a moment we are trying to solve a class of constrained optimization problems of the form $$\begin{align*}&amp;\inf_x f(x) \\&amp;\text{subject to } &amp;g_i(x) \leq 0 \text{ for } 1 \leq i \leq m \\&amp;&amp;h_j(x) = 0, \text{ for } 1 \leq j \leq n\end{align*} $$ where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. How should we do it?">
+  <meta itemprop="datePublished" content="2025-11-09T13:44:57+01:00">
+  <meta itemprop="dateModified" content="2025-11-09T13:44:57+01:00">
+  <meta itemprop="wordCount" content="1831">
+  <meta itemprop="keywords" content="Math,Optimization,KKT,Convex Optimization,Linear Programming">
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  :root {
+    --width: 720px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #01242e;
+    --heading-color: #eee;
+    --text-color: #ddd;
+    --link-color: #8cc2dd;
+    --visited-color: #8b6fcb;
+    --blockquote-color: #ccc;
+
+
+  }
+
+  @media (prefers-color-scheme: white) {
+    :root {
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color: #8b6fcb;
+    --blockquote-color: #222;
+    }
+  }
+
+  body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+  }
+
+  a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  nav a {
+    margin-right: 8px;
+  }
+
+  strong,
+  b {
+    color: var(--heading-color);
+  }
+
+  button {
+    margin: 0;
+    cursor: pointer;
+  }
+
+  time {
+    font-family: monospace;
+    font-style: normal;
+    font-size: 15px;
+  }
+
+  main {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px dashed;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    font-family: monospace;
+    padding: 2px;
+    border-radius: 3px;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: var(--blockquote-color);
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px 0;
+    text-align: center;
+  }
+
+  .title:hover {
+    text-decoration: none;
+  }
+
+  .title h1 {
+    font-size: 1.5em;
+  }
+
+  .inline {
+    width: auto !important;
+  }
+
+  .highlight,
+  .code {
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: var(--visited-color);
+  }
+
+</style>
+
+
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+
+<script>
+  MathJax = {
+    tex: {
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],  
+      inlineMath: [['$', '$']]                  
+    },
+    loader:{
+      load: ['ui/safe']
+    },
+  };
+</script>
+  
+</head>
+
+<body>
+  <header><a href="/" class="title">
+  <h2>Slow Data</h2>
+</a>
+<nav>
+<a href="/blog/">Blog</a>
+
+</nav>
+</header>
+  <main>
+
+<h1>Lagrangian Duality, KKT conditions and LP duality</h1>
+<p>
+  <i>
+    <time datetime='2025-11-09'>
+      09 Nov, 2025
+    </time>
+  </i>
+</p>
+
+<content>
+  <h2 id="optimization-context">Optimization context</h2>
+<p>Let&rsquo;s imagine for a moment we are trying to solve a class of <em>constrained</em> optimization problems of the form
+</p>
+$$\begin{align*}
+    &\inf_x f(x) \\
+    &\text{subject to } &g_i(x) \leq 0 \text{ for } 1 \leq i \leq m \\
+                        &&h_j(x) = 0, \text{ for } 1 \leq j \leq n
+\end{align*} 
+$$<p>
+where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. How should we do it?</p>
+<p>It is mathematical common sense that unconstrained optimization problems are simpler to solve than their constrained counterparts. So we may be tempted to transform the problem into
+</p>
+$$\inf_x f(x) + \sum_{i = 1}^m J(g_i(x)) + \sum_{j = 1}^n I(h_j(x)) \leq 0$$<p>where
+</p>
+$$J(x) = \begin{cases} 0 \text{ if } x \leq 0 \\ +\infty \text{ otherwise} \end{cases} \text{ and } I(x) = \begin{cases} 0 \text{ if } x = 0 \\ +\infty \text{ otherwise} \end{cases} $$<p>Unfortunately, $I$ and $J$ are not smooth—indeed, they are not even continuous—so smooth optimization methods cannot be applied, leaving us at a dead end. Something a little smarter would be to replace $I$ and $J$ by $J_{\lambda_i}, I_{\mu_j}$, where
+</p>
+$$J_{\lambda_i} (x) = \begin{cases} 0 \text{ if } x \leq 0 \\ \lambda_i \cdot x \text{ otherwise} \end{cases} \text{ and } I_{\mu_j} (x) = \begin{cases} 0 \text{ if } x = 0 \\ \mu_j \cdot x \text{ otherwise} \end{cases}$$<p>
+and
+solve
+</p>
+$$\inf_x f(x) + \sum_{i = 1}^m J_{\lambda_i} (g_i(x)) + \sum_{j = 1}^n I_{\mu_j} (h_j(x)) \leq 0$$<p>with $\lambda, \mu$ as parameters and then take $\lambda, \mu \to +\infty$. But is this the same thing as solving $(P)$? It turns out that the answer is not too complicated, and that this is not a dead end at all. The standard theory avoids $I_{\mu_j}$ and $J_{\lambda_i}$ and instead simply uses multiplication by scalars, which is what we will do too as it is arguably simpler. The function</p>
+$$\mathcal{L}(x, \lambda, \mu) = f(x) + \sum_{i = 1}^m \lambda_i \cdot g_i(x) + \sum_{j = 1}^n \mu_j \cdot h_j(x)$$<p>
+is called the Lagrangian of the optimization problem (P). Letting the domain of the optimization problem be $K = \{x \mid \forall i, j, g_i(x) \leq 0, h_j(x) = 0\}$, we have</p>
+<blockquote>
+<p>The Lagrangian embeds all the data of $(P)$, in that:</p>
+<ul>
+<li>For any fixed parameter $x$, we have
+$$\sup_{\lambda \geq 0, \mu} \mathcal{L}(x, \lambda, \mu) = \begin{cases} f(x) \text{ if } x \in K \\ + \infty \text{ otherwise} \end{cases}$$</li>
+<li>It follows that $(P)$ is equivalent to solving
+$$\inf_x \sup_{\lambda \geq 0, \mu} \mathcal{L}(x, \lambda, \mu)$$</li>
+</ul>
+</blockquote>
+<p>But how does this help us? We began with one optimization problem, and now seem to have two nested ones. Well, the advantage is that these new problems are unconstrained! Also, suppose for a moment that we were able to switch the $\inf$ and the $\sup$ in the last equation. Then we would be solving for
+</p>
+$$\sup_{\lambda \geq 0, \mu} \inf_x \mathcal{L}(x, \lambda, \mu)$$<p>
+The function $\inf_x \mathcal{L}(x, \cdot, \cdot)$ is a pointwise infimum of affine maps, meaning it is concave: the supremum problem becomes easy to solve. We are only left with a single (parametrized) infimization unconstrained problem, which is arguably a lot better than what we started with.</p>
+<p>We made a crucial assumption, let&rsquo;s go back to it:
+</p>
+$$ \inf_x \sup_{\lambda \geq 0, \mu} \mathcal{L}(x, \lambda, \mu) =^{???!}\sup_{\lambda \geq 0, \mu} \inf_x \mathcal{L}(x, \lambda, \mu) $$<p>This second problem is called the dual problem of $(P)$.</p>
+<blockquote>
+<p>Given a problem $(P)$, we say that the problem
+</p>
+$$ (D) \  \ \sup_{\lambda \geq 0, \mu} \inf_x \mathcal{L}(x, \lambda, \mu) $$<p>
+is the dual of $(P)$.</p>
+</blockquote>
+<p>Denote by $p^*$ and $d^*$ the optimal value of $(P)$ and $(D)$ respectively. Since
+</p>
+$$\inf_x \sup_{\lambda \geq 0, \mu} \mathcal{L}(x, \lambda, \mu) = p^*$$<p>
+we have, for given $\lambda \geq 0$ and $\mu$,
+</p>
+$$\inf_x \mathcal{L}(x, \lambda, \mu) \leq p^*$$<p>
+and thus
+</p>
+$$\sup_{\lambda \geq 0} \inf_x \mathcal{L}(x, \lambda, \mu) = d^* \leq p^*$$<p>The inequality $d^* \leq p^*$ is known as <em>weak</em> Lagrangian duality and it is often useful to get lower bounds on certain classes of optimization problems.
+The reverse inequality can be false, and we say <em>strong</em> Lagrangian duality holds when it is true, i.e. $p^* = d^*$. The difference $p^* - d^*$ is called the <em>duality gap</em>.</p>
+<details style="opacity: 0.6;">
+    <summary>Click for counter-example to strong duality</summary>
+    <div><p>Take for instance the convex problem (!)
+</p>
+$$\begin{align*}
+    &\inf_{x, y > 0} \frac{e^{-x}}{y} \\
+    &\text{subject to } \frac{x^2}{y} \leq 0
+\end{align*}$$<p>
+It is obvious that $p^* = 1$, and $\mathcal{L}(x, y, \lambda) = e^{-x} + \lambda \frac{x^2}{y}$ whose infimum on $x, y > 0$ is $0$, for any $\lambda \geq 0$, i.e. $d^* = 0$</p>
+</div>
+</details>
+<h2 id="slaters-condition-for-strong-duality">Slater&rsquo;s condition for strong duality</h2>
+<p>As we just saw, convexity is not enough to guarantee strong duality. It turns out it is not too far from being enough:</p>
+<blockquote>
+<p><strong>Slater&rsquo;s condition</strong>:</p>
+<p>If the problem is smooth convex, i.e. $f, g_1, \ldots, g_m$ are all smooth convex and $h_1, \ldots, h_n$ are all affine, and strictly feasible, i.e. there exists $x$ such that $g_i(x) < 0$ for all inequality constraints $g_i$ that are not affine functions, then strong duality holds.</p>
+<p>Moreover, the dual value is reached, i.e. there exists $(x^*, \lambda^*)$ solution of the dual problem.</p>
+</blockquote>
+<details style="opacity: 0.6;">
+    <summary>About the smoothness condition</summary>
+    <div>One can actually remove the smoothness condition completely, and work with subgradients instead. While sometimes useful, the generalization is confusing if the reader does not know about subgradients and straightforward otherwise. I choose not to dive into that.</div>
+</details>
+<p>The proof is highly geometric and full details can be found in <a href="https://stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf">Convex Optimization, by Boyd and Vandenberghe</a>, at the end of page 234. The drawings and motivation in the book is very nice, and the following proof is only a partial, concise, reconstruction of these.</p>
+<details style="opacity: 0.6;">
+    <summary>The reconstruction</summary>
+    <div><p>We follow notations of the above book, which are not exactly compatible with the notations of this post: they write the affine equality condition as $Ax = b$ with $A$ a matrix of full rank $p$ (which has nothing to do with $p^*$, although they use it the same way we do&hellip;). The letters $\lambda, \mu$ are not associated with scalars for (in)equality constraints respectively anymore, and they use $\lambda, \nu$ instead.</p>
+<p>Feasibility ensures $p^* \neq +\infty$, and if $p^* = -\infty$, weak duality gives $d^* = -\infty$. Let $p^*$ be finite, and define
+</p>
+$$\begin{align*}
+&\mathcal{A} = \{(u,v,t) | \exists x, g_i(x) \leq u_i, (Ax)_i = b + v_i, f(x) \leq t \} \\
+&\mathcal{B} = \{(0, 0, s)| s < p^* \}
+\end{align*}$$<p>
+which can be thought of as some kind of epigraph of the &ldquo;reachable values&rdquo; by the problem.
+Both of these are convex and do not intersect, so the <a href="https://en.wikipedia.org/wiki/Hyperplane_separation_theorem">separating hyperplane theorem</a> gives some $(\tilde{\lambda}, \tilde{\nu}, \mu)$ and $\alpha$ so that the linear form
+</p>
+$$\varphi(u, v, t) = (\tilde{\lambda}, \tilde{\nu}, \mu)^T (u, v, t) + \alpha$$<p>
+separates $\mathcal{A}$ and $\mathcal{B}$, i.e. $\mathcal{A} \subset \{\varphi \geq \alpha\}$ and $\mathcal{B} \subset \{\varphi \leq \alpha\}$.</p>
+<p>Since $\mathcal{A}$ is unbounded above, we must have $\tilde{\lambda} \succeq 0, \mu \geq 0$.
+Condition for $\mathcal{B}$ gives $\mu t \leq \alpha$ for any $t < p^*$, i.e. $\mu p^* \leq \alpha$.</p>
+<p>If $\mu > 0$, by taking $\lambda = \frac{\tilde{\lambda}}{\mu}, \nu = \frac{\tilde{\nu}}{\mu}$ we get that $\mathcal{L}(x, \lambda, \nu) \geq p^*$, which gives by taking minimum over $x$ that $d^* \geq p^*$, i.e. $d^* = p^*$ by weak duality, and $(\lambda, \mu)$ is an optimal dual point.</p>
+<p>The case $\mu = 0$ cannot happen. Indeed, by writing the condition for $\mathcal{A}$ at the point $x^0$ satisfying Slater&rsquo;s condition, we have</p>
+$$\sum_{i = 1}^m \tilde{\lambda}_i f_i(x^0) + \nu^T (Ax - b) \geq \alpha \geq \mu p^* = 0$$<p>
+that $\tilde{\lambda} = 0$ since $f_i(x^0) < 0$.</p>
+<p>As $(\tilde{\lambda}, \tilde{\nu}, \mu) \neq 0$, we must have $\tilde{\nu} \neq 0$. From $v^T(Ax^0 - b) \geq 0$, and $x^0$ being in the interior of the domain of definition, we must have some point $x$ such that $v^T(Ax - b) \leq 0$, unless $v^T A = 0$, contradicting $\text{rank } A = p$.</p>
+</div>
+</details>
+<h2 id="the-karush-kuhn-tucker-conditions">The Karush-Kuhn-Tucker conditions</h2>
+<p>Strong Lagrangian duality allows us to derive general necessary conditions for a point $x^*$ to be an optimum (at least whenever the duality gap is zero). We go back, for the moment, to the general where $\mathcal{C}$ is any class of smooth functions.</p>
+<blockquote>
+<p><strong>KKT necessary conditions</strong> (smooth case)</p>
+<p>Let $x^*$ be an optimal point for a smooth $(P)$ and assume that the duality gap for $(P)$ is zero. Then the KKT conditions state that there exists $\lambda^*, \mu^*$ such that:</p>
+<ul>
+<li>The gradient of the Lagrangian w.r.t $x$ is zero at $(x^*, \lambda^*, \mu^*)$:
+$$ \nabla f(x^*) + \sum_{i = 1}^m \lambda_i^* \nabla g_i(x^*) + \sum_{j = 1}^n \mu_j^* \nabla h_j(x) = 0 $$</li>
+<li>$\lambda^* \succeq 0$ and $\lambda_i^* g_i(x^*) = 0$ for each $1 \leq i \leq n$</li>
+</ul>
+</blockquote>
+<p>Pick $(\lambda^*, \mu^*)$ a dual optimal point. The gradient vanishing is given by the fact $x^*$ solves $(P)$, $\lambda^* \succeq 0$ follows from constraints and $\lambda_i^* g_i(x^*)$ follows from $f(x^*) = \mathcal{L}(x^*, \lambda^*, \mu^*)$ and the combination of $\lambda^*_i \leq 0$ and $g_i(x^*) \leq 0$.</p>
+<p>Note that in the unconstrained case, the conditions reduce to being a critical point.</p>
+<blockquote>
+<p><strong>KKT conditions</strong> (convex case)</p>
+<p>If $(P)$ is assumed to be smooth convex (i.e. $f, g_1, \ldots, g_n$ are smooth convex maps and $h_j$ are affine), the necessary conditions are sufficient:</p>
+<p>For any primal feasible point $x^*$, if there exists $(\lambda^*, \mu^*)$ satisfying the two points above then $x^*$ is primal optimal and $(\lambda^*, \mu^*)$ is dual optimal. Moreover the duality gap is automatically zero.</p>
+</blockquote>
+<p>Since $\lambda^* \succeq 0$, the map $x \mapsto \mathcal{L}(\lambda^*, \mu^*, x)$ is convex and the first KKT condition shows that its gradient vanishes at $x^*$, i.e. it is a minimum. Then $\mathcal{L}(\lambda^*, \mu^*, x^*) = f(x^*)$ as $x^*$ is feasible and satisfies the second KKT condition. This equality enforces that the duality gap is zero and in particular that $x^*$ and $(\lambda^*, \mu^*)$ are primal and dual optimal points respectively.</p>
+<h2 id="about-lp-duality">About LP duality</h2>
+<p>This post ends here, as I believe we got a reasonable answer to the question at the beginning: whenever $\mathcal{C}$ is a class of smooth (or not, reformulating everything with subgradients) convex maps, we found a necessary and sufficient effective condition for optimality.</p>
+<p>It is however kind of sad to develop all this theory without saying even a single word about how it can be used. Problems of the form
+</p>
+$$
+\begin{align*}
+    &\inf_x c^T x \\
+    &\text{subject to } Ax \preceq  b
+\end{align*} 
+$$<p>
+are called linear programs (LP), and it is standard LP theory that the above program has a dual equivalent program that&rsquo;s given by</p>
+$$
+\begin{align*}
+    &\sup_x b^T y \\
+    &\text{subject to } A^Ty = c, y \succeq 0
+\end{align*} 
+$$<p>and that whenever either one has a solution, the other also has one and the objectives are equal. It’s a nice exercise to use the framework developed here to prove it.</p>
+<p>This implies that finding a feasible point for a general LP is as hard as finding an optimal one. Can you see why?</p>
+
+</content>
+
+
+
+<p>
+  
+  <a href="http://localhost:1313/tags/math/">#Math</a>
+  
+  <a href="http://localhost:1313/tags/optimization/">#Optimization</a>
+  
+  <a href="http://localhost:1313/tags/kkt/">#KKT</a>
+  
+  <a href="http://localhost:1313/tags/convex-optimization/">#Convex Optimization</a>
+  
+  <a href="http://localhost:1313/tags/linear-programming/">#Linear Programming</a>
+  
+</p>
+
+  </main>
+  <footer>Made with <a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ Bear</a>
+</footer>
+
+  
+</body>
+
+</html>

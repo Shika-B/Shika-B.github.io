@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blog on Slow Data</title>
+    <link>http://localhost:1313/blog/</link>
+    <description>Recent content in Blog on Slow Data</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 10 Nov 2025 02:47:29 +0100</lastBuildDate>
+    <atom:link href="http://localhost:1313/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Matrix reconstruction and denoising</title>
+      <link>http://localhost:1313/blog/matrix_reconstruction/</link>
+      <pubDate>Mon, 10 Nov 2025 02:47:29 +0100</pubDate>
+      <guid>http://localhost:1313/blog/matrix_reconstruction/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Lagrangian Duality, KKT conditions and LP duality</title>
+      <link>http://localhost:1313/blog/lagrangian_duality/</link>
+      <pubDate>Sun, 09 Nov 2025 13:44:57 +0100</pubDate>
+      <guid>http://localhost:1313/blog/lagrangian_duality/</guid>
+      <description>&lt;h2 id=&#34;optimization-context&#34;&gt;Optimization context&lt;/h2&gt;&#xA;&lt;p&gt;Let&amp;rsquo;s imagine for a moment we are trying to solve a class of &lt;em&gt;constrained&lt;/em&gt; optimization problems of the form&#xA;&lt;/p&gt;&#xA;$$\begin{align*}&#xD;&#xA;    &amp;\inf_x f(x) \\&#xD;&#xA;    &amp;\text{subject to } &amp;g_i(x) \leq 0 \text{ for } 1 \leq i \leq m \\&#xD;&#xA;                        &amp;&amp;h_j(x) = 0, \text{ for } 1 \leq j \leq n&#xD;&#xA;\end{align*} &#xD;&#xA;$$&lt;p&gt;&#xA;where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. How should we do it?&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

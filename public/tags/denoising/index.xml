@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Denoising on Slow Data</title>
+    <link>http://localhost:1313/tags/denoising/</link>
+    <description>Recent content in Denoising on Slow Data</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 10 Nov 2025 02:47:29 +0100</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/denoising/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Matrix reconstruction and denoising</title>
+      <link>http://localhost:1313/blog/matrix_reconstruction/</link>
+      <pubDate>Mon, 10 Nov 2025 02:47:29 +0100</pubDate>
+      <guid>http://localhost:1313/blog/matrix_reconstruction/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>
