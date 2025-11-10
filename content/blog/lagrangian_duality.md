@@ -167,7 +167,7 @@ are called linear programs (LP), and it is standard LP theory that the above pro
 
 $$
 \begin{align*}
-    &\sup_x b^T y \\
+    &\sup_y b^T y \\
     &\text{subject to } A^Ty = c, y \succeq 0
 \end{align*} 
 $$
