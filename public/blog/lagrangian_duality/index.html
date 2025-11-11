@@ -16,14 +16,14 @@ $$\begin{align*}
                         &&h_j(x) = 0, \text{ for } 1 \leq j \leq n
 \end{align*} 
 $$
-where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. How should we do it?" />
+where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. What is a reasonable strategy to solve this ?" />
 <meta name="keywords" content="Math,Optimization,KKT,Convex optimization,Linear Programming," />
 
 
 <meta property="og:url" content="http://localhost:1313/blog/lagrangian_duality/">
   <meta property="og:site_name" content="Slow Data">
   <meta property="og:title" content="Lagrangian Duality, KKT conditions and LP duality">
-  <meta property="og:description" content="Optimization context Let’s imagine for a moment we are trying to solve a class of constrained optimization problems of the form $$\begin{align*}&amp;\inf_x f(x) \\&amp;\text{subject to } &amp;g_i(x) \leq 0 \text{ for } 1 \leq i \leq m \\&amp;&amp;h_j(x) = 0, \text{ for } 1 \leq j \leq n\end{align*} $$ where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. How should we do it?">
+  <meta property="og:description" content="Optimization context Let’s imagine for a moment we are trying to solve a class of constrained optimization problems of the form $$\begin{align*}&amp;\inf_x f(x) \\&amp;\text{subject to } &amp;g_i(x) \leq 0 \text{ for } 1 \leq i \leq m \\&amp;&amp;h_j(x) = 0, \text{ for } 1 \leq j \leq n\end{align*} $$ where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. What is a reasonable strategy to solve this ?">
   <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="blog">
@@ -40,16 +40,16 @@ where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ 
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Lagrangian Duality, KKT conditions and LP duality">
-  <meta name="twitter:description" content="Optimization context Let’s imagine for a moment we are trying to solve a class of constrained optimization problems of the form $$\begin{align*}&amp;\inf_x f(x) \\&amp;\text{subject to } &amp;g_i(x) \leq 0 \text{ for } 1 \leq i \leq m \\&amp;&amp;h_j(x) = 0, \text{ for } 1 \leq j \leq n\end{align*} $$ where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. How should we do it?">
+  <meta name="twitter:description" content="Optimization context Let’s imagine for a moment we are trying to solve a class of constrained optimization problems of the form $$\begin{align*}&amp;\inf_x f(x) \\&amp;\text{subject to } &amp;g_i(x) \leq 0 \text{ for } 1 \leq i \leq m \\&amp;&amp;h_j(x) = 0, \text{ for } 1 \leq j \leq n\end{align*} $$ where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. What is a reasonable strategy to solve this ?">
 
 
 
 
   <meta itemprop="name" content="Lagrangian Duality, KKT conditions and LP duality">
-  <meta itemprop="description" content="Optimization context Let’s imagine for a moment we are trying to solve a class of constrained optimization problems of the form $$\begin{align*}&amp;\inf_x f(x) \\&amp;\text{subject to } &amp;g_i(x) \leq 0 \text{ for } 1 \leq i \leq m \\&amp;&amp;h_j(x) = 0, \text{ for } 1 \leq j \leq n\end{align*} $$ where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. How should we do it?">
+  <meta itemprop="description" content="Optimization context Let’s imagine for a moment we are trying to solve a class of constrained optimization problems of the form $$\begin{align*}&amp;\inf_x f(x) \\&amp;\text{subject to } &amp;g_i(x) \leq 0 \text{ for } 1 \leq i \leq m \\&amp;&amp;h_j(x) = 0, \text{ for } 1 \leq j \leq n\end{align*} $$ where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. What is a reasonable strategy to solve this ?">
   <meta itemprop="datePublished" content="2025-11-09T13:44:57+01:00">
   <meta itemprop="dateModified" content="2025-11-09T13:44:57+01:00">
-  <meta itemprop="wordCount" content="1829">
+  <meta itemprop="wordCount" content="1849">
   <meta itemprop="keywords" content="Math,Optimization,KKT,Convex Optimization,Linear Programming">
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
@@ -256,7 +256,7 @@ $$\begin{align*}
                         &&h_j(x) = 0, \text{ for } 1 \leq j \leq n
 \end{align*} 
 $$<p>
-where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. How should we do it?</p>
+where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. What is a reasonable strategy to solve this ?</p>
 <p>It is mathematical common sense that unconstrained optimization problems are simpler to solve than their constrained counterparts. So we may be tempted to transform the problem into
 </p>
 $$\inf_x f(x) + \sum_{i = 1}^m J(g_i(x)) + \sum_{j = 1}^n I(h_j(x))$$<p>where
@@ -267,50 +267,51 @@ $$J_{\lambda_i} (x) = \begin{cases} 0 \text{ if } x \leq 0 \\ \lambda_i \cdot x 
 and
 solve
 </p>
-$$\inf_x f(x) + \sum_{i = 1}^m J_{\lambda_i} (g_i(x)) + \sum_{j = 1}^n I_{\mu_j} (h_j(x)) \leq 0$$<p>with $\lambda, \mu$ as parameters and then take $\lambda, \mu \to +\infty$. But is this the same thing as solving $(P)$? It turns out that the answer is not too complicated, and that this is not a dead end at all. The standard theory avoids $I_{\mu_j}$ and $J_{\lambda_i}$ and instead simply uses multiplication by scalars, which is what we will do too as it is arguably simpler. The function</p>
+$$\inf_x f(x) + \sum_{i = 1}^m J_{\lambda_i} (g_i(x)) + \sum_{j = 1}^n I_{\mu_j} (h_j(x)) \leq 0$$<p>with $\lambda, \mu$ as parameters and then take $\lambda, \mu \to +\infty$. But is this the same thing as solving $(P)$? It turns out this is a good question to ask, and the partial answer we will discuss validates the approach. The standard theory avoids $I_{\mu_j}$ and $J_{\lambda_i}$ and instead uses multiplication by scalars, which is what we will do too as it is arguably simpler. The function</p>
 $$\mathcal{L}(x, \lambda, \mu) = f(x) + \sum_{i = 1}^m \lambda_i \cdot g_i(x) + \sum_{j = 1}^n \mu_j \cdot h_j(x)$$<p>
 is called the Lagrangian of the optimization problem (P). Letting the domain of the optimization problem be $K = \{x \mid \forall i, j, g_i(x) \leq 0, h_j(x) = 0\}$, we have</p>
 <blockquote>
 <p>The Lagrangian embeds all the data of $(P)$, in that:</p>
 <ul>
 <li>For any fixed parameter $x$, we have
-$$\sup_{\lambda \geq 0, \mu} \mathcal{L}(x, \lambda, \mu) = \begin{cases} f(x) \text{ if } x \in K \\ + \infty \text{ otherwise} \end{cases}$$</li>
+$$\sup_{\lambda \succeq 0, \mu} \mathcal{L}(x, \lambda, \mu) = \begin{cases} f(x) \text{ if } x \in K \\ + \infty \text{ otherwise} \end{cases}$$</li>
 <li>It follows that $(P)$ is equivalent to solving
-$$\inf_x \sup_{\lambda \geq 0, \mu} \mathcal{L}(x, \lambda, \mu)$$</li>
+$$\inf_x \sup_{\lambda \succeq 0, \mu} \mathcal{L}(x, \lambda, \mu)$$</li>
 </ul>
 </blockquote>
 <p>But how does this help us? We began with one optimization problem, and now seem to have two nested ones. Well, the advantage is that these new problems are unconstrained! Also, suppose for a moment that we were able to switch the $\inf$ and the $\sup$ in the last equation. Then we would be solving for
 </p>
-$$\sup_{\lambda \geq 0, \mu} \inf_x \mathcal{L}(x, \lambda, \mu)$$<p>
+$$\sup_{\lambda \succeq 0, \mu} \inf_x \mathcal{L}(x, \lambda, \mu)$$<p>
 The function $\inf_x \mathcal{L}(x, \cdot, \cdot)$ is a pointwise infimum of affine maps, meaning it is concave: the supremum problem becomes easy to solve. We are only left with a single (parametrized) infimization unconstrained problem, which is arguably a lot better than what we started with.</p>
 <p>We made a crucial assumption, let&rsquo;s go back to it:
 </p>
-$$ \inf_x \sup_{\lambda \geq 0, \mu} \mathcal{L}(x, \lambda, \mu) =^{???!}\sup_{\lambda \geq 0, \mu} \inf_x \mathcal{L}(x, \lambda, \mu) $$<p>This second problem is called the dual problem of $(P)$.</p>
+$$ \inf_x \sup_{\lambda \succeq 0, \mu} \mathcal{L}(x, \lambda, \mu) =^{???!}\sup_{\lambda \succeq 0, \mu} \inf_x \mathcal{L}(x, \lambda, \mu) $$<p>This second problem is called the dual problem of $(P)$.</p>
 <blockquote>
 <p>Given a problem $(P)$, we say that the problem
 </p>
-$$ (D) \  \ \sup_{\lambda \geq 0, \mu} \inf_x \mathcal{L}(x, \lambda, \mu) $$<p>
+$$ (D) \  \ \sup_{\lambda \succeq 0, \mu} \inf_x \mathcal{L}(x, \lambda, \mu) $$<p>
 is the dual of $(P)$.</p>
 </blockquote>
 <p>Denote by $p^*$ and $d^*$ the optimal value of $(P)$ and $(D)$ respectively. Since
 </p>
-$$\inf_x \sup_{\lambda \geq 0, \mu} \mathcal{L}(x, \lambda, \mu) = p^*$$<p>
-we have, for given $\lambda \geq 0$ and $\mu$,
+$$\inf_x \sup_{\lambda \succeq 0, \mu} \mathcal{L}(x, \lambda, \mu) = p^*$$<p>
+we have, for given $\lambda \succeq 0$ and $\mu$,
 </p>
 $$\inf_x \mathcal{L}(x, \lambda, \mu) \leq p^*$$<p>
 and thus
 </p>
-$$\sup_{\lambda \geq 0} \inf_x \mathcal{L}(x, \lambda, \mu) = d^* \leq p^*$$<p>The inequality $d^* \leq p^*$ is known as <em>weak</em> Lagrangian duality and it is often useful to get lower bounds on certain classes of optimization problems.
+$$\sup_{\lambda \succeq 0} \inf_x \mathcal{L}(x, \lambda, \mu) = d^* \leq p^*$$<p>The inequality $d^* \leq p^*$ is known as <em>weak</em> Lagrangian duality and it is often useful to get lower bounds on certain classes of optimization problems.
 The reverse inequality can be false, and we say <em>strong</em> Lagrangian duality holds when it is true, i.e. $p^* = d^*$. The difference $p^* - d^*$ is called the <em>duality gap</em>.</p>
 <details style="opacity: 0.6;">
     <summary>Click for counter-example to strong duality</summary>
-    <div><p>Take for instance the convex problem (!)
+    <div><p>The example is crafted to make Slatter condition fail (see next section):
+The convex problem (!)
 </p>
 $$\begin{align*}
-    &\inf_{x, y > 0} e^{-x} \\
+    &\inf_{x \in \mathbb{R}, y \in \mathbb{R}^+} e^{-x} \\
     &\text{subject to } \frac{x^2}{y} \leq 0
 \end{align*}$$<p>
-It is obvious that $p^* = 1$, and $\mathcal{L}(x, y, \lambda) = e^{-x} + \lambda \frac{x^2}{y}$ whose infimum on $x, y > 0$ is $0$, for any $\lambda \geq 0$, i.e. $d^* = 0$</p>
+It is obvious that $p^* = 1$, and $\mathcal{L}(x, y, \lambda) = e^{-x} + \lambda \frac{x^2}{y}$ whose infimum on $x, y > 0$ is $0$, for any $\lambda \succeq 0$, i.e. $d^* = 0$</p>
 </div>
 </details>
 <h2 id="slaters-condition-for-strong-duality">Slater&rsquo;s condition for strong duality</h2>
@@ -331,8 +332,8 @@ It is obvious that $p^* = 1$, and $\mathcal{L}(x, y, \lambda) = e^{-x} + \lambda
 <p>Feasibility ensures $p^* \neq +\infty$, and if $p^* = -\infty$, weak duality gives $d^* = -\infty$. Let $p^*$ be finite, and define
 </p>
 $$\begin{align*}
-&\mathcal{A} = \{(u,v,t) | \exists x, g_i(x) \leq u_i, (Ax)_i = b + v_i, f(x) \leq t \} \\
-&\mathcal{B} = \{(0, 0, s)| s < p^* \}
+&\mathcal{A} = \{(u,v,t)\ | \  \exists x, g_i(x) \leq u_i, (Ax)_i = b + v_i, f(x) \leq t \} \\
+&\mathcal{B} = \{(0, 0, s) \ |\  s < p^* \}
 \end{align*}$$<p>
 which can be thought of as some kind of epigraph of the &ldquo;reachable values&rdquo; by the problem.
 Both of these are convex and do not intersect, so the <a href="https://en.wikipedia.org/wiki/Hyperplane_separation_theorem">separating hyperplane theorem</a> gives some $(\tilde{\lambda}, \tilde{\nu}, \mu)$ and $\alpha$ so that the linear form
@@ -341,11 +342,11 @@ $$\varphi(u, v, t) = (\tilde{\lambda}, \tilde{\nu}, \mu)^T (u, v, t) + \alpha$$<
 separates $\mathcal{A}$ and $\mathcal{B}$, i.e. $\mathcal{A} \subset \{\varphi \geq \alpha\}$ and $\mathcal{B} \subset \{\varphi \leq \alpha\}$.</p>
 <p>Since $\mathcal{A}$ is unbounded above, we must have $\tilde{\lambda} \succeq 0, \mu \geq 0$.
 Condition for $\mathcal{B}$ gives $\mu t \leq \alpha$ for any $t < p^*$, i.e. $\mu p^* \leq \alpha$.</p>
-<p>If $\mu > 0$, by taking $\lambda = \frac{\tilde{\lambda}}{\mu}, \nu = \frac{\tilde{\nu}}{\mu}$ we get that $\mathcal{L}(x, \lambda, \nu) \geq p^*$, which gives by taking minimum over $x$ that $d^* \geq p^*$, i.e. $d^* = p^*$ by weak duality, and $(\lambda, \mu)$ is an optimal dual point.</p>
+<p>If $\mu > 0$, by taking $\lambda = \frac{\tilde{\lambda}}{\mu}, \nu = \frac{\tilde{\nu}}{\mu}$ we get that $\mathcal{L}(x, \lambda, \nu) \geq p^*$. The inequality $d^* \geq p^*$, follows by taking minimum on $x$, which is equivalent to $d^* = p^*$ by weak duality. Finally, we found an optimal dual point $(\lambda, \mu)$.</p>
 <p>The case $\mu = 0$ cannot happen. Indeed, by writing the condition for $\mathcal{A}$ at the point $x^0$ satisfying Slater&rsquo;s condition, we have</p>
 $$\sum_{i = 1}^m \tilde{\lambda}_i f_i(x^0) + \nu^T (Ax^0 - b) \geq \alpha \geq \mu p^* = 0$$<p>
 that $\tilde{\lambda} = 0$ since $f_i(x^0) < 0$.</p>
-<p>As $(\tilde{\lambda}, \tilde{\nu}, \mu) \neq 0$, we must have $\tilde{\nu} \neq 0$. From $v^T(Ax^0 - b) \geq 0$, and $x^0$ being in the interior of the domain of definition, we must have some point $x$ such that $v^T(Ax - b) \leq 0$, unless $v^T A = 0$, contradicting $\text{rank } A = p$.</p>
+<p>As $(\tilde{\lambda}, \tilde{\nu}, \mu) \neq 0$, we must have $\tilde{\nu} \neq 0$. From $v^T(Ax^0 - b) \geq 0$, and $x^0$ being in the interior of the domain of definition, we must have a point $x$ with $v^T(Ax - b) \leq 0$, unless $v^T A = 0$, contradicting $\text{rank } A = p$.</p>
 </div>
 </details>
 <h2 id="the-karush-kuhn-tucker-conditions">The Karush-Kuhn-Tucker conditions</h2>
@@ -380,7 +381,7 @@ $$<p>
 are called linear programs (LP), and it is standard LP theory that the above program has a dual equivalent program that&rsquo;s given by</p>
 $$
 \begin{align*}
-    &\sup_x b^T y \\
+    &\sup_y b^T y \\
     &\text{subject to } A^Ty = c, y \succeq 0
 \end{align*} 
 $$<p>and that whenever either one has a solution, the other also has one and the objectives are equal. It’s a nice exercise to use the framework developed here to prove it.</p>

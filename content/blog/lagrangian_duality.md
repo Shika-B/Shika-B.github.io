@@ -18,7 +18,7 @@ $$\begin{align*}
                         &&h_j(x) = 0, \text{ for } 1 \leq j \leq n
 \end{align*} 
 $$
-where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. How should we do it? 
+where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. What is a reasonable strategy to solve this ?
 
 
 <!---
@@ -38,7 +38,7 @@ and
 solve 
 $$\inf_x f(x) + \sum_{i = 1}^m J_{\lambda_i} (g_i(x)) + \sum_{j = 1}^n I_{\mu_j} (h_j(x)) \leq 0$$
 
-with $\lambda, \mu$ as parameters and then take $\lambda, \mu \to +\infty$. But is this the same thing as solving $(P)$? It turns out that the answer is not too complicated, and that this is not a dead end at all. The standard theory avoids $I_{\mu_j}$ and $J_{\lambda_i}$ and instead simply uses multiplication by scalars, which is what we will do too as it is arguably simpler. The function
+with $\lambda, \mu$ as parameters and then take $\lambda, \mu \to +\infty$. But is this the same thing as solving $(P)$? It turns out this is a good question to ask, and the partial answer we will discuss validates the approach. The standard theory avoids $I_{\mu_j}$ and $J_{\lambda_i}$ and instead uses multiplication by scalars, which is what we will do too as it is arguably simpler. The function
 
 $$\mathcal{L}(x, \lambda, \mu) = f(x) + \sum_{i = 1}^m \lambda_i \cdot g_i(x) + \sum_{j = 1}^n \mu_j \cdot h_j(x)$$
 is called the Lagrangian of the optimization problem (P). Letting the domain of the optimization problem be $K = \{x \mid \forall i, j, g_i(x) \leq 0, h_j(x) = 0\}$, we have
@@ -71,9 +71,10 @@ The inequality $d^* \leq p^*$ is known as *weak* Lagrangian duality and it is of
 The reverse inequality can be false, and we say *strong* Lagrangian duality holds when it is true, i.e. $p^* = d^*$. The difference $p^* - d^*$ is called the *duality gap*.
 
 {{< details title="Click for counter-example to strong duality">}}
-Take for instance the convex problem (!)
+The example is crafted to make Slatter condition fail (see next section):
+The convex problem (!)
 $$\begin{align*}
-    &\inf_{x, y > 0} e^{-x} \\
+    &\inf_{x \in \mathbb{R}, y \in \mathbb{R}^+} e^{-x} \\
     &\text{subject to } \frac{x^2}{y} \leq 0
 \end{align*}$$
 It is obvious that $p^* = 1$, and $\mathcal{L}(x, y, \lambda) = e^{-x} + \lambda \frac{x^2}{y}$ whose infimum on $x, y > 0$ is $0$, for any $\lambda \succeq 0$, i.e. $d^* = 0$
@@ -106,8 +107,8 @@ We follow notations of the above book, which are not exactly compatible with the
 
 Feasibility ensures $p^* \neq +\infty$, and if $p^* = -\infty$, weak duality gives $d^* = -\infty$. Let $p^*$ be finite, and define 
 $$\begin{align*}
-&\mathcal{A} = \{(u,v,t) | \exists x, g_i(x) \leq u_i, (Ax)_i = b + v_i, f(x) \leq t \} \\
-&\mathcal{B} = \{(0, 0, s)| s < p^* \}
+&\mathcal{A} = \{(u,v,t)\ | \  \exists x, g_i(x) \leq u_i, (Ax)_i = b + v_i, f(x) \leq t \} \\
+&\mathcal{B} = \{(0, 0, s) \ |\  s < p^* \}
 \end{align*}$$
 which can be thought of as some kind of epigraph of the "reachable values" by the problem. 
 Both of these are convex and do not intersect, so the [separating hyperplane theorem](https://en.wikipedia.org/wiki/Hyperplane_separation_theorem) gives some $(\tilde{\lambda}, \tilde{\nu}, \mu)$ and $\alpha$ so that the linear form 
@@ -117,14 +118,14 @@ separates $\mathcal{A}$ and $\mathcal{B}$, i.e. $\mathcal{A} \subset \{\varphi \
 Since $\mathcal{A}$ is unbounded above, we must have $\tilde{\lambda} \succeq 0, \mu \geq 0$. 
 Condition for $\mathcal{B}$ gives $\mu t \leq \alpha$ for any $t < p^*$, i.e. $\mu p^* \leq \alpha$. 
 
-If $\mu > 0$, by taking $\lambda = \frac{\tilde{\lambda}}{\mu}, \nu = \frac{\tilde{\nu}}{\mu}$ we get that $\mathcal{L}(x, \lambda, \nu) \geq p^*$, which gives by taking minimum over $x$ that $d^* \geq p^*$, i.e. $d^* = p^*$ by weak duality, and $(\lambda, \mu)$ is an optimal dual point.
+If $\mu > 0$, by taking $\lambda = \frac{\tilde{\lambda}}{\mu}, \nu = \frac{\tilde{\nu}}{\mu}$ we get that $\mathcal{L}(x, \lambda, \nu) \geq p^*$. The inequality $d^* \geq p^*$, follows by taking minimum on $x$, which is equivalent to $d^* = p^*$ by weak duality. Finally, we found an optimal dual point $(\lambda, \mu)$.
 
 The case $\mu = 0$ cannot happen. Indeed, by writing the condition for $\mathcal{A}$ at the point $x^0$ satisfying Slater's condition, we have 
 
 $$\sum_{i = 1}^m \tilde{\lambda}_i f_i(x^0) + \nu^T (Ax^0 - b) \geq \alpha \geq \mu p^* = 0$$
 that $\tilde{\lambda} = 0$ since $f_i(x^0) < 0$.
 
-As $(\tilde{\lambda}, \tilde{\nu}, \mu) \neq 0$, we must have $\tilde{\nu} \neq 0$. From $v^T(Ax^0 - b) \geq 0$, and $x^0$ being in the interior of the domain of definition, we must have some point $x$ such that $v^T(Ax - b) \leq 0$, unless $v^T A = 0$, contradicting $\text{rank } A = p$.
+As $(\tilde{\lambda}, \tilde{\nu}, \mu) \neq 0$, we must have $\tilde{\nu} \neq 0$. From $v^T(Ax^0 - b) \geq 0$, and $x^0$ being in the interior of the domain of definition, we must have a point $x$ with $v^T(Ax - b) \leq 0$, unless $v^T A = 0$, contradicting $\text{rank } A = p$.
 
 {{< /details >}}
 
