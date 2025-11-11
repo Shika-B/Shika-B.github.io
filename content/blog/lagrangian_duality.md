@@ -36,7 +36,7 @@ Unfortunately, $I$ and $J$ are not smooth—indeed, they are not even continuous
 $$J_{\lambda_i} (x) = \begin{cases} 0 \text{ if } x \leq 0 \\ \lambda_i \cdot x \text{ otherwise} \end{cases} \text{ and } I_{\mu_j} (x) = \begin{cases} 0 \text{ if } x = 0 \\ \mu_j \cdot x \text{ otherwise} \end{cases}$$ 
 and 
 solve 
-$$\inf_x f(x) + \sum_{i = 1}^m J_{\lambda_i} (g_i(x)) + \sum_{j = 1}^n I_{\mu_j} (h_j(x)) \leq 0$$
+$$\inf_x f(x) + \sum_{i = 1}^m J_{\lambda_i} (g_i(x)) + \sum_{j = 1}^n I_{\mu_j} (h_j(x))$$
 
 with $\lambda, \mu$ as parameters and then take $\lambda, \mu \to +\infty$. But is this the same thing as solving $(P)$? It turns out this is a good question to ask, and the partial answer we will discuss validates the approach. The standard theory avoids $I_{\mu_j}$ and $J_{\lambda_i}$ and instead uses multiplication by scalars, which is what we will do too as it is arguably simpler. The function
 
