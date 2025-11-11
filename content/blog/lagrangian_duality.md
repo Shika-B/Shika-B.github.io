@@ -72,12 +72,14 @@ The reverse inequality can be false, and we say *strong* Lagrangian duality hold
 
 {{< details title="Click for counter-example to strong duality">}}
 The example is crafted to make Slatter condition fail (see next section):
-The convex problem (!)
+
+
+Consider the convex problem (!) given by
 $$\begin{align*}
-    &\inf_{x \in \mathbb{R}, y \in \mathbb{R}^+} e^{-x} \\
+    &\inf_{x \in \mathbb{R}, y \in \mathbb{R}^{+*}} e^{-x} \\
     &\text{subject to } \frac{x^2}{y} \leq 0
 \end{align*}$$
-It is obvious that $p^* = 1$, and $\mathcal{L}(x, y, \lambda) = e^{-x} + \lambda \frac{x^2}{y}$ whose infimum on $x, y > 0$ is $0$, for any $\lambda \succeq 0$, i.e. $d^* = 0$
+It is obvious that $p^* = 1$, and $\mathcal{L}(x, y, \lambda) = e^{-x} + \lambda \frac{x^2}{y}$ whose infimum on $x \in \mathbb{R}$ and $y > 0$ is $0$, for any $\lambda \succeq 0$, i.e. $d^* = 0$
 
 {{< /details >}}
 
