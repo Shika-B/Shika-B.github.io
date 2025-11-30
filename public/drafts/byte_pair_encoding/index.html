@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A fast Byte-Pair tokenizer for LLMs | Slow Data</title>
+<meta name="title" content="A fast Byte-Pair tokenizer for LLMs" />
+<meta name="description" content="Fast and meaningful tokenization for LLMs
+I&rsquo;m currently taking a deep learning course and I have an assignement that&rsquo;s basically: write a Google Trad/DeepL for French to English translation with minimal data (130k paired sentences) and training time (we need to make it trainable on a laptop). The goal of the assignment is to learn about modern LLMs architectures, specifically about attention and transformers, the deep learning part really. Naturally, this is not what I did: this blog post recounts my wanderings." />
+<meta name="keywords" content="Computer Science,Machine Learning,LLMs,Tokenizers," />
+
+
+<meta property="og:url" content="http://localhost:1313/drafts/byte_pair_encoding/">
+  <meta property="og:site_name" content="Slow Data">
+  <meta property="og:title" content="A fast Byte-Pair tokenizer for LLMs">
+  <meta property="og:description" content="Fast and meaningful tokenization for LLMs I’m currently taking a deep learning course and I have an assignement that’s basically: write a Google Trad/DeepL for French to English translation with minimal data (130k paired sentences) and training time (we need to make it trainable on a laptop). The goal of the assignment is to learn about modern LLMs architectures, specifically about attention and transformers, the deep learning part really. Naturally, this is not what I did: this blog post recounts my wanderings.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="drafts">
+    <meta property="article:published_time" content="2025-11-29T18:08:29+01:00">
+    <meta property="article:modified_time" content="2025-11-29T18:08:29+01:00">
+    <meta property="article:tag" content="Computer Science">
+    <meta property="article:tag" content="Machine Learning">
+    <meta property="article:tag" content="LLMs">
+    <meta property="article:tag" content="Tokenizers">
+
+
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="A fast Byte-Pair tokenizer for LLMs">
+  <meta name="twitter:description" content="Fast and meaningful tokenization for LLMs I’m currently taking a deep learning course and I have an assignement that’s basically: write a Google Trad/DeepL for French to English translation with minimal data (130k paired sentences) and training time (we need to make it trainable on a laptop). The goal of the assignment is to learn about modern LLMs architectures, specifically about attention and transformers, the deep learning part really. Naturally, this is not what I did: this blog post recounts my wanderings.">
+
+
+
+
+  <meta itemprop="name" content="A fast Byte-Pair tokenizer for LLMs">
+  <meta itemprop="description" content="Fast and meaningful tokenization for LLMs I’m currently taking a deep learning course and I have an assignement that’s basically: write a Google Trad/DeepL for French to English translation with minimal data (130k paired sentences) and training time (we need to make it trainable on a laptop). The goal of the assignment is to learn about modern LLMs architectures, specifically about attention and transformers, the deep learning part really. Naturally, this is not what I did: this blog post recounts my wanderings.">
+  <meta itemprop="datePublished" content="2025-11-29T18:08:29+01:00">
+  <meta itemprop="dateModified" content="2025-11-29T18:08:29+01:00">
+  <meta itemprop="wordCount" content="2071">
+  <meta itemprop="keywords" content="Computer Science,Machine Learning,LLMs,Tokenizers">
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  :root {
+    --width: 720px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #01242e;
+    --heading-color: #eee;
+    --text-color: #ddd;
+    --link-color: #8cc2dd;
+    --visited-color: #8b6fcb;
+    --blockquote-color: #ccc;
+
+
+  }
+
+  @media (prefers-color-scheme: white) {
+    :root {
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color: #8b6fcb;
+    --blockquote-color: #222;
+    }
+  }
+
+  body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+  }
+
+  a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  nav a {
+    margin-right: 8px;
+  }
+
+  strong,
+  b {
+    color: var(--heading-color);
+  }
+
+  button {
+    margin: 0;
+    cursor: pointer;
+  }
+
+  time {
+    font-family: monospace;
+    font-style: normal;
+    font-size: 15px;
+  }
+
+  main {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px dashed;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    font-family: monospace;
+    padding: 2px;
+    border-radius: 3px;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: var(--blockquote-color);
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px 0;
+    text-align: center;
+  }
+
+  .title:hover {
+    text-decoration: none;
+  }
+
+  .title h1 {
+    font-size: 1.5em;
+  }
+
+  .inline {
+    width: auto !important;
+  }
+
+  .highlight,
+  .code {
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: var(--visited-color);
+  }
+
+</style>
+
+
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+
+<script>
+  MathJax = {
+    tex: {
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],  
+      inlineMath: [['$', '$']]                  
+    },
+    loader:{
+      load: ['ui/safe']
+    },
+  };
+</script>
+  
+</head>
+
+<body>
+  <header><a href="/" class="title">
+  <h2>Slow Data</h2>
+</a>
+<nav>
+<a href="/blog/">Blog</a>
+
+<a href="/drafts/">Drafts</a>
+
+</nav>
+</header>
+  <main>
+
+<content>
+  <h1 id="fast-and-meaningful-tokenization-for-llms">Fast and meaningful tokenization for LLMs</h1>
+<p>I&rsquo;m currently taking a <a href="https://jjv.ie/">deep learning course</a> and I have an assignement that&rsquo;s basically: write a Google Trad/DeepL for French to English translation with minimal data (130k paired sentences) and training time (we need to make it trainable on a laptop). The goal of the assignment is to learn about modern LLMs architectures, specifically about attention and transformers, the deep learning part really. Naturally, this is not what I did: this blog post recounts my wanderings.</p>
+<p>From a very high-level perspective, today&rsquo;s LLMs take a context string as an input (the prompt, or the last few prompts and generated answers) and try to predict the next token, i.e they output a probability distribution over the tokens. Then to generate full sentences as ChatGPT does, or to translate, we can just iterate the predictions:</p>
+<ul>
+<li>Break the sentence into words, and break the words into tokens.</li>
+<li>If there are $n$ possible token values, the token $i$ is encoded as an $n$-dimensional &ldquo;one-hot&rdquo; vector, i.e a vector with $n$ entries: a $1$ at the $i$-th position and zero elsewhere.</li>
+<li>Repeat until reaching the &ldquo;finished talking&rdquo; token (or some arbitrary threshold):
+<ul>
+<li>Transformers magic ?? (this is not the topic of this post)</li>
+<li>We get a probability distribution over the tokens that tells us what&rsquo;s the probability that a given token follows after the known context.</li>
+<li>Pick the most probable token, append it to the context string</li>
+</ul>
+</li>
+</ul>
+<p>Now the transformers part is fun, but everyone is already talking about it. Let&rsquo;s focus on the first part, how do we get tokens ?</p>
+<h2 id="why-bother-">Why bother ?</h2>
+<p>I am lazy, so I will simply list all words in english, write this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>ENGLISH_WORDS <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;cup&#39;</span>: <span style="color:#ae81ff">34874</span>, <span style="color:#e6db74">&#39;of&#39;</span>: <span style="color:#ae81ff">54123</span>, <span style="color:#e6db74">&#39;tea&#39;</span>: <span style="color:#ae81ff">15879</span>, <span style="color:#f92672">...</span>}
+</span></span><span style="display:flex;"><span>REVERSE_ENGLISH_WORDS <span style="color:#f92672">=</span> {<span style="color:#ae81ff">34874</span>: <span style="color:#e6db74">&#39;cup&#39;</span>, <span style="color:#ae81ff">54123</span>: <span style="color:#e6db74">&#39;of&#39;</span>, <span style="color:#ae81ff">15879</span>: <span style="color:#e6db74">&#39;tea&#39;</span>, <span style="color:#f92672">...</span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">tokenize</span>(context):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> [ENGLISH_WORDS[word] <span style="color:#66d9ef">for</span> word <span style="color:#f92672">in</span> context<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39; &#39;</span>)]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">detokenize</span>(tokens):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34; &#34;</span><span style="color:#f92672">.</span>join(REVERSE_ENGLISH_WORDS[token] <span style="color:#66d9ef">for</span> token <span style="color:#f92672">in</span> tokens)
+</span></span></code></pre></div><p>and call it a day ? Except for the extra/missing spaces these functions introduce, that is a reasonable option. There a few problems however:</p>
+<ul>
+<li>We can&rsquo;t have any input that&rsquo;s ill-formed, even a single mistyped word breaks the tokenizing process</li>
+<li>There are a lot of words: almost <a href="https://en.wikipedia.org/wiki/List_of_dictionaries_by_number_of_words">a million in English and half a million in French</a>. That means atleast that many dimensions in our inputs to the model, and that makes for a lot of parameters (I&rsquo;m training it on a laptop, remember ?)</li>
+<li>The model needs to do everything by itself. Words are often formed by appending meaningful prefixes and suffixes to meaningful roots: take the words low, lowest, lower, hard, hardest and harder. Per word tokenization erases all this information.</li>
+<li>Some words are very rare, so it&rsquo;s extremely hard to get a dataset where they have enough statistical presence. But most of these words are.. composition of more common roots, prefixes suffixes.</li>
+<li>The preceding point is also true across languages especially when working with latin languages! Words like &ldquo;attack&rdquo; in English and &ldquo;attaque&rdquo; in French mean the same thing and have an obvious common root.</li>
+</ul>
+<p>In an ideal world, we would thus break sentences into words and words themselves into <a href="https://en.wikipedia.org/wiki/Lexeme">lexemes</a>. It turns out the second task is extremely hard even in reasonable generality, and there is a lot of research going on in the machine learning community to solve it, even among latin languages.</p>
+<p>Conclusion: we need to compromise on our goals! What&rsquo;s the middle ground between splitting on whitespaces and a full linguistics lexeme split, you ask ? A compression algorithm obviously.</p>
+<h2 id="byte-pair-encoding">Byte-Pair encoding</h2>
+<p>Consider the following string <code>s = &quot;aaabdaaabace&quot;</code> and imagine a perfect world where all the data is perfectly packed into memory. As the string is formed over an alphabet of 5 tokens, every character can be coded on 3 bits, and we actually get an extra 3 unused token values. Let&rsquo;s use them to compress the string:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>VOCAB <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;a&#39;</span>: <span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#39;b&#39;</span>: <span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#39;c&#39;</span>: <span style="color:#ae81ff">2</span>, <span style="color:#e6db74">&#39;d&#39;</span>: <span style="color:#ae81ff">3</span>, <span style="color:#e6db74">&#39;e&#39;</span>: <span style="color:#ae81ff">4</span>, <span style="color:#e6db74">&#39;aaabdaaabace&#39;</span>: <span style="color:#ae81ff">5</span>}
+</span></span></code></pre></div><p>Easy, right? Yeah, but now our compression scheme is completely unable to generalize to similarly structured but different data. Let&rsquo;s enforce instead that each new token must be the concatenation of two preexisting tokens.</p>
+<p>Choosing the extra tokens so that they reduce as much as possible the length of the final string is a hard problem, so let&rsquo;s not solve it exactly and do greedy instead: choose at each step the most common pair of tokens:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>s <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;aaabdaaabace&#34;</span>  <span style="color:#75715e"># step 0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;FabdFabace&#34;</span>    <span style="color:#75715e"># F = aa, occurs 4 times</span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;FGdFGace&#34;</span>      <span style="color:#75715e"># G = ab, occurs 2 times</span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;HdHace&#34;</span>        <span style="color:#75715e"># H = FG, occurs 2 times </span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>MERGE_LIST <span style="color:#f92672">=</span> [(<span style="color:#ae81ff">5</span>, (<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>)), (<span style="color:#ae81ff">6</span>, (<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>)), (<span style="color:#ae81ff">7</span>, (<span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>))]
+</span></span><span style="display:flex;"><span>FINAL_VOCAB <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;a&#39;</span>: <span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#39;b&#39;</span>: <span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#39;c&#39;</span>: <span style="color:#ae81ff">2</span>, <span style="color:#e6db74">&#39;d&#39;</span>: <span style="color:#ae81ff">3</span>, <span style="color:#e6db74">&#39;e&#39;</span>: <span style="color:#ae81ff">4</span>, <span style="color:#e6db74">&#39;aa&#39;</span>: <span style="color:#ae81ff">5</span>, <span style="color:#e6db74">&#39;ab&#39;</span>: <span style="color:#ae81ff">6</span>, <span style="color:#e6db74">&#39;aaab&#39;</span>: <span style="color:#ae81ff">7</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>initial_s <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">4</span>]
+</span></span><span style="display:flex;"><span>compressed_s <span style="color:#f92672">=</span> [<span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">9</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">4</span>]
+</span></span></code></pre></div><p>Now, once we trained our vocab on our initial string, we know <code>MERGE_LIST</code> and <code>FINAL_VOCAB</code>. To compress any string defined on the same initial alphabet, we go over <code>MERGE_LIST</code> and apply merges iteratively. To get our initial string back, we reverse the process.</p>
+<h2 id="tokenization-as-compression">Tokenization as compression</h2>
+<p>In 2016, <a href="https://arxiv.org/abs/1508.07909?utm_source=chatgpt.com">Snnrich, Haddow and Birch noticed</a> we can actually use this<br>
+Let&rsquo;s say the dataset contains exactly the following english words:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># POV: training a model on a toaster</span>
+</span></span><span style="display:flex;"><span>ENG_DATASET_WORDS <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;low&#39;</span>, <span style="color:#e6db74">&#39;lower&#39;</span>, <span style="color:#e6db74">&#39;hard&#39;</span>, <span style="color:#e6db74">&#39;harder&#39;</span>}
+</span></span></code></pre></div><p>Extracting meaningful lexemes from this dataset amounts to extracting repetitive patterns inside words: &rsquo;low&rsquo;, &rsquo;er&rsquo; and &lsquo;hard&rsquo; all occur two times. From that, we get a very reasonable token vocabulary of size 3</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>ENG_VOCAB <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;low&#39;</span>: <span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#39;hard&#39;</span>: <span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#39;er&#39;</span>: <span style="color:#ae81ff">2</span>}
+</span></span></code></pre></div><p>By applying the compression algorithm with 6 merges instead, we get the following merges:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>l, o <span style="color:#f92672">-&gt;</span> lo
+</span></span><span style="display:flex;"><span>e, r <span style="color:#f92672">-&gt;</span> er
+</span></span><span style="display:flex;"><span>h, a <span style="color:#f92672">-&gt;</span> ha
+</span></span><span style="display:flex;"><span>r, d <span style="color:#f92672">-&gt;</span> rd
+</span></span><span style="display:flex;"><span>lo, w <span style="color:#f92672">-&gt;</span> low
+</span></span><span style="display:flex;"><span>ha, rd <span style="color:#f92672">-&gt;</span> hard
+</span></span></code></pre></div><p>and we get the same final tokens, with some extra intermediate tokens.</p>
+<h2 id="a-naive-bpe-tokenizer">A naive BPE tokenizer</h2>
+<p>Let&rsquo;s put that into code. For convenience, we define a token class that stores the token representation, its id and the word it comes from.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> collections <span style="color:#f92672">import</span> Counter
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Token</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self, s, tok_id, word_id):
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>s <span style="color:#f92672">=</span> s
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>tok_id <span style="color:#f92672">=</span> tok_id
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>word_id <span style="color:#f92672">=</span> word_id
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__repr__</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Token(</span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>s<span style="color:#e6db74">}</span><span style="color:#e6db74">, tok_id: </span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>tok_id<span style="color:#e6db74">}</span><span style="color:#e6db74"> word_id:</span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>word_id<span style="color:#e6db74">}</span><span style="color:#e6db74">)&#34;</span>
+</span></span></code></pre></div><p>We also define some helper functions respectively building a vocabulary (a <code>dict[str, int]</code>) out of a list of words, and counting pairs of token ids coming from the same word</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> collections <span style="color:#f92672">import</span> Counter
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">initial_vocab</span>(words):
+</span></span><span style="display:flex;"><span>    fresh_tok <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    vocab <span style="color:#f92672">=</span> dict()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> word <span style="color:#f92672">in</span> words:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> char <span style="color:#f92672">in</span> word:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> char <span style="color:#f92672">in</span> vocab:
+</span></span><span style="display:flex;"><span>                vocab[char] <span style="color:#f92672">=</span> fresh_tok
+</span></span><span style="display:flex;"><span>                fresh_tok <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> vocab
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_stats</span>(tokens):
+</span></span><span style="display:flex;"><span>    stats <span style="color:#f92672">=</span> Counter()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> tok1, tok2 <span style="color:#f92672">in</span> zip(tokens, tokens[<span style="color:#ae81ff">1</span>:]):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> tok1<span style="color:#f92672">.</span>word_id <span style="color:#f92672">==</span> tok2<span style="color:#f92672">.</span>word_id:
+</span></span><span style="display:flex;"><span>            stats[(tok1<span style="color:#f92672">.</span>tok_id, tok2<span style="color:#f92672">.</span>tok_id)] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> stats
+</span></span></code></pre></div><p>Now we need some function that takes a list of tokens and a target pair and merges all consecutive pairs of tokens (inside the same word!) matching the given target pair. The simplest way to do that is to completely rebuild the token list:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">merge</span>(tokens, pair, fresh_token):
+</span></span><span style="display:flex;"><span>    new_tokens <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>    i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> i <span style="color:#f92672">&lt;</span> len(tokens) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>        tok1, tok2 <span style="color:#f92672">=</span> tokens[i], tokens[i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> tok1<span style="color:#f92672">.</span>word_id <span style="color:#f92672">==</span> tok2<span style="color:#f92672">.</span>word_id <span style="color:#f92672">and</span> (tok1<span style="color:#f92672">.</span>tok_id, tok2<span style="color:#f92672">.</span>tok_id) <span style="color:#f92672">==</span> pair:
+</span></span><span style="display:flex;"><span>            new_tokens<span style="color:#f92672">.</span>append(Token(tok1<span style="color:#f92672">.</span>s <span style="color:#f92672">+</span> tok2<span style="color:#f92672">.</span>s, fresh_token, tok1<span style="color:#f92672">.</span>word_id))
+</span></span><span style="display:flex;"><span>            i <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            new_tokens<span style="color:#f92672">.</span>append(tok1)
+</span></span><span style="display:flex;"><span>            i <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> i <span style="color:#f92672">==</span> len(tokens) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>        new_tokens<span style="color:#f92672">.</span>append(tokens[i])
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> new_tokens
+</span></span></code></pre></div><p>Finally, we define a function that trains our tokenizer with a merges threshold.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">train</span>(words, num_merges, verbose<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>):
+</span></span><span style="display:flex;"><span>    vocab <span style="color:#f92672">=</span> initial_vocab(words)
+</span></span><span style="display:flex;"><span>    reverse_vocab <span style="color:#f92672">=</span> {vocab[c]: c <span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> vocab<span style="color:#f92672">.</span>keys()}
+</span></span><span style="display:flex;"><span>    tokens <span style="color:#f92672">=</span> [Token(c, vocab[c], word_id) <span style="color:#66d9ef">for</span> word_id, word <span style="color:#f92672">in</span> enumerate(words) <span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> word]
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    fresh_token <span style="color:#f92672">=</span> len(vocab)
+</span></span><span style="display:flex;"><span>    merge_tree <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(num_merges): 
+</span></span><span style="display:flex;"><span>        stats <span style="color:#f92672">=</span> get_stats(tokens) 
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>            ((left, right), count) <span style="color:#f92672">=</span> stats<span style="color:#f92672">.</span>most_common(<span style="color:#ae81ff">1</span>)[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">IndexError</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> verbose:
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Merging the pair (</span><span style="color:#e6db74">{</span>reverse_vocab[left]<span style="color:#e6db74">}</span><span style="color:#e6db74">, </span><span style="color:#e6db74">{</span>reverse_vocab[right]<span style="color:#e6db74">}</span><span style="color:#e6db74">)&#34;</span>)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        tokens <span style="color:#f92672">=</span> merge(tokens, (left, right), fresh_token)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        new_token_s <span style="color:#f92672">=</span> reverse_vocab[left] <span style="color:#f92672">+</span> reverse_vocab[right]
+</span></span><span style="display:flex;"><span>        vocab[new_token_s] <span style="color:#f92672">=</span> fresh_token
+</span></span><span style="display:flex;"><span>        reverse_vocab[fresh_token] <span style="color:#f92672">=</span> new_token_s
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        merge_tree<span style="color:#f92672">.</span>append(((left, right), fresh_token))
+</span></span><span style="display:flex;"><span>        fresh_token <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> vocab, merge_tree
+</span></span></code></pre></div><p>Encoding a list of words is just applying the merges we got from training, and decoding is straightforward</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">encode</span>(vocab, merge_tree, words):
+</span></span><span style="display:flex;"><span>    tokens <span style="color:#f92672">=</span> [Token(c, vocab[c], word_id) <span style="color:#66d9ef">for</span> word_id, word <span style="color:#f92672">in</span> enumerate(words) <span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> word]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> ((left, right), new) <span style="color:#f92672">in</span> merge_tree:
+</span></span><span style="display:flex;"><span>        tokens <span style="color:#f92672">=</span> merge(tokens, (left, right), new)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> tokens
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decode</span>(tokens):
+</span></span><span style="display:flex;"><span>    words <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>    curr_word <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>    i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> i <span style="color:#f92672">&lt;</span> len(tokens):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> i <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">and</span> tokens[i<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>word_id <span style="color:#f92672">!=</span> tokens[i]<span style="color:#f92672">.</span>word_id:
+</span></span><span style="display:flex;"><span>            words<span style="color:#f92672">.</span>append(<span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">.</span>join(curr_word))
+</span></span><span style="display:flex;"><span>            curr_word <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>        curr_word<span style="color:#f92672">.</span>append(tokens[i]<span style="color:#f92672">.</span>s)
+</span></span><span style="display:flex;"><span>        i <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    words<span style="color:#f92672">.</span>append(<span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">.</span>join(curr_word))    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> words
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>words <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;low&#39;</span>, <span style="color:#e6db74">&#39;lower&#39;</span>, <span style="color:#e6db74">&#39;hard&#39;</span>, <span style="color:#e6db74">&#39;harder&#39;</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>vocab, merge_tree <span style="color:#f92672">=</span> train(words, <span style="color:#ae81ff">6</span>)
+</span></span><span style="display:flex;"><span>tokens <span style="color:#f92672">=</span> encode(vocab, merge_tree, words)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Tokens: &#34;</span>, [tok<span style="color:#f92672">.</span>tok_id <span style="color:#66d9ef">for</span> tok <span style="color:#f92672">in</span> tokens])
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Decoded tokens: &#34;</span>, decode(tokens))
+</span></span></code></pre></div><pre tabindex="0"><code>Merging the pair (l, o)
+Merging the pair (lo, w)
+Merging the pair (e, r)
+Merging the pair (h, a)
+Merging the pair (ha, r)
+Merging the pair (har, d)
+Tokens:  [9, 9, 10, 13, 13, 10]
+Decoded tokens:  [&#39;low&#39;, &#39;lower&#39;, &#39;hard&#39;, &#39;harder&#39;]
+</code></pre><p>Obviously, we cannot use this decoder with a word that contains a &lsquo;z&rsquo; or a &lsquo;-&rsquo;. Three options:</p>
+<ul>
+<li>Option 1: Train it on a large enough dataset so that it does not matter</li>
+<li>Option 2: Initialize vocab with the appropriate alphabet for the target language</li>
+<li>Option 2bis: Same as Option 2 but we work on bytes instead of chars, so that we can work with arbitrary unicode strings with an initial token alphabet of 256 bytes.</li>
+</ul>
+<p>The problem with option 2bis is that the model may form token sequences that form invalid unicode characters. Working with unicode strings is painful anyway, so let&rsquo;s say we&rsquo;re working with full ascii strings. The problem with option 2 is that I don&rsquo;t like it because what do you mean I cannot automate the training of the preprocessing for my automated machine translation model?</p>
+<p>Let&rsquo;s do Option 1: <a href="https://www.manythings.org/anki/">here</a> there is a file called <code>fra-eng.zip</code> and after unzipping it we get about 100k pairs of sentences looking like this (not exactly, I removed the extra columns with the credits for the translation to make it fit):</p>
+<pre tabindex="0"><code>You didn&#39;t mean it, did you?	Ce n&#39;était pas ton intention, si ?
+I don&#39;t want to speak ill of the dead.	Je ne veux pas dire du mal des morts.
+I would&#39;ve drowned if you hadn&#39;t saved me.	Je me serais noyé si vous ne m&#39;aviez pas sauvé.	
+</code></pre><p>We open the file:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#39;data/fra.txt&#39;</span>, <span style="color:#e6db74">&#39;r&#39;</span>, encoding<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;utf-8&#39;</span>) <span style="color:#66d9ef">as</span> file:
+</span></span><span style="display:flex;"><span>    txt <span style="color:#f92672">=</span> file<span style="color:#f92672">.</span>read()
+</span></span><span style="display:flex;"><span>    lines <span style="color:#f92672">=</span> txt<span style="color:#f92672">.</span>strip()<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>    fra, eng <span style="color:#f92672">=</span> [], []
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> line <span style="color:#f92672">in</span> lines:
+</span></span><span style="display:flex;"><span>        cols <span style="color:#f92672">=</span> line<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\t</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>        eng<span style="color:#f92672">.</span>append(cols[<span style="color:#ae81ff">0</span>])
+</span></span><span style="display:flex;"><span>        fra<span style="color:#f92672">.</span>append(cols[<span style="color:#ae81ff">1</span>])
+</span></span><span style="display:flex;"><span>print(fra[<span style="color:#ae81ff">50</span>], eng[<span style="color:#ae81ff">50</span>])
+</span></span></code></pre></div><pre tabindex="0"><code>Hello! Bonjour !
+</code></pre><p>Let&rsquo;s split into words (we remove punctuation) and train our BPE on english words:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> re
+</span></span><span style="display:flex;"><span>regex <span style="color:#f92672">=</span> re<span style="color:#f92672">.</span>compile(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">s|</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">.|</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">!|</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">?&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>eng_words <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> sentence <span style="color:#f92672">in</span> eng:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> word <span style="color:#f92672">in</span> regex<span style="color:#f92672">.</span>split(sentence<span style="color:#f92672">.</span>lower()):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> len(word) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>            eng_words<span style="color:#f92672">.</span>append(word)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>train(eng_words, <span style="color:#ae81ff">10_000</span>, verbose<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span></code></pre></div><pre tabindex="0"><code>Merging the pair (t, h)
+Merging the pair (o, u)
+Merging the pair (t, o)
+Merging the pair (i, n)
+Merging the pair (r, e)
+Merging the pair (y, ou)
+Merging the pair (th, e)
+Merging the pair (a, t)
+Merging the pair (a, n)
+Merging the pair (i, s)
+Merging the pair (o, n)
+Merging the pair (v, e)
+Merging the pair (h, e)
+Merging the pair (m, e)
+Merging the pair (in, g)
+...
+</code></pre><p>Looks nice right ? Except even these 14 merges took more than a minute. We need to make things faster if we don&rsquo;t want to leave it running all night long. We could just Rewrite It In Rust #RIIR and get insane speed-ups because Python is slow.
+Okay, <a href="https://github.com/Shika-B/rs-bpe/blob/main/src/main.rs">challenge accepted</a>, there we go</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>&gt; time cargo run --release
+</span></span><span style="display:flex;"><span>real	5m39,627s
+</span></span><span style="display:flex;"><span>user	4m9,633s
+</span></span><span style="display:flex;"><span>sys	1m26,246s
+</span></span></code></pre></div><p>Better, now it&rsquo;s actually usable. But it&rsquo;s not fast enough, our dataset is a toy dataset, I feel we can do better. My Rust code above is clearly not optimized memory-wise, I could avoid a <em>lot</em> of copies by using slices instead but that turns out to be a little harder than one might think. It wouldn&rsquo;t get us that last speed-up magnitude we&rsquo;re looking for.</p>
+<p>If we look at our code, we can sum it up in Pseudo-Python as:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># Say we&#39;re training on n words, for m merges</span>
+</span></span><span style="display:flex;"><span>vocab <span style="color:#f92672">=</span> build_vocab(words) <span style="color:#75715e"># O(n)</span>
+</span></span><span style="display:flex;"><span>tokens <span style="color:#f92672">=</span> initial_tokenize(words) <span style="color:#75715e"># O(n)</span>
+</span></span><span style="display:flex;"><span>merge_tree <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>fresh_id <span style="color:#f92672">=</span> fresh()
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> m <span style="color:#f92672">in</span> range(num_merges):
+</span></span><span style="display:flex;"><span>    stats <span style="color:#f92672">=</span> agregate_stats(tokens) <span style="color:#75715e"># O(n)</span>
+</span></span><span style="display:flex;"><span>    top_pair, _ <span style="color:#f92672">=</span> max(stats) <span style="color:#75715e"># O(n)</span>
+</span></span><span style="display:flex;"><span>    tokens <span style="color:#f92672">=</span> merge(top_pair, tokens, fresh_id) <span style="color:#75715e"># O(n)</span>
+</span></span><span style="display:flex;"><span>    merge_tree<span style="color:#f92672">.</span>append((top_pair, fresh_id)) <span style="color:#75715e"># O(1)</span>
+</span></span><span style="display:flex;"><span>    fresh_id <span style="color:#f92672">=</span> fresh() <span style="color:#75715e"># O(1)</span>
+</span></span></code></pre></div><p>which means we&rsquo;re asymptotically doing $mn$ operations. Let&rsquo;s improve that!</p>
+<h2 id="a-faster-merge-function">A faster merge function</h2>
+<p>Can we improve</p>
+
+</content>
+
+
+
+<p>
+  
+  <a href="http://localhost:1313/tags/computer-science/">#Computer Science</a>
+  
+  <a href="http://localhost:1313/tags/machine-learning/">#Machine Learning</a>
+  
+  <a href="http://localhost:1313/tags/llms/">#LLMs</a>
+  
+  <a href="http://localhost:1313/tags/tokenizers/">#Tokenizers</a>
+  
+</p>
+
+  </main>
+  <footer>Made with <a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ Bear</a>
+</footer>
+
+  
+</body>
+
+</html>

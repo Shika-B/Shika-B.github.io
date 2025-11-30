@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tokenizers on Slow Data</title>
+    <link>http://localhost:1313/tags/tokenizers/</link>
+    <description>Recent content in Tokenizers on Slow Data</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 29 Nov 2025 18:08:29 +0100</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/tokenizers/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>A fast Byte-Pair tokenizer for LLMs</title>
+      <link>http://localhost:1313/drafts/byte_pair_encoding/</link>
+      <pubDate>Sat, 29 Nov 2025 18:08:29 +0100</pubDate>
+      <guid>http://localhost:1313/drafts/byte_pair_encoding/</guid>
+      <description>&lt;h1 id=&#34;fast-and-meaningful-tokenization-for-llms&#34;&gt;Fast and meaningful tokenization for LLMs&lt;/h1&gt;&#xA;&lt;p&gt;I&amp;rsquo;m currently taking a &lt;a href=&#34;https://jjv.ie/&#34;&gt;deep learning course&lt;/a&gt; and I have an assignement that&amp;rsquo;s basically: write a Google Trad/DeepL for French to English translation with minimal data (130k paired sentences) and training time (we need to make it trainable on a laptop). The goal of the assignment is to learn about modern LLMs architectures, specifically about attention and transformers, the deep learning part really. Naturally, this is not what I did: this blog post recounts my wanderings.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
