@@ -76,20 +76,19 @@ compressed_s = [7, 3, 7, 9, 2, 4]
 Now, once we trained our vocab on our initial string, we know `MERGE_LIST` and `FINAL_VOCAB`. To compress any string defined on the same initial alphabet, we go over `MERGE_LIST` and apply merges iteratively. To get our initial string back, we reverse the process.
 
 ## Tokenization as compression
-In 2016, [Snnrich, Haddow and Birch noticed](https://arxiv.org/abs/1508.07909?utm_source=chatgpt.com) we can actually use this   
-Let's say the dataset contains exactly the following English words:
+In 2016, [Snnrich, Haddow and Birch noticed](https://arxiv.org/abs/1508.07909?utm_source=chatgpt.com) we can actually use this to get a reasonable approximation of the lexeme extraction process. Let's say the dataset contains exactly the following English words:
 
 ```python
 # POV: training a model on a toaster
 ENG_DATASET_WORDS = {'low', 'lower', 'hard', 'harder'}
 ```
 
-Extracting meaningful lexemes from this dataset amounts to extracting repetitive patterns inside words: 'low', 'er' and 'hard' all occur two times. From that, we get a very reasonable token vocabulary of size 3
+Extracting meaningful lexemes from this dataset amounts to extracting repetitive patterns inside words: 'low', 'er' and 'hard' all occur two times. From that observation, we get a very reasonable token vocabulary of size 3
 ```python
 ENG_VOCAB = {'low': 0, 'hard': 1, 'er': 2}
 ```
 
-By applying the compression algorithm with 6 merges instead, we get the following merges:
+Instead, if we apply the compression algorithm with 6 merges, we get the following merges:
 ```python
 l, o -> lo
 e, r -> er
@@ -302,7 +301,7 @@ user	0m47,198s
 sys	0m0,886s
 ```
 
-We need to make things faster if we don't want to leave it running all night long. We could just Rewrite It In Rust #RIIR and get insane speed-ups because Python is slow. 
+I tried to let it run it's whole course (10k merges) and it took almost 5 hours to train. We need to make things faster if we don't want to leave it running all night long every time we make a change. We could just Rewrite It In Rust and get insane speed-ups because Python is slow. 
 Okay, [challenge accepted](https://github.com/Shika-B/rs-bpe/blob/main/src/main.rs), there we go for 10k merges
 ```bash
 > time cargo run --release
@@ -310,7 +309,7 @@ real	5m39,627s
 user	4m9,633s
 sys	1m26,246s
 ```
-Better, now it is actually usable, but definitely not fast enough, in real life we do hundreds of thousands of merges and the dataset is magnitudes larger. I feel we can do better, even on a laptop. My Rust code above is clearly not optimized memory-wise, I could avoid quite a few copies by using references over the original string (str slices for those familiar with Rust) instead. Still, I'm using small-strings optimization, and I don't think we could get anything more than a 2x speed-up avoiding these copies and doing a few other small optimizations. It wouldn't get us that last speed-up magnitude we're looking for, so we need to change the actual logic.
+Now it is actually usable, but definitely not fast enough, in real life we do hundreds of thousands of merges and the dataset is magnitudes larger. I feel we can do better, even on a laptop. My Rust code above is clearly not optimized memory-wise, I could avoid quite a few copies by using references over the original string (str slices for those familiar with Rust) instead. Still, I'm using small-strings optimization, and I don't think we could get anything more than a 2x speed-up avoiding these copies and doing a few other small optimizations. It wouldn't get us that last speed-up magnitude we're looking for, so we need to change the actual logic.
 
 If we look at our code, we can sum it up in Pseudo-Python as:
 ```python
@@ -459,7 +458,7 @@ user	0m28,149s
 sys	0m0,514s
 ```
 
-Yeeeah... Still going with the Rust code for the moment. Still, we cut off 10 seconds. And there's a new overhead at warm-up in the new code. If we test it with 20 more merges, we get: difference is more significant if we add 20 merges:
+Yeeeah... Still going with the Rust code for the moment. We cut off about 10 seconds. Since there's a new overhead at warm-up in the new code, how different is it if we test it with 40 merges:
 
 ```bash
 40 merges
@@ -473,6 +472,7 @@ real	0m44,376s
 user	0m43,552s
 sys	0m0,521s
 ```
+
 Doubling the amount of merges, we get a 50% increase of compute time with `fast.py` and almost 80% with `naive.py`.
 
 What is the complexity of the new merge function ? It's the number of nodes we had stored in `pair_nodes[pair_to_merge]`, and the total amount of nodes we can merge across all calls is at most the length of the initial token linked list, i.e. n. 
@@ -533,7 +533,9 @@ real	0m33,924s
 user	0m33,127s
 sys	0m0,627s
 ```
-Nice, we managed to scrap off 10 seconds. Yup, except I lied. I didn't do 40 merges here, I did 10 000 merges this time. You read it right, this is about 10 times faster than the Rust code, in Python. Even on a training set 100 times larger, we would still train our vocabulary in less than an hour, in Python. Right ? Not good enough, I want real speed:
+Nice, we managed to scrap off 10 seconds. Yup, except I lied. I didn't do 40 merges here, I did 10 000 merges this time. You read it right, this is about 10 times faster than the Rust code, in Python. Even on a training set 100 times larger, we would still train our vocabulary in less than an hour, in Python. 
+
+Except it's not good enough, I want real speed:
 
 <div class="tenor-gif-embed" data-postid="14031708" data-share-method="host" data-aspect-ratio="1.9685" data-width="70%"><a href="https://tenor.com/view/speed-i-am-speed-lightning-mcqueen-cars-meme-gif-14031708">Speed I Am Speed GIF</a>from <a href="https://tenor.com/search/speed-gifs">Speed GIFs</a></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
 
@@ -589,7 +591,7 @@ if (node.nxt.tok_id, node.nxt.nxt.tok_id) != pair_to_merge: # updated
 
 ## Final clean up
 
-Let's do a little clean up now. Since we're only doing it once, we can build the initial statistics and the linked list in one pass:
+While we're at it, let's do a little clean up. Since we're only doing it once, we can build the initial statistics and the linked list in one pass:
 ```python
 def tokens_pairs_and_stats(words, vocab, keep_stats=False):
     dummy = TokenNode("", -1, -1)
@@ -625,7 +627,16 @@ tokens, pairs, _ = tokens_pairs_and_stats(words, vocab, keep_stats=False)
 
 ## Results of the experiment
 
-Here are the final results we get:
+Running it, we get:
+
+```bash
+> time python fast.py
+real	0m17,884s
+user	0m16,950s
+sys	0m0,934s
+```
+
+And the final results in a nice little table:
 | Code                               |   Time    |
 |:---------------------------        |:---------:|
 | Python Naive                       | 4h48m     |
@@ -633,5 +644,6 @@ Here are the final results we get:
 | Python Optimized                   | 17s       |
 | HuggingFace tokenizers in Rust     | 0.9s      |
 
-I am curious as to how close I can  
+I am curious as to how close I can get to hugging face perfs by porting the Python optimized code to Rust. The linked list part is definitely not suited to Rust, but we can [get around that](https://docs.rs/indexlist/latest/indexlist/). Maybe I'll try doing that and update that blog post in the future: stay tuned.
+
 [^1]: except for the fact they use an extra dummy head for a reason I fail to understand (less arithmetic ops ?)
