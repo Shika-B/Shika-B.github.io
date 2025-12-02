@@ -47,7 +47,7 @@ and call it a day? Except for the extra/missing spaces these functions introduce
 
 In an ideal world, we would thus break sentences into words and words themselves into [lexemes](https://en.wikipedia.org/wiki/Lexeme). It turns out the second task is extremely hard even in reasonable generality, and there is a lot of research going on in the machine learning community to solve it, even among Romance languages.
 
-Conclusion: we need to compromise on our goals! What is the middle ground between splitting on whitespaces and a full linguistics lexeme split, you ask ? A compression algorithm obviously.
+Conclusion: we need to compromise on our goals. What is the middle ground between splitting on whitespaces and a full linguistics lexeme split, you ask ? A compression algorithm obviously!
 
 ## Byte-Pair encoding
 

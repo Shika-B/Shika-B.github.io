@@ -8,14 +8,22 @@
 <title>A fast Byte-Pair tokenizer for LLMs | Slow Data</title>
 <meta name="title" content="A fast Byte-Pair tokenizer for LLMs" />
 <meta name="description" content="Fast and meaningful tokenization for LLMs
+<<<<<<< HEAD
 I&rsquo;m currently taking a deep learning course and I have an assignment that is basically: write a Google Trad/DeepL for French to English translation with minimal data (130k paired sentences) and training time (we need to make it trainable on a laptop). The goal of the assignment is to learn about modern LLMs architectures, specifically about attention and transformers, the deep learning part really. Naturally, this is not what I did: this blog post recounts my wanderings." />
+=======
+I&rsquo;m currently taking a deep learning course and I have an assignement that&rsquo;s basically: write a Google Trad/DeepL for French to English translation with minimal data (130k paired sentences) and training time (we need to make it trainable on a laptop). The goal of the assignment is to learn about modern LLMs architectures, specifically about attention and transformers, the deep learning part really. Naturally, this is not what I did: this blog post recounts my wanderings." />
+>>>>>>> origin
 <meta name="keywords" content="Computer Science,Machine Learning,LLMs,Tokenizers," />
 
 
 <meta property="og:url" content="http://localhost:1313/drafts/byte_pair_encoding/">
   <meta property="og:site_name" content="Slow Data">
   <meta property="og:title" content="A fast Byte-Pair tokenizer for LLMs">
+<<<<<<< HEAD
   <meta property="og:description" content="Fast and meaningful tokenization for LLMs I’m currently taking a deep learning course and I have an assignment that is basically: write a Google Trad/DeepL for French to English translation with minimal data (130k paired sentences) and training time (we need to make it trainable on a laptop). The goal of the assignment is to learn about modern LLMs architectures, specifically about attention and transformers, the deep learning part really. Naturally, this is not what I did: this blog post recounts my wanderings.">
+=======
+  <meta property="og:description" content="Fast and meaningful tokenization for LLMs I’m currently taking a deep learning course and I have an assignement that’s basically: write a Google Trad/DeepL for French to English translation with minimal data (130k paired sentences) and training time (we need to make it trainable on a laptop). The goal of the assignment is to learn about modern LLMs architectures, specifically about attention and transformers, the deep learning part really. Naturally, this is not what I did: this blog post recounts my wanderings.">
+>>>>>>> origin
   <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="drafts">
@@ -31,22 +39,37 @@ I&rsquo;m currently taking a deep learning course and I have an assignment that 
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="A fast Byte-Pair tokenizer for LLMs">
+<<<<<<< HEAD
   <meta name="twitter:description" content="Fast and meaningful tokenization for LLMs I’m currently taking a deep learning course and I have an assignment that is basically: write a Google Trad/DeepL for French to English translation with minimal data (130k paired sentences) and training time (we need to make it trainable on a laptop). The goal of the assignment is to learn about modern LLMs architectures, specifically about attention and transformers, the deep learning part really. Naturally, this is not what I did: this blog post recounts my wanderings.">
+=======
+  <meta name="twitter:description" content="Fast and meaningful tokenization for LLMs I’m currently taking a deep learning course and I have an assignement that’s basically: write a Google Trad/DeepL for French to English translation with minimal data (130k paired sentences) and training time (we need to make it trainable on a laptop). The goal of the assignment is to learn about modern LLMs architectures, specifically about attention and transformers, the deep learning part really. Naturally, this is not what I did: this blog post recounts my wanderings.">
+>>>>>>> origin
 
 
 
 
   <meta itemprop="name" content="A fast Byte-Pair tokenizer for LLMs">
+<<<<<<< HEAD
   <meta itemprop="description" content="Fast and meaningful tokenization for LLMs I’m currently taking a deep learning course and I have an assignment that is basically: write a Google Trad/DeepL for French to English translation with minimal data (130k paired sentences) and training time (we need to make it trainable on a laptop). The goal of the assignment is to learn about modern LLMs architectures, specifically about attention and transformers, the deep learning part really. Naturally, this is not what I did: this blog post recounts my wanderings.">
   <meta itemprop="datePublished" content="2025-11-29T18:08:29+01:00">
   <meta itemprop="dateModified" content="2025-11-29T18:08:29+01:00">
   <meta itemprop="wordCount" content="3955">
+=======
+  <meta itemprop="description" content="Fast and meaningful tokenization for LLMs I’m currently taking a deep learning course and I have an assignement that’s basically: write a Google Trad/DeepL for French to English translation with minimal data (130k paired sentences) and training time (we need to make it trainable on a laptop). The goal of the assignment is to learn about modern LLMs architectures, specifically about attention and transformers, the deep learning part really. Naturally, this is not what I did: this blog post recounts my wanderings.">
+  <meta itemprop="datePublished" content="2025-11-29T18:08:29+01:00">
+  <meta itemprop="dateModified" content="2025-11-29T18:08:29+01:00">
+  <meta itemprop="wordCount" content="2071">
+>>>>>>> origin
   <meta itemprop="keywords" content="Computer Science,Machine Learning,LLMs,Tokenizers">
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
   <style>
   :root {
+<<<<<<< HEAD
     --width: 1024px;
+=======
+    --width: 720px;
+>>>>>>> origin
     --font-main: Verdana, sans-serif;
     --font-secondary: Verdana, sans-serif;
     --font-scale: 1em;
@@ -62,12 +85,21 @@ I&rsquo;m currently taking a deep learning course and I have an assignment that 
 
   @media (prefers-color-scheme: white) {
     :root {
+<<<<<<< HEAD
       --background-color: #fff;
       --heading-color: #222;
       --text-color: #444;
       --link-color: #3273dc;
       --visited-color: #8b6fcb;
       --blockquote-color: #222;
+=======
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color: #8b6fcb;
+    --blockquote-color: #222;
+>>>>>>> origin
     }
   }
 
@@ -174,11 +206,16 @@ I&rsquo;m currently taking a deep learning course and I have an assignment that 
 
   .highlight,
   .code {
+<<<<<<< HEAD
+=======
+    border-radius: 3px;
+>>>>>>> origin
     margin-block-start: 1em;
     margin-block-end: 1em;
     overflow-x: auto;
   }
 
+<<<<<<< HEAD
   .highlight pre,
   .code pre {
     padding-left: 1em;
@@ -192,6 +229,8 @@ I&rsquo;m currently taking a deep learning course and I have an assignment that 
     overflow-y: hidden;
   }
 
+=======
+>>>>>>> origin
    
   ul.blog-posts {
     list-style-type: none;
@@ -209,8 +248,15 @@ I&rsquo;m currently taking a deep learning course and I have an assignment that 
   ul.blog-posts li a:visited {
     color: var(--visited-color);
   }
+<<<<<<< HEAD
 </style>
 
+=======
+
+</style>
+
+
+>>>>>>> origin
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
 
 <script>
@@ -234,12 +280,18 @@ I&rsquo;m currently taking a deep learning course and I have an assignment that 
 <nav>
 <a href="/blog/">Blog</a>
 
+<<<<<<< HEAD
+=======
+<a href="/drafts/">Drafts</a>
+
+>>>>>>> origin
 </nav>
 </header>
   <main>
 
 <content>
   <h1 id="fast-and-meaningful-tokenization-for-llms">Fast and meaningful tokenization for LLMs</h1>
+<<<<<<< HEAD
 <p>I&rsquo;m currently taking a <a href="https://jjv.ie/">deep learning course</a> and I have an assignment that is basically: write a Google Trad/DeepL for French to English translation with minimal data (130k paired sentences) and training time (we need to make it trainable on a laptop). The goal of the assignment is to learn about modern LLMs architectures, specifically about attention and transformers, the deep learning part really. Naturally, this is not what I did: this blog post recounts my wanderings.</p>
 <p>From a very high-level perspective, today&rsquo;s LLMs take a context string as an input (the prompt, or the last few prompts and generated answers) and try to predict the next token, i.e. they output a probability distribution over the tokens. Then to generate full sentences as ChatGPT does, or to translate, we can just iterate the predictions:</p>
 <ul>
@@ -251,12 +303,28 @@ I&rsquo;m currently taking a deep learning course and I have an assignment that 
 <li>We get a probability distribution over the tokens that tells us what is the probability that a given token follows after the known context.</li>
 <li>Pick the most probable token, append it to the context string</li>
 <li>If that token is not the &ldquo;shut up&rdquo; token, we go back to the start of step 3.</li>
+=======
+<p>I&rsquo;m currently taking a <a href="https://jjv.ie/">deep learning course</a> and I have an assignement that&rsquo;s basically: write a Google Trad/DeepL for French to English translation with minimal data (130k paired sentences) and training time (we need to make it trainable on a laptop). The goal of the assignment is to learn about modern LLMs architectures, specifically about attention and transformers, the deep learning part really. Naturally, this is not what I did: this blog post recounts my wanderings.</p>
+<p>From a very high-level perspective, today&rsquo;s LLMs take a context string as an input (the prompt, or the last few prompts and generated answers) and try to predict the next token, i.e they output a probability distribution over the tokens. Then to generate full sentences as ChatGPT does, or to translate, we can just iterate the predictions:</p>
+<ul>
+<li>Break the sentence into words, and break the words into tokens.</li>
+<li>If there are $n$ possible token values, the token $i$ is encoded as an $n$-dimensional &ldquo;one-hot&rdquo; vector, i.e a vector with $n$ entries: a $1$ at the $i$-th position and zero elsewhere.</li>
+<li>Repeat until reaching the &ldquo;finished talking&rdquo; token (or some arbitrary threshold):
+<ul>
+<li>Transformers magic ?? (this is not the topic of this post)</li>
+<li>We get a probability distribution over the tokens that tells us what&rsquo;s the probability that a given token follows after the known context.</li>
+<li>Pick the most probable token, append it to the context string</li>
+>>>>>>> origin
 </ul>
 </li>
 </ul>
 <p>Now the transformers part is fun, but everyone is already talking about it. Let&rsquo;s focus on the first part, how do we get tokens ?</p>
 <h2 id="why-bother-">Why bother ?</h2>
+<<<<<<< HEAD
 <p>I am lazy, so I will simply list all words in English, write this:</p>
+=======
+<p>I am lazy, so I will simply list all words in english, write this:</p>
+>>>>>>> origin
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>ENGLISH_WORDS <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;cup&#39;</span>: <span style="color:#ae81ff">34874</span>, <span style="color:#e6db74">&#39;of&#39;</span>: <span style="color:#ae81ff">54123</span>, <span style="color:#e6db74">&#39;tea&#39;</span>: <span style="color:#ae81ff">15879</span>, <span style="color:#f92672">...</span>}
 </span></span><span style="display:flex;"><span>REVERSE_ENGLISH_WORDS <span style="color:#f92672">=</span> {<span style="color:#ae81ff">34874</span>: <span style="color:#e6db74">&#39;cup&#39;</span>, <span style="color:#ae81ff">54123</span>: <span style="color:#e6db74">&#39;of&#39;</span>, <span style="color:#ae81ff">15879</span>: <span style="color:#e6db74">&#39;tea&#39;</span>, <span style="color:#f92672">...</span>}
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">tokenize</span>(context):
@@ -264,6 +332,7 @@ I&rsquo;m currently taking a deep learning course and I have an assignment that 
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">detokenize</span>(tokens):
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34; &#34;</span><span style="color:#f92672">.</span>join(REVERSE_ENGLISH_WORDS[token] <span style="color:#66d9ef">for</span> token <span style="color:#f92672">in</span> tokens)
+<<<<<<< HEAD
 </span></span></code></pre></div><p>and call it a day? Except for the extra/missing spaces these functions introduce, that is a reasonable option. There a few problems, however:</p>
 <ul>
 <li>We can&rsquo;t have any input that is ill-formed, even a single mistyped word breaks the tokenizing process</li>
@@ -278,6 +347,22 @@ I&rsquo;m currently taking a deep learning course and I have an assignment that 
 <p>Consider the following string <code>s = &quot;aaabdaaabace&quot;</code> and imagine a perfect world where all the data is perfectly packed into memory. As the string is formed over an alphabet of 5 tokens, every character can be coded on 3 bits, and we actually get an extra 3 unused token values. Let&rsquo;s use them to compress the string:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>VOCAB <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;a&#39;</span>: <span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#39;b&#39;</span>: <span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#39;c&#39;</span>: <span style="color:#ae81ff">2</span>, <span style="color:#e6db74">&#39;d&#39;</span>: <span style="color:#ae81ff">3</span>, <span style="color:#e6db74">&#39;e&#39;</span>: <span style="color:#ae81ff">4</span>, <span style="color:#e6db74">&#39;aaabdaaabace&#39;</span>: <span style="color:#ae81ff">5</span>}
 </span></span></code></pre></div><p>Easy, right? Yeah, but now our compression scheme is completely unable to generalize to similarly structured but different data. Let&rsquo;s instead enforce that each new token must be the concatenation of two preexisting tokens.</p>
+=======
+</span></span></code></pre></div><p>and call it a day ? Except for the extra/missing spaces these functions introduce, that is a reasonable option. There a few problems however:</p>
+<ul>
+<li>We can&rsquo;t have any input that&rsquo;s ill-formed, even a single mistyped word breaks the tokenizing process</li>
+<li>There are a lot of words: almost <a href="https://en.wikipedia.org/wiki/List_of_dictionaries_by_number_of_words">a million in English and half a million in French</a>. That means atleast that many dimensions in our inputs to the model, and that makes for a lot of parameters (I&rsquo;m training it on a laptop, remember ?)</li>
+<li>The model needs to do everything by itself. Words are often formed by appending meaningful prefixes and suffixes to meaningful roots: take the words low, lowest, lower, hard, hardest and harder. Per word tokenization erases all this information.</li>
+<li>Some words are very rare, so it&rsquo;s extremely hard to get a dataset where they have enough statistical presence. But most of these words are.. composition of more common roots, prefixes suffixes.</li>
+<li>The preceding point is also true across languages especially when working with latin languages! Words like &ldquo;attack&rdquo; in English and &ldquo;attaque&rdquo; in French mean the same thing and have an obvious common root.</li>
+</ul>
+<p>In an ideal world, we would thus break sentences into words and words themselves into <a href="https://en.wikipedia.org/wiki/Lexeme">lexemes</a>. It turns out the second task is extremely hard even in reasonable generality, and there is a lot of research going on in the machine learning community to solve it, even among latin languages.</p>
+<p>Conclusion: we need to compromise on our goals! What&rsquo;s the middle ground between splitting on whitespaces and a full linguistics lexeme split, you ask ? A compression algorithm obviously.</p>
+<h2 id="byte-pair-encoding">Byte-Pair encoding</h2>
+<p>Consider the following string <code>s = &quot;aaabdaaabace&quot;</code> and imagine a perfect world where all the data is perfectly packed into memory. As the string is formed over an alphabet of 5 tokens, every character can be coded on 3 bits, and we actually get an extra 3 unused token values. Let&rsquo;s use them to compress the string:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>VOCAB <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;a&#39;</span>: <span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#39;b&#39;</span>: <span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#39;c&#39;</span>: <span style="color:#ae81ff">2</span>, <span style="color:#e6db74">&#39;d&#39;</span>: <span style="color:#ae81ff">3</span>, <span style="color:#e6db74">&#39;e&#39;</span>: <span style="color:#ae81ff">4</span>, <span style="color:#e6db74">&#39;aaabdaaabace&#39;</span>: <span style="color:#ae81ff">5</span>}
+</span></span></code></pre></div><p>Easy, right? Yeah, but now our compression scheme is completely unable to generalize to similarly structured but different data. Let&rsquo;s enforce instead that each new token must be the concatenation of two preexisting tokens.</p>
+>>>>>>> origin
 <p>Choosing the extra tokens so that they reduce as much as possible the length of the final string is a hard problem, so let&rsquo;s not solve it exactly and do greedy instead: choose at each step the most common pair of tokens:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>s <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;aaabdaaabace&#34;</span>  <span style="color:#75715e"># step 0</span>
 </span></span><span style="display:flex;"><span>
@@ -293,7 +378,11 @@ I&rsquo;m currently taking a deep learning course and I have an assignment that 
 </span></span></code></pre></div><p>Now, once we trained our vocab on our initial string, we know <code>MERGE_LIST</code> and <code>FINAL_VOCAB</code>. To compress any string defined on the same initial alphabet, we go over <code>MERGE_LIST</code> and apply merges iteratively. To get our initial string back, we reverse the process.</p>
 <h2 id="tokenization-as-compression">Tokenization as compression</h2>
 <p>In 2016, <a href="https://arxiv.org/abs/1508.07909?utm_source=chatgpt.com">Snnrich, Haddow and Birch noticed</a> we can actually use this<br>
+<<<<<<< HEAD
 Let&rsquo;s say the dataset contains exactly the following English words:</p>
+=======
+Let&rsquo;s say the dataset contains exactly the following english words:</p>
+>>>>>>> origin
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># POV: training a model on a toaster</span>
 </span></span><span style="display:flex;"><span>ENG_DATASET_WORDS <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;low&#39;</span>, <span style="color:#e6db74">&#39;lower&#39;</span>, <span style="color:#e6db74">&#39;hard&#39;</span>, <span style="color:#e6db74">&#39;harder&#39;</span>}
 </span></span></code></pre></div><p>Extracting meaningful lexemes from this dataset amounts to extracting repetitive patterns inside words: &rsquo;low&rsquo;, &rsquo;er&rsquo; and &lsquo;hard&rsquo; all occur two times. From that, we get a very reasonable token vocabulary of size 3</p>
@@ -352,7 +441,11 @@ Let&rsquo;s say the dataset contains exactly the following English words:</p>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> i <span style="color:#f92672">==</span> len(tokens) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>:
 </span></span><span style="display:flex;"><span>        new_tokens<span style="color:#f92672">.</span>append(tokens[i])
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> new_tokens
+<<<<<<< HEAD
 </span></span></code></pre></div><p>Finally, we define a function that trains our tokenizer with a number of merges threshold.</p>
+=======
+</span></span></code></pre></div><p>Finally, we define a function that trains our tokenizer with a merges threshold.</p>
+>>>>>>> origin
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">train</span>(words, num_merges, verbose<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>):
 </span></span><span style="display:flex;"><span>    vocab <span style="color:#f92672">=</span> initial_vocab(words)
 </span></span><span style="display:flex;"><span>    reverse_vocab <span style="color:#f92672">=</span> {vocab[c]: c <span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> vocab<span style="color:#f92672">.</span>keys()}
@@ -437,7 +530,11 @@ I would&#39;ve drowned if you hadn&#39;t saved me.	Je me serais noyé si vous ne
 </span></span><span style="display:flex;"><span>        fra<span style="color:#f92672">.</span>append(cols[<span style="color:#ae81ff">1</span>])
 </span></span><span style="display:flex;"><span>print(fra[<span style="color:#ae81ff">50</span>], eng[<span style="color:#ae81ff">50</span>])
 </span></span></code></pre></div><pre tabindex="0"><code>Hello! Bonjour !
+<<<<<<< HEAD
 </code></pre><p>Let&rsquo;s split into words (we remove punctuation) and train our BPE on English words:</p>
+=======
+</code></pre><p>Let&rsquo;s split into words (we remove punctuation) and train our BPE on english words:</p>
+>>>>>>> origin
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> re
 </span></span><span style="display:flex;"><span>regex <span style="color:#f92672">=</span> re<span style="color:#f92672">.</span>compile(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">s|</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">.|</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">!|</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">?&#34;</span>)
 </span></span><span style="display:flex;"><span>
@@ -447,7 +544,11 @@ I would&#39;ve drowned if you hadn&#39;t saved me.	Je me serais noyé si vous ne
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> len(word) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>:
 </span></span><span style="display:flex;"><span>            eng_words<span style="color:#f92672">.</span>append(word)
 </span></span><span style="display:flex;"><span>
+<<<<<<< HEAD
 </span></span><span style="display:flex;"><span>train(eng_words, <span style="color:#ae81ff">20</span>, verbose<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+=======
+</span></span><span style="display:flex;"><span>train(eng_words, <span style="color:#ae81ff">10_000</span>, verbose<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+>>>>>>> origin
 </span></span></code></pre></div><pre tabindex="0"><code>Merging the pair (t, h)
 Merging the pair (o, u)
 Merging the pair (t, o)
@@ -463,6 +564,7 @@ Merging the pair (v, e)
 Merging the pair (h, e)
 Merging the pair (m, e)
 Merging the pair (in, g)
+<<<<<<< HEAD
 Merging the pair (a, s)
 Merging the pair (e, d)
 Merging the pair (l, l)
@@ -475,23 +577,38 @@ Merging the pair (&#39;, t)
 </span></span><span style="display:flex;"><span>sys	0m0,886s
 </span></span></code></pre></div><p>I tried to let it run it&rsquo;s whole course (10k merges) and it took almost 5 hours to train. We need to make things faster if we don&rsquo;t want to leave it running all night long every time we make a change. We could just Rewrite It In Rust and get insane speed-ups because Python is slow.
 Okay, <a href="https://github.com/Shika-B/rs-bpe/blob/main/src/main.rs">challenge accepted</a>, there we go for 10k merges</p>
+=======
+...
+</code></pre><p>Looks nice right ? Except even these 14 merges took more than a minute. We need to make things faster if we don&rsquo;t want to leave it running all night long. We could just Rewrite It In Rust #RIIR and get insane speed-ups because Python is slow.
+Okay, <a href="https://github.com/Shika-B/rs-bpe/blob/main/src/main.rs">challenge accepted</a>, there we go</p>
+>>>>>>> origin
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>&gt; time cargo run --release
 </span></span><span style="display:flex;"><span>real	5m39,627s
 </span></span><span style="display:flex;"><span>user	4m9,633s
 </span></span><span style="display:flex;"><span>sys	1m26,246s
+<<<<<<< HEAD
 </span></span></code></pre></div><p>Now it is actually usable, but definitely not fast enough, in real life we do hundreds of thousands of merges and the dataset is magnitudes larger. I feel we can do better, even on a laptop. My Rust code above is clearly not optimized memory-wise, I could avoid quite a few copies by using references over the original string (str slices for those familiar with Rust) instead. Still, I&rsquo;m using small-strings optimization, and I don&rsquo;t think we could get anything more than a 2x speed-up avoiding these copies and doing a few other small optimizations. It wouldn&rsquo;t get us that last speed-up magnitude we&rsquo;re looking for, so we need to change the actual logic.</p>
+=======
+</span></span></code></pre></div><p>Better, now it&rsquo;s actually usable. But it&rsquo;s not fast enough, our dataset is a toy dataset, I feel we can do better. My Rust code above is clearly not optimized memory-wise, I could avoid a <em>lot</em> of copies by using slices instead but that turns out to be a little harder than one might think. It wouldn&rsquo;t get us that last speed-up magnitude we&rsquo;re looking for.</p>
+>>>>>>> origin
 <p>If we look at our code, we can sum it up in Pseudo-Python as:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># Say we&#39;re training on n words, for m merges</span>
 </span></span><span style="display:flex;"><span>vocab <span style="color:#f92672">=</span> build_vocab(words) <span style="color:#75715e"># O(n)</span>
 </span></span><span style="display:flex;"><span>tokens <span style="color:#f92672">=</span> initial_tokenize(words) <span style="color:#75715e"># O(n)</span>
 </span></span><span style="display:flex;"><span>merge_tree <span style="color:#f92672">=</span> []
 </span></span><span style="display:flex;"><span>fresh_id <span style="color:#f92672">=</span> fresh()
+<<<<<<< HEAD
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> m <span style="color:#f92672">in</span> range(m):
 </span></span><span style="display:flex;"><span>    stats <span style="color:#f92672">=</span> aggregate_stats(tokens) <span style="color:#75715e"># O(n)</span>
+=======
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> m <span style="color:#f92672">in</span> range(num_merges):
+</span></span><span style="display:flex;"><span>    stats <span style="color:#f92672">=</span> agregate_stats(tokens) <span style="color:#75715e"># O(n)</span>
+>>>>>>> origin
 </span></span><span style="display:flex;"><span>    top_pair, _ <span style="color:#f92672">=</span> max(stats) <span style="color:#75715e"># O(n)</span>
 </span></span><span style="display:flex;"><span>    tokens <span style="color:#f92672">=</span> merge(top_pair, tokens, fresh_id) <span style="color:#75715e"># O(n)</span>
 </span></span><span style="display:flex;"><span>    merge_tree<span style="color:#f92672">.</span>append((top_pair, fresh_id)) <span style="color:#75715e"># O(1)</span>
 </span></span><span style="display:flex;"><span>    fresh_id <span style="color:#f92672">=</span> fresh() <span style="color:#75715e"># O(1)</span>
+<<<<<<< HEAD
 </span></span></code></pre></div><p>which means we&rsquo;re asymptotically doing $mn$ operations. Can we do better ? Yes, we can.</p>
 <h2 id="a-faster-merge-function">A faster merge function</h2>
 <p>Let&rsquo;s go back to the merge function first</p>
@@ -768,6 +885,11 @@ The code for the <code>MultisetHeap</code> class is <a href="https://github.com/
 </li>
 </ol>
 </div>
+=======
+</span></span></code></pre></div><p>which means we&rsquo;re asymptotically doing $mn$ operations. Let&rsquo;s improve that!</p>
+<h2 id="a-faster-merge-function">A faster merge function</h2>
+<p>Can we improve</p>
+>>>>>>> origin
 
 </content>
 
