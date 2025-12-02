@@ -1,5 +1,5 @@
 +++
-title = "A fast Byte-Pair tokenizer for LLMs"
+title = "Fast and meaningful tokenization for LLMs"
 date = "2025-11-29T18:08:29+01:00"
 
 #
@@ -9,8 +9,6 @@ date = "2025-11-29T18:08:29+01:00"
 
 tags = ["Computer Science", "Machine Learning", "LLMs", "Tokenizers"]
 +++
-
-# Fast and meaningful tokenization for LLMs
 
 I'm currently taking a [deep learning course](https://jjv.ie/) and I have an assignment that is basically: write a Google Trad/DeepL for French to English translation with minimal data (130k paired sentences) and training time (we need to make it trainable on a laptop). The goal of the assignment is to learn about modern LLMs architectures, specifically about attention and transformers, the deep learning part really. Naturally, this is not what I did: this blog post recounts my wanderings.
 
@@ -645,5 +643,11 @@ And the final results in a nice little table:
 | HuggingFace tokenizers in Rust     | 0.9s      |
 
 I am curious as to how close I can get to hugging face perfs by porting the Python optimized code to Rust. The linked list part is definitely not suited to Rust, but we can [get around that](https://docs.rs/indexlist/latest/indexlist/). Maybe I'll try doing that and update that blog post in the future: stay tuned.
+
+
+
+# Comments
+
+Sorry, I'm too lazy to load a proper comment system plugin: see the associated [github issue](https://github.com/Shika-B/Shika-B.github.io/issues/1).
 
 [^1]: except for the fact they use an extra dummy head for a reason I fail to understand (less arithmetic ops ?)
