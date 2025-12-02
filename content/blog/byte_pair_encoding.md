@@ -300,7 +300,7 @@ sys	0m0,886s
 ```
 
 I tried to let it run it's whole course (10k merges) and it took almost 5 hours to train. We need to make things faster if we don't want to leave it running all night long every time we make a change. We could just Rewrite It In Rust and get insane speed-ups because Python is slow. 
-Okay, [challenge accepted](https://github.com/Shika-B/rs-bpe/blob/main/src/main.rs), there we go for 10k merges
+Okay, [challenge accepted](https://github.com/Shika-B/speedy-bpe/tree/main/rust), there we go for 10k merges
 ```bash
 > time cargo run --release
 real	5m39,627s
@@ -623,7 +623,7 @@ _root, pairs, stats = tokens_pairs_and_stats(words, vocab, keep_stats=True)
 tokens, pairs, _ = tokens_pairs_and_stats(words, vocab, keep_stats=False)
 ```
 
-## Results of the experiment
+## Results and conclusion
 
 Running it, we get:
 
@@ -641,6 +641,8 @@ And the final results in a nice little table:
 | Rust Naive + small strings         | 5m40s     |
 | Python Optimized                   | 17s       |
 | HuggingFace tokenizers in Rust     | 0.9s      |
+
+The full code is available [here](https://github.com/Shika-B/speedy-bpe/).
 
 I am curious as to how close I can get to hugging face perfs by porting the Python optimized code to Rust. The linked list part is definitely not suited to Rust, but we can [get around that](https://docs.rs/indexlist/latest/indexlist/). Maybe I'll try doing that and update that blog post in the future: stay tuned.
 
