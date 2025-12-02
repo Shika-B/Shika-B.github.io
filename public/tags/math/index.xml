@@ -6,14 +6,21 @@
     <description>Recent content in Math on Slow Data</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 09 Nov 2025 13:44:57 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 10 Nov 2025 02:47:29 +0100</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/math/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Matrix reconstruction and denoising</title>
+      <link>http://localhost:1313/drafts/matrix_reconstruction/</link>
+      <pubDate>Mon, 10 Nov 2025 02:47:29 +0100</pubDate>
+      <guid>http://localhost:1313/drafts/matrix_reconstruction/</guid>
+      <description>&lt;p&gt;Consider the following matrix, with some entries unknown:&lt;/p&gt;&#xA;$$&#xA;M = \begin{pmatrix}&#xA;? &amp; 2 &amp; ? \\&#xA;2 &amp; 4 &amp; ? \\&#xA;3 &amp; ? &amp; 3&#xA;\end{pmatrix}&#xA;$$&lt;p&gt;What is the full matrix ? That&amp;rsquo;s an absurd question, right ? The only way to get the full matrix is to know all of its entries, after all&amp;hellip;&#xA;Or is it ? For instance if you also know $\text{rank}M = 1$, then you know actually know that&#xA;&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Lagrangian Duality, KKT conditions and LP duality</title>
       <link>http://localhost:1313/blog/lagrangian_duality/</link>
       <pubDate>Sun, 09 Nov 2025 13:44:57 +0100</pubDate>
       <guid>http://localhost:1313/blog/lagrangian_duality/</guid>
-      <description>&lt;h2 id=&#34;optimization-context&#34;&gt;Optimization context&lt;/h2&gt;&#xA;&lt;p&gt;Let&amp;rsquo;s imagine for a moment we are trying to solve a class of &lt;em&gt;constrained&lt;/em&gt; optimization problems of the form&#xA;&lt;/p&gt;&#xA;$$\begin{align*}&#xD;&#xA;    &amp;\inf_x f(x) \\&#xD;&#xA;    &amp;\text{subject to } &amp;g_i(x) \leq 0 \text{ for } 1 \leq i \leq m \\&#xD;&#xA;                        &amp;&amp;h_j(x) = 0, \text{ for } 1 \leq j \leq n&#xD;&#xA;\end{align*} &#xD;&#xA;$$&lt;p&gt;&#xA;where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. What is a reasonable strategy to solve this ?&lt;/p&gt;</description>
+      <description>&lt;h2 id=&#34;optimization-context&#34;&gt;Optimization context&lt;/h2&gt;&#xA;&lt;p&gt;Let&amp;rsquo;s imagine for a moment we are trying to solve a class of &lt;em&gt;constrained&lt;/em&gt; optimization problems of the form&#xA;&lt;/p&gt;&#xA;$$\begin{align*}&#xA;    &amp;\inf_x f(x) \\&#xA;    &amp;\text{subject to } &amp;g_i(x) \leq 0 \text{ for } 1 \leq i \leq m \\&#xA;                        &amp;&amp;h_j(x) = 0, \text{ for } 1 \leq j \leq n&#xA;\end{align*} &#xA;$$&lt;p&gt;&#xA;where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. What is a reasonable strategy to solve this ?&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

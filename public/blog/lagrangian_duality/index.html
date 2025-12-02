@@ -23,7 +23,7 @@ where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ 
 <meta property="og:url" content="http://localhost:1313/blog/lagrangian_duality/">
   <meta property="og:site_name" content="Slow Data">
   <meta property="og:title" content="Lagrangian Duality, KKT conditions and LP duality">
-  <meta property="og:description" content="Optimization context Let’s imagine for a moment we are trying to solve a class of constrained optimization problems of the form $$\begin{align*}&amp;\inf_x f(x) \\&amp;\text{subject to } &amp;g_i(x) \leq 0 \text{ for } 1 \leq i \leq m \\&amp;&amp;h_j(x) = 0, \text{ for } 1 \leq j \leq n\end{align*} $$ where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. What is a reasonable strategy to solve this ?">
+  <meta property="og:description" content="Optimization context Let’s imagine for a moment we are trying to solve a class of constrained optimization problems of the form $$\begin{align*} &amp;\inf_x f(x) \\ &amp;\text{subject to } &amp;g_i(x) \leq 0 \text{ for } 1 \leq i \leq m \\ &amp;&amp;h_j(x) = 0, \text{ for } 1 \leq j \leq n \end{align*} $$ where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. What is a reasonable strategy to solve this ?">
   <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="blog">
@@ -40,22 +40,22 @@ where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ 
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Lagrangian Duality, KKT conditions and LP duality">
-  <meta name="twitter:description" content="Optimization context Let’s imagine for a moment we are trying to solve a class of constrained optimization problems of the form $$\begin{align*}&amp;\inf_x f(x) \\&amp;\text{subject to } &amp;g_i(x) \leq 0 \text{ for } 1 \leq i \leq m \\&amp;&amp;h_j(x) = 0, \text{ for } 1 \leq j \leq n\end{align*} $$ where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. What is a reasonable strategy to solve this ?">
+  <meta name="twitter:description" content="Optimization context Let’s imagine for a moment we are trying to solve a class of constrained optimization problems of the form $$\begin{align*} &amp;\inf_x f(x) \\ &amp;\text{subject to } &amp;g_i(x) \leq 0 \text{ for } 1 \leq i \leq m \\ &amp;&amp;h_j(x) = 0, \text{ for } 1 \leq j \leq n \end{align*} $$ where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. What is a reasonable strategy to solve this ?">
 
 
 
 
   <meta itemprop="name" content="Lagrangian Duality, KKT conditions and LP duality">
-  <meta itemprop="description" content="Optimization context Let’s imagine for a moment we are trying to solve a class of constrained optimization problems of the form $$\begin{align*}&amp;\inf_x f(x) \\&amp;\text{subject to } &amp;g_i(x) \leq 0 \text{ for } 1 \leq i \leq m \\&amp;&amp;h_j(x) = 0, \text{ for } 1 \leq j \leq n\end{align*} $$ where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. What is a reasonable strategy to solve this ?">
+  <meta itemprop="description" content="Optimization context Let’s imagine for a moment we are trying to solve a class of constrained optimization problems of the form $$\begin{align*} &amp;\inf_x f(x) \\ &amp;\text{subject to } &amp;g_i(x) \leq 0 \text{ for } 1 \leq i \leq m \\ &amp;&amp;h_j(x) = 0, \text{ for } 1 \leq j \leq n \end{align*} $$ where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. What is a reasonable strategy to solve this ?">
   <meta itemprop="datePublished" content="2025-11-09T13:44:57+01:00">
   <meta itemprop="dateModified" content="2025-11-09T13:44:57+01:00">
-  <meta itemprop="wordCount" content="1849">
+  <meta itemprop="wordCount" content="1853">
   <meta itemprop="keywords" content="Math,Optimization,KKT,Convex Optimization,Linear Programming">
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
   <style>
   :root {
-    --width: 720px;
+    --width: 1024px;
     --font-main: Verdana, sans-serif;
     --font-secondary: Verdana, sans-serif;
     --font-scale: 1em;
@@ -71,12 +71,12 @@ where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ 
 
   @media (prefers-color-scheme: white) {
     :root {
-    --background-color: #fff;
-    --heading-color: #222;
-    --text-color: #444;
-    --link-color: #3273dc;
-    --visited-color: #8b6fcb;
-    --blockquote-color: #222;
+      --background-color: #fff;
+      --heading-color: #222;
+      --text-color: #444;
+      --link-color: #3273dc;
+      --visited-color: #8b6fcb;
+      --blockquote-color: #222;
     }
   }
 
@@ -183,10 +183,22 @@ where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ 
 
   .highlight,
   .code {
-    border-radius: 3px;
     margin-block-start: 1em;
     margin-block-end: 1em;
     overflow-x: auto;
+  }
+
+  .highlight pre,
+  .code pre {
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 5px;
+    overflow-x: auto;
+    overflow-y: hidden;
   }
 
    
@@ -206,9 +218,7 @@ where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ 
   ul.blog-posts li a:visited {
     color: var(--visited-color);
   }
-
 </style>
-
 
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
 
@@ -257,6 +267,9 @@ $$\begin{align*}
 \end{align*} 
 $$<p>
 where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. What is a reasonable strategy to solve this ?</p>
+<!---
+Note: This framework also encompasses *equality* constraints $h(x) = 0$ if whenever $f \in \mathcal{C}$ we also have $-f \in \mathcal{C}$. Indeed, one can introduce the two constraints $h(x) \leq 0 \land h(x) \geq 0$, amounting to $h(x) = 0$. It turns out this 
+-->
 <p>It is mathematical common sense that unconstrained optimization problems are simpler to solve than their constrained counterparts. So we may be tempted to transform the problem into
 </p>
 $$\inf_x f(x) + \sum_{i = 1}^m J(g_i(x)) + \sum_{j = 1}^n I(h_j(x))$$<p>where
@@ -267,7 +280,7 @@ $$J_{\lambda_i} (x) = \begin{cases} 0 \text{ if } x \leq 0 \\ \lambda_i \cdot x 
 and
 solve
 </p>
-$$\inf_x f(x) + \sum_{i = 1}^m J_{\lambda_i} (g_i(x)) + \sum_{j = 1}^n I_{\mu_j} (h_j(x)) \leq 0$$<p>with $\lambda, \mu$ as parameters and then take $\lambda, \mu \to +\infty$. But is this the same thing as solving $(P)$? It turns out this is a good question to ask, and the partial answer we will discuss validates the approach. The standard theory avoids $I_{\mu_j}$ and $J_{\lambda_i}$ and instead uses multiplication by scalars, which is what we will do too as it is arguably simpler. The function</p>
+$$\inf_x f(x) + \sum_{i = 1}^m J_{\lambda_i} (g_i(x)) + \sum_{j = 1}^n I_{\mu_j} (h_j(x))$$<p>with $\lambda, \mu$ as parameters and then take $\lambda, \mu \to +\infty$. But is this the same thing as solving $(P)$? It turns out this is a good question to ask, and the partial answer we will discuss validates the approach. The standard theory avoids $I_{\mu_j}$ and $J_{\lambda_i}$ and instead uses multiplication by scalars, which is what we will do too as it is arguably simpler. The function</p>
 $$\mathcal{L}(x, \lambda, \mu) = f(x) + \sum_{i = 1}^m \lambda_i \cdot g_i(x) + \sum_{j = 1}^n \mu_j \cdot h_j(x)$$<p>
 is called the Lagrangian of the optimization problem (P). Letting the domain of the optimization problem be $K = \{x \mid \forall i, j, g_i(x) \leq 0, h_j(x) = 0\}$, we have</p>
 <blockquote>
@@ -277,8 +290,7 @@ is called the Lagrangian of the optimization problem (P). Letting the domain of 
 $$\sup_{\lambda \succeq 0, \mu} \mathcal{L}(x, \lambda, \mu) = \begin{cases} f(x) \text{ if } x \in K \\ + \infty \text{ otherwise} \end{cases}$$</li>
 <li>It follows that $(P)$ is equivalent to solving
 $$\inf_x \sup_{\lambda \succeq 0, \mu} \mathcal{L}(x, \lambda, \mu)$$</li>
-</ul>
-</blockquote>
+</ul></blockquote>
 <p>But how does this help us? We began with one optimization problem, and now seem to have two nested ones. Well, the advantage is that these new problems are unconstrained! Also, suppose for a moment that we were able to switch the $\inf$ and the $\sup$ in the last equation. Then we would be solving for
 </p>
 $$\sup_{\lambda \succeq 0, \mu} \inf_x \mathcal{L}(x, \lambda, \mu)$$<p>
@@ -290,8 +302,7 @@ $$ \inf_x \sup_{\lambda \succeq 0, \mu} \mathcal{L}(x, \lambda, \mu) =^{???!}\su
 <p>Given a problem $(P)$, we say that the problem
 </p>
 $$ (D) \  \ \sup_{\lambda \succeq 0, \mu} \inf_x \mathcal{L}(x, \lambda, \mu) $$<p>
-is the dual of $(P)$.</p>
-</blockquote>
+is the dual of $(P)$.</p></blockquote>
 <p>Denote by $p^*$ and $d^*$ the optimal value of $(P)$ and $(D)$ respectively. Since
 </p>
 $$\inf_x \sup_{\lambda \succeq 0, \mu} \mathcal{L}(x, \lambda, \mu) = p^*$$<p>
@@ -304,14 +315,14 @@ $$\sup_{\lambda \succeq 0} \inf_x \mathcal{L}(x, \lambda, \mu) = d^* \leq p^*$$<
 The reverse inequality can be false, and we say <em>strong</em> Lagrangian duality holds when it is true, i.e. $p^* = d^*$. The difference $p^* - d^*$ is called the <em>duality gap</em>.</p>
 <details style="opacity: 0.6;">
     <summary>Click for counter-example to strong duality</summary>
-    <div><p>The example is crafted to make Slatter condition fail (see next section):
-The convex problem (!)
+    <div><p>The example is crafted to make Slatter condition fail (see next section):</p>
+<p>Consider the convex problem (!) given by
 </p>
 $$\begin{align*}
-    &\inf_{x \in \mathbb{R}, y \in \mathbb{R}^+} e^{-x} \\
+    &\inf_{x \in \mathbb{R}, y \in \mathbb{R}^{+*}} e^{-x} \\
     &\text{subject to } \frac{x^2}{y} \leq 0
 \end{align*}$$<p>
-It is obvious that $p^* = 1$, and $\mathcal{L}(x, y, \lambda) = e^{-x} + \lambda \frac{x^2}{y}$ whose infimum on $x, y > 0$ is $0$, for any $\lambda \succeq 0$, i.e. $d^* = 0$</p>
+It is obvious that $p^* = 1$, and $\mathcal{L}(x, y, \lambda) = e^{-x} + \lambda \frac{x^2}{y}$ whose infimum on $x \in \mathbb{R}$ and $y > 0$ is $0$, for any $\lambda \succeq 0$, i.e. $d^* = 0$</p>
 </div>
 </details>
 <h2 id="slaters-condition-for-strong-duality">Slater&rsquo;s condition for strong duality</h2>
@@ -319,8 +330,7 @@ It is obvious that $p^* = 1$, and $\mathcal{L}(x, y, \lambda) = e^{-x} + \lambda
 <blockquote>
 <p><strong>Slater&rsquo;s condition</strong>:</p>
 <p>If the problem is smooth convex, i.e. $f, g_1, \ldots, g_m$ are all smooth convex and $h_1, \ldots, h_n$ are all affine, and strictly feasible, i.e. there exists $x$ such that $g_i(x) < 0$ for all inequality constraints $g_i$ that are not affine functions, then strong duality holds.</p>
-<p>Moreover, the dual value is reached, i.e. there exists $(x^*, \lambda^*)$ solution of the dual problem.</p>
-</blockquote>
+<p>Moreover, the dual value is reached, i.e. there exists $(x^*, \lambda^*)$ solution of the dual problem.</p></blockquote>
 <details style="opacity: 0.6;">
     <summary>About the smoothness condition</summary>
     <div>One can actually remove the smoothness condition completely, and work with subgradients instead. While sometimes useful, the generalization is confusing if the reader does not know about subgradients and straightforward otherwise. I choose not to dive into that.</div>
@@ -358,15 +368,13 @@ that $\tilde{\lambda} = 0$ since $f_i(x^0) < 0$.</p>
 <li>The gradient of the Lagrangian w.r.t $x$ is zero at $(x^*, \lambda^*, \mu^*)$:
 $$ \nabla f(x^*) + \sum_{i = 1}^m \lambda_i^* \nabla g_i(x^*) + \sum_{j = 1}^n \mu_j^* \nabla h_j(x) = 0 $$</li>
 <li>$\lambda^* \succeq 0$ and $\lambda_i^* g_i(x^*) = 0$ for each $1 \leq i \leq m$</li>
-</ul>
-</blockquote>
+</ul></blockquote>
 <p>Pick $(\lambda^*, \mu^*)$ a dual optimal point. The gradient vanishing is given by the fact $x^*$ solves $(P)$, $\lambda^* \succeq 0$ follows from constraints and $\lambda_i^* g_i(x^*)$ follows from $f(x^*) = \mathcal{L}(x^*, \lambda^*, \mu^*)$ and the combination of $\lambda^*_i \leq 0$ and $g_i(x^*) \leq 0$.</p>
 <p>Note that in the unconstrained case, the conditions reduce to being a critical point.</p>
 <blockquote>
 <p><strong>KKT conditions</strong> (convex case)</p>
 <p>If $(P)$ is assumed to be smooth convex (i.e. $f, g_1, \ldots, g_m$ are smooth convex maps and $h_j$ are affine), the necessary conditions are sufficient:</p>
-<p>For any primal feasible point $x^*$, if there exists $(\lambda^*, \mu^*)$ satisfying the two points above then $x^*$ is primal optimal and $(\lambda^*, \mu^*)$ is dual optimal. Moreover the duality gap is automatically zero.</p>
-</blockquote>
+<p>For any primal feasible point $x^*$, if there exists $(\lambda^*, \mu^*)$ satisfying the two points above then $x^*$ is primal optimal and $(\lambda^*, \mu^*)$ is dual optimal. Moreover the duality gap is automatically zero.</p></blockquote>
 <p>Since $\lambda^* \succeq 0$, the map $x \mapsto \mathcal{L}(\lambda^*, \mu^*, x)$ is convex and the first KKT condition shows that its gradient vanishes at $x^*$, i.e. it is a minimum. Then $\mathcal{L}(\lambda^*, \mu^*, x^*) = f(x^*)$ as $x^*$ is feasible and satisfies the second KKT condition. This equality enforces that the duality gap is zero and in particular that $x^*$ and $(\lambda^*, \mu^*)$ are primal and dual optimal points respectively.</p>
 <h2 id="about-lp-duality">About LP duality</h2>
 <p>This post ends here, as I believe we got a reasonable answer to the question at the beginning: whenever $\mathcal{C}$ is a class of smooth (or not, reformulating everything with subgradients) convex maps, we found a necessary and sufficient effective condition for optimality.</p>

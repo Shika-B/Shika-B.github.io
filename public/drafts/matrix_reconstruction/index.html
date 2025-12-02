@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Matrix reconstruction and denoising | Slow Data</title>
+<meta name="title" content="Matrix reconstruction and denoising" />
+<meta name="description" content="Consider the following matrix, with some entries unknown:
+$$
+M = \begin{pmatrix}
+? & 2 & ? \\
+2 & 4 & ? \\
+3 & ? & 3
+\end{pmatrix}
+$$What is the full matrix ? That&rsquo;s an absurd question, right ? The only way to get the full matrix is to know all of its entries, after all&hellip;
+Or is it ? For instance if you also know $\text{rank}M = 1$, then you know actually know that
+" />
+<meta name="keywords" content="Math,Vision,Low rank approximation,Denoising," />
+
+
+<meta property="og:url" content="http://localhost:1313/drafts/matrix_reconstruction/">
+  <meta property="og:site_name" content="Slow Data">
+  <meta property="og:title" content="Matrix reconstruction and denoising">
+  <meta property="og:description" content="Consider the following matrix, with some entries unknown:
+$$ M = \begin{pmatrix} ? &amp; 2 &amp; ? \\ 2 &amp; 4 &amp; ? \\ 3 &amp; ? &amp; 3 \end{pmatrix} $$What is the full matrix ? That’s an absurd question, right ? The only way to get the full matrix is to know all of its entries, after all… Or is it ? For instance if you also know $\text{rank}M = 1$, then you know actually know that">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="drafts">
+    <meta property="article:published_time" content="2025-11-10T02:47:29+01:00">
+    <meta property="article:modified_time" content="2025-11-10T02:47:29+01:00">
+    <meta property="article:tag" content="Math">
+    <meta property="article:tag" content="Vision">
+    <meta property="article:tag" content="Low Rank Approximation">
+    <meta property="article:tag" content="Denoising">
+
+
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Matrix reconstruction and denoising">
+  <meta name="twitter:description" content="Consider the following matrix, with some entries unknown:
+$$ M = \begin{pmatrix} ? &amp; 2 &amp; ? \\ 2 &amp; 4 &amp; ? \\ 3 &amp; ? &amp; 3 \end{pmatrix} $$What is the full matrix ? That’s an absurd question, right ? The only way to get the full matrix is to know all of its entries, after all… Or is it ? For instance if you also know $\text{rank}M = 1$, then you know actually know that">
+
+
+
+
+  <meta itemprop="name" content="Matrix reconstruction and denoising">
+  <meta itemprop="description" content="Consider the following matrix, with some entries unknown:
+$$ M = \begin{pmatrix} ? &amp; 2 &amp; ? \\ 2 &amp; 4 &amp; ? \\ 3 &amp; ? &amp; 3 \end{pmatrix} $$What is the full matrix ? That’s an absurd question, right ? The only way to get the full matrix is to know all of its entries, after all… Or is it ? For instance if you also know $\text{rank}M = 1$, then you know actually know that">
+  <meta itemprop="datePublished" content="2025-11-10T02:47:29+01:00">
+  <meta itemprop="dateModified" content="2025-11-10T02:47:29+01:00">
+  <meta itemprop="wordCount" content="134">
+  <meta itemprop="keywords" content="Math,Vision,Low Rank Approximation,Denoising">
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  :root {
+    --width: 1024px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #01242e;
+    --heading-color: #eee;
+    --text-color: #ddd;
+    --link-color: #8cc2dd;
+    --visited-color: #8b6fcb;
+    --blockquote-color: #ccc;
+
+
+  }
+
+  @media (prefers-color-scheme: white) {
+    :root {
+      --background-color: #fff;
+      --heading-color: #222;
+      --text-color: #444;
+      --link-color: #3273dc;
+      --visited-color: #8b6fcb;
+      --blockquote-color: #222;
+    }
+  }
+
+  body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+  }
+
+  a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  nav a {
+    margin-right: 8px;
+  }
+
+  strong,
+  b {
+    color: var(--heading-color);
+  }
+
+  button {
+    margin: 0;
+    cursor: pointer;
+  }
+
+  time {
+    font-family: monospace;
+    font-style: normal;
+    font-size: 15px;
+  }
+
+  main {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px dashed;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    font-family: monospace;
+    padding: 2px;
+    border-radius: 3px;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: var(--blockquote-color);
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px 0;
+    text-align: center;
+  }
+
+  .title:hover {
+    text-decoration: none;
+  }
+
+  .title h1 {
+    font-size: 1.5em;
+  }
+
+  .inline {
+    width: auto !important;
+  }
+
+  .highlight,
+  .code {
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+  }
+
+  .highlight pre,
+  .code pre {
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 5px;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: var(--visited-color);
+  }
+</style>
+
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+
+<script>
+  MathJax = {
+    tex: {
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],  
+      inlineMath: [['$', '$']]                  
+    },
+    loader:{
+      load: ['ui/safe']
+    },
+  };
+</script>
+  
+</head>
+
+<body>
+  <header><a href="/" class="title">
+  <h2>Slow Data</h2>
+</a>
+<nav>
+<a href="/blog/">Blog</a>
+
+<a href="/drafts/">Drafts</a>
+
+</nav>
+</header>
+  <main>
+
+<content>
+  <p>Consider the following matrix, with some entries unknown:</p>
+$$
+M = \begin{pmatrix}
+? & 2 & ? \\
+2 & 4 & ? \\
+3 & ? & 3
+\end{pmatrix}
+$$<p>What is the full matrix ? That&rsquo;s an absurd question, right ? The only way to get the full matrix is to know all of its entries, after all&hellip;
+Or is it ? For instance if you also know $\text{rank}M = 1$, then you know actually know that
+</p>
+$$
+M = \begin{pmatrix}
+1 & 2 & 1 \\
+2 & 4 & 2 \\
+3 & 6 & 3
+\end{pmatrix}
+$$<p>Generalizing the generalization of the generalization of the above argument gives</p>
+<blockquote>
+<p>[Candes]</p></blockquote>
+<p>Oh and also, all of this is effective and we can actually compute the completion of $M$ very quickly. Wtf, right ?</p>
+
+</content>
+
+
+
+<p>
+  
+  <a href="http://localhost:1313/tags/math/">#Math</a>
+  
+  <a href="http://localhost:1313/tags/vision/">#Vision</a>
+  
+  <a href="http://localhost:1313/tags/low-rank-approximation/">#Low Rank Approximation</a>
+  
+  <a href="http://localhost:1313/tags/denoising/">#Denoising</a>
+  
+</p>
+
+  </main>
+  <footer>Made with <a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ Bear</a>
+</footer>
+
+  
+</body>
+
+</html>

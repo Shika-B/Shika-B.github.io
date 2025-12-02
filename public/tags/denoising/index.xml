@@ -10,10 +10,10 @@
     <atom:link href="http://localhost:1313/tags/denoising/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Matrix reconstruction and denoising</title>
-      <link>http://localhost:1313/blog/matrix_reconstruction/</link>
+      <link>http://localhost:1313/drafts/matrix_reconstruction/</link>
       <pubDate>Mon, 10 Nov 2025 02:47:29 +0100</pubDate>
-      <guid>http://localhost:1313/blog/matrix_reconstruction/</guid>
-      <description></description>
+      <guid>http://localhost:1313/drafts/matrix_reconstruction/</guid>
+      <description>&lt;p&gt;Consider the following matrix, with some entries unknown:&lt;/p&gt;&#xA;$$&#xA;M = \begin{pmatrix}&#xA;? &amp; 2 &amp; ? \\&#xA;2 &amp; 4 &amp; ? \\&#xA;3 &amp; ? &amp; 3&#xA;\end{pmatrix}&#xA;$$&lt;p&gt;What is the full matrix ? That&amp;rsquo;s an absurd question, right ? The only way to get the full matrix is to know all of its entries, after all&amp;hellip;&#xA;Or is it ? For instance if you also know $\text{rank}M = 1$, then you know actually know that&#xA;&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

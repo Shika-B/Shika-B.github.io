@@ -2,14 +2,14 @@
 <html lang="en-us">
 
 <head>
-	<meta name="generator" content="Hugo 0.152.2"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+	<meta name="generator" content="Hugo 0.150.0"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
   <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Slow Data</title>
 <meta name="title" content="Slow Data" />
 <meta name="description" content="" />
-<meta name="keywords" content="convex optimization,kkt,linear programming,math,optimization," />
+<meta name="keywords" content="computer science,convex optimization,denoising,kkt,linear programming,llms,low rank approximation,machine learning,math,optimization,tokenizers,vision," />
 
 
 <meta property="og:url" content="http://localhost:1313/">
@@ -31,15 +31,15 @@
 
   <meta itemprop="name" content="Slow Data">
   <meta itemprop="description" content="About Hey!">
-  <meta itemprop="datePublished" content="2025-11-09T13:44:57+01:00">
-  <meta itemprop="dateModified" content="2025-11-09T13:44:57+01:00">
+  <meta itemprop="datePublished" content="2025-11-29T18:08:29+01:00">
+  <meta itemprop="dateModified" content="2025-11-29T18:08:29+01:00">
   <meta itemprop="wordCount" content="2">
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
   <link rel="alternate" type="application/rss+xml" href="http://localhost:1313/index.xml" title="Slow Data" />
   <style>
   :root {
-    --width: 720px;
+    --width: 1024px;
     --font-main: Verdana, sans-serif;
     --font-secondary: Verdana, sans-serif;
     --font-scale: 1em;
@@ -55,12 +55,12 @@
 
   @media (prefers-color-scheme: white) {
     :root {
-    --background-color: #fff;
-    --heading-color: #222;
-    --text-color: #444;
-    --link-color: #3273dc;
-    --visited-color: #8b6fcb;
-    --blockquote-color: #222;
+      --background-color: #fff;
+      --heading-color: #222;
+      --text-color: #444;
+      --link-color: #3273dc;
+      --visited-color: #8b6fcb;
+      --blockquote-color: #222;
     }
   }
 
@@ -167,10 +167,22 @@
 
   .highlight,
   .code {
-    border-radius: 3px;
     margin-block-start: 1em;
     margin-block-end: 1em;
     overflow-x: auto;
+  }
+
+  .highlight pre,
+  .code pre {
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 5px;
+    overflow-x: auto;
+    overflow-y: hidden;
   }
 
    
@@ -190,9 +202,7 @@
   ul.blog-posts li a:visited {
     color: var(--visited-color);
   }
-
 </style>
-
 
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
 

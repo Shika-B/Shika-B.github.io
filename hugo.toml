@@ -12,7 +12,10 @@ theme = 'hugo-bearblog'
         [markup.goldmark.extensions.passthrough.delimiters]
           block = [['\[', '\]'], ['$$', '$$']]
           inline = [['$', '$']]
+  [markup.goldmark.renderer]
+      unsafe = true
 [params]
   math = true
   description = ""
   author = "Shika"
+
