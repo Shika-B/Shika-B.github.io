@@ -299,7 +299,7 @@ user	0m47,198s
 sys	0m0,886s
 ```
 
-I tried to let it run it's whole course (10k merges) and it took almost 5 hours to train. We need to make things faster if we don't want to leave it running all night long every time we make a change. We could just Rewrite It In Rust and get insane speed-ups because Python is slow. 
+I tried to let it run it's whole course (10k merges) and it took almost 5 hours to train. We need to make things faster if we don't want to leave it running all night long everytime we make a change. We could just Rewrite It In Rust and get insane speed-ups because Python is slow. 
 Okay, [challenge accepted](https://github.com/Shika-B/speedy-bpe/tree/main/rust), there we go for 10k merges
 ```bash
 > time cargo run --release
@@ -517,7 +517,7 @@ def merge(pair_nodes, pair_to_merge, fresh_token, stats=None):
                 stats[(node.nxt.tok_id, node.nxt.nxt.tok_id)] -= 1
         node.merge_with_nxt(fresh_token)
 ```
-and in the `train` function, we avoid reconstructing the stats dictionary every time
+and in the `train` function, we avoid reconstructing the stats dictionary everytime
 ```python
 stats = get_stats(root) # move it out of the loop
 for i in range(num_merges): 
