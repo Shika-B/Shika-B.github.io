@@ -68,7 +68,7 @@ MERGE_LIST = [(5, (0, 0)), (6, (0, 1)), (7, (5, 6))]
 FINAL_VOCAB = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'aa': 5, 'ab': 6, 'aaab': 7}
 
 initial_s = [0, 0, 0, 1, 3, 0, 0, 0, 1, 0, 2, 4]
-compressed_s = [7, 3, 7, 9, 2, 4]
+compressed_s = [7, 3, 7, 0, 2, 4]
 ```
 
 Now, once we trained our vocab on our initial string, we know `MERGE_LIST` and `FINAL_VOCAB`. To compress any string defined on the same initial alphabet, we go over `MERGE_LIST` and apply merges iteratively. To get our initial string back, we reverse the process.
