@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Shazam algorithm in 100 lines of code | Slow Data</title>
+<meta name="title" content="Shazam algorithm in 100 lines of code" />
+<meta name="description" content="I recently saw this video on my YouTube landing page: some junior developer decided he would reimplement Shazam to keep his days and add to his portfolio, busy since he can&rsquo;t land a job. I decided I&rsquo;d do it too, without looking at the video. After a few unsuccessful attemps, I gave up: I watched the video and read about the general algorithm ideas in a few different places. That guy implementation is extremely cool, and definitely more complete than mine, it is a fully-featured (almost) deployment-ready piece of software.
+But I&rsquo;m not trying to make any money out of this, I just want to understand how Shazam works, as it is pretty clear that must be a wonderful piece of engineering: let&rsquo;s code Shazam in about 100 lines of Python." />
+<meta name="keywords" content="Math,Signal analysis,Hashing,Algorithm,Music,Engineering," />
+
+
+<meta property="og:url" content="http://localhost:1313/drafts/shazam_100_loc/">
+  <meta property="og:site_name" content="Slow Data">
+  <meta property="og:title" content="Shazam algorithm in 100 lines of code">
+  <meta property="og:description" content="I recently saw this video on my YouTube landing page: some junior developer decided he would reimplement Shazam to keep his days and add to his portfolio, busy since he can’t land a job. I decided I’d do it too, without looking at the video. After a few unsuccessful attemps, I gave up: I watched the video and read about the general algorithm ideas in a few different places. That guy implementation is extremely cool, and definitely more complete than mine, it is a fully-featured (almost) deployment-ready piece of software. But I’m not trying to make any money out of this, I just want to understand how Shazam works, as it is pretty clear that must be a wonderful piece of engineering: let’s code Shazam in about 100 lines of Python.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="drafts">
+    <meta property="article:published_time" content="2025-12-20T12:30:29+01:00">
+    <meta property="article:modified_time" content="2025-12-20T12:30:29+01:00">
+    <meta property="article:tag" content="Math">
+    <meta property="article:tag" content="Signal Analysis">
+    <meta property="article:tag" content="Hashing">
+    <meta property="article:tag" content="Algorithm">
+    <meta property="article:tag" content="Music">
+    <meta property="article:tag" content="Engineering">
+
+
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Shazam algorithm in 100 lines of code">
+  <meta name="twitter:description" content="I recently saw this video on my YouTube landing page: some junior developer decided he would reimplement Shazam to keep his days and add to his portfolio, busy since he can’t land a job. I decided I’d do it too, without looking at the video. After a few unsuccessful attemps, I gave up: I watched the video and read about the general algorithm ideas in a few different places. That guy implementation is extremely cool, and definitely more complete than mine, it is a fully-featured (almost) deployment-ready piece of software. But I’m not trying to make any money out of this, I just want to understand how Shazam works, as it is pretty clear that must be a wonderful piece of engineering: let’s code Shazam in about 100 lines of Python.">
+
+
+
+
+  <meta itemprop="name" content="Shazam algorithm in 100 lines of code">
+  <meta itemprop="description" content="I recently saw this video on my YouTube landing page: some junior developer decided he would reimplement Shazam to keep his days and add to his portfolio, busy since he can’t land a job. I decided I’d do it too, without looking at the video. After a few unsuccessful attemps, I gave up: I watched the video and read about the general algorithm ideas in a few different places. That guy implementation is extremely cool, and definitely more complete than mine, it is a fully-featured (almost) deployment-ready piece of software. But I’m not trying to make any money out of this, I just want to understand how Shazam works, as it is pretty clear that must be a wonderful piece of engineering: let’s code Shazam in about 100 lines of Python.">
+  <meta itemprop="datePublished" content="2025-12-20T12:30:29+01:00">
+  <meta itemprop="dateModified" content="2025-12-20T12:30:29+01:00">
+  <meta itemprop="wordCount" content="1027">
+  <meta itemprop="keywords" content="Math,Signal Analysis,Hashing,Algorithm,Music,Engineering">
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  :root {
+    --width: 1024px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #01242e;
+    --heading-color: #eee;
+    --text-color: #ddd;
+    --link-color: #8cc2dd;
+    --visited-color: #8b6fcb;
+    --blockquote-color: #ccc;
+
+
+  }
+
+  @media (prefers-color-scheme: white) {
+    :root {
+      --background-color: #fff;
+      --heading-color: #222;
+      --text-color: #444;
+      --link-color: #3273dc;
+      --visited-color: #8b6fcb;
+      --blockquote-color: #222;
+    }
+  }
+
+  body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+  }
+
+  a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  nav a {
+    margin-right: 8px;
+  }
+
+  strong,
+  b {
+    color: var(--heading-color);
+  }
+
+  button {
+    margin: 0;
+    cursor: pointer;
+  }
+
+  time {
+    font-family: monospace;
+    font-style: normal;
+    font-size: 15px;
+  }
+
+  main {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px dashed;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    font-family: monospace;
+    padding: 2px;
+    border-radius: 3px;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: var(--blockquote-color);
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px 0;
+    text-align: center;
+  }
+
+  .title:hover {
+    text-decoration: none;
+  }
+
+  .title h1 {
+    font-size: 1.5em;
+  }
+
+  .inline {
+    width: auto !important;
+  }
+
+  .highlight,
+  .code {
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+  }
+
+  .highlight pre,
+  .code pre {
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 5px;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: var(--visited-color);
+  }
+</style>
+
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+
+<script>
+  MathJax = {
+    tex: {
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],  
+      inlineMath: [['$', '$']]                  
+    },
+    loader:{
+      load: ['ui/safe']
+    },
+  };
+</script>
+  
+</head>
+
+<body>
+  <header><a href="/" class="title">
+  <h2>Slow Data</h2>
+</a>
+<nav>
+<a href="/blog/">Blog</a>
+
+</nav>
+</header>
+  <main>
+
+<content>
+  <p>I recently saw <a href="https://www.youtube.com/watch?v=a0CVCcb0RJM">this video</a> on my YouTube landing page: some junior developer decided he would reimplement Shazam to keep his days and add to his portfolio, busy since he can&rsquo;t land a job. I decided I&rsquo;d do it too, without looking at the video. After a few unsuccessful attemps, I gave up: I watched the video and read about the general algorithm ideas in a few different places. That guy <a href="https://github.com/cgzirim/seek-tune?tab=readme-ov-file">implementation</a> is extremely cool, and definitely more complete than mine, it is a fully-featured (almost) deployment-ready piece of software.
+But I&rsquo;m not trying to make any money out of this, I just want to understand how Shazam works, as it is pretty clear that must be a wonderful piece of engineering: let&rsquo;s code Shazam in about 100 lines of Python.</p>
+<audio controls preload="auto" src="/audios/noisy_toxic.wav"></audio>
+<h1 id="a-physics-crashcourse-a-lie-and-a-promise">A physics crashcourse, a lie and a promise</h1>
+<p>Our goal is to design a fingerprinting algorithm for songs, so that even from an extremely partial and noisy sample from the song, we may recognize parts of its unique fingerprint and match it to the right song in our database. To design such a thing, we need to understand what is a <code>.wav</code> or <code>.mp3</code> file in a computer, and this is actually closely related to what &ldquo;sound&rdquo; means in physics.</p>
+<h2 id="the-physics-of-sounds">The physics of sounds</h2>
+<p>Wikipedia states that:</p>
+<blockquote>
+<p>In physics, sound is a vibration that propagates as an acoustic wave through a transmission medium such as a gas, liquid or solid. In human physiology and psychology, sound is the reception of such waves and their perception by the brain. Only acoustic waves that have frequencies lying between about 20 Hz and 20 kHz, the audio frequency range, elicit an auditory percept Sound waves above 20 kHz are known as ultrasound and are not audible to humans. Sound waves below 20 Hz are known as infrasound. Different animal species have varying hearing ranges, allowing some to even hear ultrasounds.</p>
+</blockquote>
+<p>What matters in that paragraph is that our human ears hear sounds by sensing variations of the air pressure. In Audacity (a free software for editing audio files), when you open a file, you may visualize it like this:</p>
+<p><img src="https://manual.audacityteam.org/m/images/b/b7/multi_view_mono_default_50_50.png" alt="Soundwave and spectrogram"></p>
+<p>In the top part, there is a fairly familiar sight: the x-axis is time and the y-axis is the pressure, i.e the amplitude/intensity of the sound.
+As we already said what really matters is the variation of that amplitude, so when we&rsquo;re recording a sound numerically, we need to sample the air pressure very very often. Wikipedia states that we can hear sounds up to 20kHz, so we need atleast 20 000 samples per second ! Actually, to avoid <a href="https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem">aliasing</a> it is better to have atleast twice that, i.e 40kHz. In a computer, if we ignore compression to save memory, a sound will be represented as a header with some metadata (notably the duration, the sample rate and the number of channels) and then a big list of all these samples. This is exactly how the <a href="en.wikipedia.org/wiki/WAV"><code>.wav</code> file format</a> is designed.</p>
+<p>Going back to the bottom part of that image, we see something completely differen. The x-axis is still time, and the color is the intensity of the sound at a given time, but then what&rsquo;s the  y-axis ? The answer is frequency, in this case it seems to be varying between 0 and 12kHz, with most signal being below 2.6kHz. As I am more a mathemacian than a physicist, I understand this through the following theorem from Fourier analysis:</p>
+<blockquote>
+<p>For $f: \mathbb{R} \to \mathbb{R}$ smooth enough ($\mathcal{C}^1$ is enough for instance) and $1$-periodic, there exists a unique sequence $(a_n)_{n \in \mathbb{Z}}$ such that </p>
+$$f(x) = \sum_{n \in \mathbb{Z}} a_n e^{2 i \pi n x}$$<p>
+Moreover the coefficients $a_n$, called the frequencies composing $f$, can be retrieved through the formula </p>
+$$a_n = \int_0^1 f(x) e^{-2i \pi nx} \mathrm{d}x$$</blockquote>
+<p>The second part of that statement is easy to deduce from the first, by a simple change of integral using the identity $\int_0^1 e^{2 i \pi n x} = 0$ whenever $n \neq 0$. The first part requires some work and we will not elaborate on that. Now if we think of $f$ as representing a sound (that is the air pressure as a function of the time), we see that any (periodic) sound can be decomposed as a sum of pure trigonometric waves. Pure sin/cosine soundwaves are called pure tones in music, and they sound exactly like when you hit a single note on a piano.</p>
+<h2 id="-spectrogramss">## Spectrogramss</h2>
+<p>I actually lied earlier, when I talked about that bottom part of that image. a bit evasive earlier,</p>
+<h2 id="the-infamous-fft">The infamous FFT</h2>
+<p>We will need a way to go from the amplitude representation to the frequency representation algorithmically. By the above theorem, this amounts to computing enough fourier transforms, that is the above integrals <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>, which amounts to <code>2 * SAMPLE_RATE * NUMBERS_Of_SAMPLES</code> number of operations: that&rsquo;s way too much. Luckily for us, there is a clever algorithm designed in a divide-and-conqueer fashion that speeds up this process significantly and runs in quasi-linear time: the Fast Fourier Transform (FFT). For a fairly clear explanation of the algorithm, see <a href="https://en.wikipedia.org/wiki/Cooley%E2%80%93Tukey_FFT_algorithm#The_radix-2_DIT_case">this wikipedia page</a>.
+In essence, the algorithm is fairly easy to map into pure, clean and simple Python, but it will never be fast enough for comfortable use. I wanted to be able to quickly iterate over changes and waiting 20 secondes every time I need the frequency representation of my 3 minute audio was not an option, so I used the <a href="https://librosa.org/doc/latest/index.html">librosa</a> library in Python. Similarly, Audio files I/O is also handled by librosa, even though <code>.wav</code> is fairly easy and I could have just parsed it by hand. For speed, comfort and many other very good reasons, I also use <a href="https://numpy.org/">numpy</a>.</p>
+<p>That&rsquo;s it, we are set up, no more new specific theory, no more dependencies. The rest is really about 100 line of codes of pure Python, and a working reasonable proof-of-concept Shazam clone that works reasonably fast with very good noise and distortion resistance (see below for some tests). No magic theorem or unknown data structure, that&rsquo;s a promise !</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>In the discretized case we are concerned, I actually mean computing enough sums&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+</content>
+
+
+
+<p>
+  
+  <a href="http://localhost:1313/tags/math/">#Math</a>
+  
+  <a href="http://localhost:1313/tags/signal-analysis/">#Signal Analysis</a>
+  
+  <a href="http://localhost:1313/tags/hashing/">#Hashing</a>
+  
+  <a href="http://localhost:1313/tags/algorithm/">#Algorithm</a>
+  
+  <a href="http://localhost:1313/tags/music/">#Music</a>
+  
+  <a href="http://localhost:1313/tags/engineering/">#Engineering</a>
+  
+</p>
+
+  </main>
+  <footer>Made with <a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ Bear</a>
+</footer>
+
+  
+</body>
+
+</html>
