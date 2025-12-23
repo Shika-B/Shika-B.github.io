@@ -42,7 +42,7 @@ But I&rsquo;m not trying to make any money out of this, I just want to understan
   <meta itemprop="description" content="I recently saw this video on my YouTube landing page: some junior developer decided he would reimplement Shazam to keep his days and add to his portfolio, busy since he can’t land a job. I decided I’d do it too, without looking at the video. After a few unsuccessful attemps, I gave up: I watched the video and read about the general algorithm ideas in a few different places. That guy’s implementation is extremely cool, and definitely more complete than mine, it is a fully-featured (almost) deployment-ready piece of software. But I’m not trying to make any money out of this, I just want to understand how Shazam works: let’s code Shazam in about 100 lines of Python.">
   <meta itemprop="datePublished" content="2025-12-20T12:30:29+01:00">
   <meta itemprop="dateModified" content="2025-12-20T12:30:29+01:00">
-  <meta itemprop="wordCount" content="2779">
+  <meta itemprop="wordCount" content="3004">
   <meta itemprop="keywords" content="Math,Signal Analysis,Hashing,Algorithm,Music,Engineering">
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
@@ -420,7 +420,7 @@ $$a_n = \int_0^1 f(x) e^{-2i \pi nx} \mathrm{d}x$$</blockquote>
 </span></span><span style="display:flex;"><span>    database <span style="color:#f92672">=</span> empty_database()
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (audio_path, tag) <span style="color:#f92672">in</span> audios:
 </span></span><span style="display:flex;"><span>        audio <span style="color:#f92672">=</span> load_audio(audio_path)
-</span></span><span style="display:flex;"><span>        spectrogram <span style="color:#f92672">=</span> get_spectrogram(audio)
+</span></span><span style="display:flex;"><span>        spectrogram <span style="color:#f92672">=</span> build_spectrogram(audio)
 </span></span><span style="display:flex;"><span>        bands <span style="color:#f92672">=</span> get_bands(spectrogram)
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> band <span style="color:#f92672">in</span> bands:
 </span></span><span style="display:flex;"><span>            (peaks, magnitudes, sample_indexes) <span style="color:#f92672">=</span> get_peaks(band)
@@ -442,24 +442,40 @@ $$a_n = \int_0^1 f(x) e^{-2i \pi nx} \mathrm{d}x$$</blockquote>
 <li>Finally, we ask for our signal to be read as 32bit floating points numbers.</li>
 </ul>
 <p>The second argument we ignore with <code>_</code> is the sample rate, which is useful if you let the <code>sr</code> parameter unspecified and work with files comeing with distinct sample rates: not our case.</p>
-<p>Next, we need the spectrogram of our signal. As explained above, we need to take the fft of our signal   times a smoothing function supported on a small subset. We could define such a function like this, with <code>fft</code> being some function yet to be defined</p>
+<p>Next, we need the spectrogram of our signal. As explained above, we need to take the fft of our signal   times a smoothing function supported on a small subset. We could define such a function like this</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">build_spectrogram</span>(audio, window_size, hop_length, smoothing_window):
 </span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    smoothing_window is a window_size-sized array
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
-</span></span><span style="display:flex;"><span>    spectrogram <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>    frames <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> (len(audio) <span style="color:#f92672">-</span> window_size) <span style="color:#f92672">//</span> hop_length 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    spectrogram <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>zeros((frames, <span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> window_size <span style="color:#f92672">//</span> <span style="color:#ae81ff">2</span>), dtype<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>complex)
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0</span>, len(audio), hop_length)
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> i <span style="color:#f92672">+</span> window_size <span style="color:#f92672">&gt;=</span> len(audio):
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>
-</span></span><span style="display:flex;"><span>        spectrogram<span style="color:#f92672">.</span>append(fft(audio[i:i<span style="color:#f92672">+</span>window_size] <span style="color:#f92672">*</span> smoothing_window))
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> np<span style="color:#f92672">.</span>array(spectrogram)<span style="color:#f92672">.</span>transpose()
-</span></span></code></pre></div><p>Nice thing with librosa is there is already a function that builds a spectrogram out of our audio, so that we don&rsquo;t have to handle the sliding window ourselves (and make it a speed bottleneck). It is called <code>stft</code> for Short-Time Fourier Transform</p>
+</span></span><span style="display:flex;"><span>        spectrogram[k, :] <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>fft<span style="color:#f92672">.</span>rfft(audio[i:i<span style="color:#f92672">+</span>window_size] <span style="color:#f92672">*</span> smoothing_window)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> np<span style="color:#f92672">.</span>abs(spectrogram)
+</span></span></code></pre></div><p>We make use of numpy&rsquo;s real fft function<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>. Note that we take the absolute value since we are only really interested in the magnitude of the signal, no the phase.</p>
+<p>Nice thing with librosa is there is already a function that builds a spectrogram out of our audio, so that we don&rsquo;t have to handle the sliding window ourselves (and make it a speed bottleneck). It is called <code>stft</code> for Short-Time Fourier Transform</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>spectrogram <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>abs(librosa<span style="color:#f92672">.</span>stft(audio, n_fft<span style="color:#f92672">=</span>WINDOW_SIZE, hop_length<span style="color:#f92672">=</span>HOP_LENGTH, window<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;hamming&#34;</span>))
-</span></span></code></pre></div><p>For the constants, we set <code>WINDOW_SIZE = 2048, HOP_LENGTH = 256</code> which are approximately equal to <code>250ms</code> and <code>25ms</code>, given a sampling_rate of <code>8000</code>.</p>
-<p>The <code>window=&quot;hamming&quot;</code> parameter tells librosa to use a Hamming smoothing window function. Why this function and not another one  ? It seems to be the one that better preserves peak frequencies. I checked that by drawing the spectrograms of a few sums of sinusoids with matplotlib.</p>
-<p>TODO add proper link to image
-<img src="hamming_window.png" alt="A hamming window function"></p>
-<p>The spectrogram here is <code>(1025, len(audio) // WINDOW_SIZE)</code>-shaped, because on a <code>2048</code>-long signal we can&rsquo;t expect to read anything more than the `1025</p>
+</span></span></code></pre></div><p>For the constants, we set at the beginning of the file <code>WINDOW_SIZE = 2048, HOP_LENGTH = 256</code> which are approximately equal to <code>250ms</code> and <code>25ms</code>, given a sampling_rate of <code>8000</code>. The <code>window=&quot;hamming&quot;</code> parameter tells librosa to use a Hamming smoothing window function. Why this function and not another one  ? It seems to be the one that better preserves peak frequencies. I checked that by drawing the spectrograms of a few sums of sinusoids with matplotlib.</p>
+<p>To get a better feel as to what we&rsquo;re doing here, Here is the spectrogram of the 20 first seconds of Get Lucky from the Daft Punk, first built with a hamming window and then without any smoothing window (i.e a rectangular window). We can clearly see the rough cut-offs created by the aliasing in the second picture.
+<img src="/images/spectrogram_get_lucky.png" alt="A spectrogram with a hamming window">
+<img src="/images/spectrogram_no_window_get_lucky.png" alt="A spectrogram with no windowing"></p>
+<p>Now we want to split our spectrogram into frequency bands. Frequencies below 80Hz can safely be dropped since they&rsquo;ll often contain more noise than signal, and anything above 1300Hz is already extremely high. We thus define the following bands: 80-160Hz, 160-320Hz, 320-640Hz, 640-1280Hz, 1280-4000Hz. We&rsquo;ll need to index our spectrogram, i.e map these frequencies to actual spectrogram indexes, and so we define</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>STFT_RESOLUTION <span style="color:#f92672">=</span> SAMPLE_RATE <span style="color:#f92672">/</span> WINDOW_SIZE
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>BAND_THRESHOLDS <span style="color:#f92672">=</span> [<span style="color:#ae81ff">80</span>, <span style="color:#ae81ff">160</span>, <span style="color:#ae81ff">320</span>, <span style="color:#ae81ff">640</span>, <span style="color:#ae81ff">1280</span>, SAMPLE_RATE <span style="color:#f92672">//</span> <span style="color:#ae81ff">2</span>]
+</span></span><span style="display:flex;"><span>BAND_INDEXES <span style="color:#f92672">=</span> [
+</span></span><span style="display:flex;"><span>    (
+</span></span><span style="display:flex;"><span>        round(BAND_THRESHOLDS[i] <span style="color:#f92672">/</span> STFT_RESOLUTION),
+</span></span><span style="display:flex;"><span>        round(BAND_THRESHOLDS[i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">/</span> STFT_RESOLUTION),
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(BAND_THRESHOLDS)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>]
+</span></span></code></pre></div><p>Now in our function we define</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    bands <span style="color:#f92672">=</span> [spectrogram[start:end, :] <span style="color:#66d9ef">for</span> (start, end) <span style="color:#f92672">in</span> BAND_INDEXES]
+</span></span></code></pre></div><p>Now to compute peaks,</p>
 <div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
@@ -471,6 +487,9 @@ $$a_n = \int_0^1 f(x) e^{-2i \pi nx} \mathrm{d}x$$</blockquote>
 </li>
 <li id="fn:3">
 <p>Downsampling by an integer factor of $k$ should be easy: keep samples that are at indexes a multiple of $k$. Sadly, this introduce aliasing so we need to first filter higher frequencies before doing that, by applying a low-pass filter. Nothing unmanageable, but since this is all done by librosa automatically, we don&rsquo;t need to be concerned with that.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4">
+<p>Note here that the spectrogram is <code>(WINDOW_SIZE // 2 + 1, len(audio) // WINDOW_SIZE)</code>-shaped, because on a real signal with $n$ samples, rfft returns $\lfloor n / 2 \rfloor + 1$ frequency bins. See <a href="https://numpy.org/doc/stable/reference/generated/numpy.fft.rfft.html">the note here</a>&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </div>

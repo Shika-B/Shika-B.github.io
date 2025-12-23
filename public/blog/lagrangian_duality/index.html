@@ -315,7 +315,7 @@ and thus
 </p>
 $$\sup_{\lambda \succeq 0} \inf_x \mathcal{L}(x, \lambda, \mu) = d^* \leq p^*$$<p>The inequality $d^* \leq p^*$ is known as <em>weak</em> Lagrangian duality and it is often useful to get lower bounds on certain classes of optimization problems.
 The reverse inequality can be false, and we say <em>strong</em> Lagrangian duality holds when it is true, i.e. $p^* = d^*$. The difference $p^* - d^*$ is called the <em>duality gap</em>.</p>
-<details style="opacity: 0.6;">
+<details style="opacity: 0.8;">
     <summary>Click for counter-example to strong duality</summary>
     <div><p>The example is crafted to make Slatter condition fail (see next section):</p>
 <p>Consider the convex problem (!) given by
@@ -334,12 +334,12 @@ It is obvious that $p^* = 1$, and $\mathcal{L}(x, y, \lambda) = e^{-x} + \lambda
 <p>If the problem is smooth convex, i.e. $f, g_1, \ldots, g_m$ are all smooth convex and $h_1, \ldots, h_n$ are all affine, and strictly feasible, i.e. there exists $x$ such that $g_i(x) < 0$ for all inequality constraints $g_i$ that are not affine functions, then strong duality holds.</p>
 <p>Moreover, the dual value is reached, i.e. there exists $(x^*, \lambda^*)$ solution of the dual problem.</p>
 </blockquote>
-<details style="opacity: 0.6;">
+<details style="opacity: 0.8;">
     <summary>About the smoothness condition</summary>
     <div>One can actually remove the smoothness condition completely, and work with subgradients instead. While sometimes useful, the generalization is confusing if the reader does not know about subgradients and straightforward otherwise. I choose not to dive into that.</div>
 </details>
 <p>The proof is highly geometric and full details can be found in <a href="https://stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf">Convex Optimization, by Boyd and Vandenberghe</a>, at the end of page 234. The drawings and motivation in the book is very nice, and the following proof is only a partial, concise, reconstruction of these.</p>
-<details style="opacity: 0.6;">
+<details style="opacity: 0.8;">
     <summary>The reconstruction</summary>
     <div><p>We follow notations of the above book, which are not exactly compatible with the notations of this post: they write the affine equality condition as $Ax = b$ with $A$ a matrix of full rank $p$ (which has nothing to do with $p^*$, although they use it the same way we do&hellip;). The letters $\lambda, \mu$ are not associated with scalars for (in)equality constraints respectively anymore, and they use $\lambda, \nu$ instead.</p>
 <p>Feasibility ensures $p^* \neq +\infty$, and if $p^* = -\infty$, weak duality gives $d^* = -\infty$. Let $p^*$ be finite, and define
