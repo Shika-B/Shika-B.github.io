@@ -422,6 +422,11 @@ Many improvements are possible:
 - We could make things faster by first trying to use only the first 5 seconds of the recording, then the 10 first seconds etc, as the real Shazam does. Often the audio will be clear enough that 5 seconds will.
 etc.
 
+# Comments
+
+Sorry, I'm too lazy to load a proper comment system plugin: see the associated [github issue](https://github.com/Shika-B/Shika-B.github.io/issues/2).
+
+
 [^1]: The algorithm could handle a lot more songs in the database, the bottleneck really is that I did not download more songs from YouTube because of the timeout yt-dlp enforces
 [^2]: In the discretized case we are concerned with, I actually mean computing enough sums
 [^3]: Because the human ear hears high frequencies before the low ones. 
