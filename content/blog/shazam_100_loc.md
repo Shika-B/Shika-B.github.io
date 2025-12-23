@@ -57,7 +57,7 @@ That's it, we are set up, no more new specific theory, no more dependencies. The
 
 
 # The strategy
-Here's a rough outline of we will do for each audio we want to be able to recognize:
+Here's a rough outline of what we will do for each audio we want to be able to recognize:
 - Preprocess our audio: resample it to a fixed sample rate, average across channels to transform stereo signals to mono
 - Apply the procedure explained above to get a spectrogram out of our signal
 - Split the spectrogram into a few frequency bands (pretty much given by [octaves](https://en.wikipedia.org/wiki/Octave)), to avoid dominance in magnitude by the low bass that are often amplified in musical post-processing[^3]
