@@ -39,7 +39,7 @@ Back to that image: in the bottom part, we see something completely different. T
 > For $f: \mathbb{R} \to \mathbb{R}$ sufficiently smooth (for instance, $\mathcal{C}^1$ is enough) and $1$-periodic, there exists a unique sequence $(a_n)_{n \in \mathbb{Z}}$ such that $$f(x) = \sum_{n \in \mathbb{Z}} a_n e^{2 i \pi n x}$$
 > Moreover the coefficients $a_n$, called the frequencies composing $f$, can be retrieved through the formula $$a_n = \int_0^1 f(x) e^{-2i \pi nx} \mathrm{d}x$$
 
-The second part of that statement is easy to deduce from the first, by swapping both integrals and using the identity $\int_0^1 e^{2 i \pi n x} = 0$ whenever $n \neq 0$. The first part requires some work and I we will not go down this rabbit hole. Going back to the physics, if we think of $f$ as representing a sound (that is the air pressure as a function of the time), we see that any (periodic, it will matter later) sound can be decomposed as a sum of pure trigonometric waves. Pure sin/cosine soundwaves are called pure tones in music, and they sound exactly like when you hit a single note on a piano. 
+The second part of that statement is easy to deduce from the first, by swapping both integrals and using the identity $\int_0^1 e^{2 i \pi n x} = 0$ whenever $n \neq 0$. The first part requires some work and I we will not go down this rabbit hole. Going back to the physics, if we think of $f$ as representing a sound (that is the air pressure as a function of the time), we see that any (periodic, it will matter later) sound can be decomposed as a sum of pure trigonometric waves. Pure sin/cosine soundwaves are called pure tones in music, and they sound kind of like when you hit a single note on a piano. 
 
 ## The infamous FFT
 
