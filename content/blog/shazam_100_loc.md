@@ -59,9 +59,9 @@ That's it, we are set up, no more new specific theory, no more dependencies. The
 # The strategy
 Here's a rough outline of we will do for each audio we want to be able to recognize:
 - Preprocess our audio: resample it to a fixed sample rate, average across channels to transform stereo signals to mono
-- Apply the procedure explained above to get a spectrogram out of our signal 
-- Split the spectrogram into a few frequency bands (pretty much given by [octaves](https://en.wikipedia.org/wiki/Octave)), to avoid dominance in magnitude by the low bass that are often amplified in musical post-processing[^3].  
-- For each of these bands, store the local magnitude peaks in a big database, that is store triples `(peak_frequency, sample_index, music_name)`. We'll make the meaning of "local magnitude peak" more precise below, but you can think of it as "the fundamental note played at a given moment in a given octave".
+- Apply the procedure explained above to get a spectrogram out of our signal
+- Split the spectrogram into a few frequency bands (pretty much given by [octaves](https://en.wikipedia.org/wiki/Octave)), to avoid dominance in magnitude by the low bass that are often amplified in musical post-processing[^3]
+- For each of these bands, store the local magnitude peaks in a big database, that is store triples `(peak_frequency, sample_index, music_name)`. We'll make the meaning of "local magnitude peak" more precise below, but you can think of it as "the fundamental note played at a given moment in a given octave"
 
 Then, when we're querying the database with a given noisy recording, we apply the same steps but instead of storing the peaks in the database, we collect all the matching peak_frequencies in the database and then we compare the sample indexes of the matches against the sample indexes of the noisy recording. If there is enough match for a given song and they are coherent in timing, then we found a very likely match.
 
