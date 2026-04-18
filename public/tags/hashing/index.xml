@@ -4,16 +4,16 @@
     <title>Hashing on Slow Data</title>
     <link>http://localhost:1313/tags/hashing/</link>
     <description>Recent content in Hashing on Slow Data</description>
-    <generator>Hugo</generator>
+    <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 20 Dec 2025 12:30:29 +0100</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/hashing/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Shazam algorithm in 100 lines of code</title>
-      <link>http://localhost:1313/drafts/shazam_100_loc/</link>
+      <link>http://localhost:1313/blog/shazam_100_loc/</link>
       <pubDate>Sat, 20 Dec 2025 12:30:29 +0100</pubDate>
-      <guid>http://localhost:1313/drafts/shazam_100_loc/</guid>
-      <description>&lt;p&gt;I recently saw &lt;a href=&#34;https://www.youtube.com/watch?v=a0CVCcb0RJM&#34;&gt;this video&lt;/a&gt; on my YouTube landing page: some junior developer decided he would reimplement Shazam to keep his days and add to his portfolio, busy since he can&amp;rsquo;t land a job. I decided I&amp;rsquo;d do it too, without looking at the video. After a few unsuccessful attemps, I gave up: I watched the video and read about the general algorithm ideas in a few different places. That guy&amp;rsquo;s &lt;a href=&#34;https://github.com/cgzirim/seek-tune?tab=readme-ov-file&#34;&gt;implementation&lt;/a&gt; is extremely cool, and definitely more complete than mine, it is a fully-featured (almost) deployment-ready piece of software.&#xA;But I&amp;rsquo;m not trying to make any money out of this, I just want to understand how Shazam works: let&amp;rsquo;s code Shazam in about 100 lines of Python.&lt;/p&gt;</description>
+      <guid>http://localhost:1313/blog/shazam_100_loc/</guid>
+      <description>I recently saw this video on my YouTube landing page: some junior developer decided he would reimplement Shazam to keep himself busy and add something to his portfolio, since he can’t land a job. I decided to do it too, without looking at the video. After a few unsuccessful attempts, I gave up: I watched the video and read about the general algorithm ideas in a few different places. That guy&amp;rsquo;s implementation is extremely cool, and definitely more complete than mine, it is a fully-featured (almost) deployment-ready piece of software.</description>
     </item>
   </channel>
 </rss>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LLMs are a strong baseline for shitposting | Slow Data</title>
+<meta name="title" content="LLMs are a strong baseline for shitposting" />
+<meta name="description" content="Last weekend I was talking with some friends online, as I do most of my weekends. I asked one of them to elaborate on something, he got lazy and jokingly answered with an obvious ChatGPT answer. Someone else wondered if we couldn&rsquo;t just plug a GPT to the discord server, as a bot for instance. I said I had a better idea. A few sleep-deprived days later, we had a new friend, Zizou, spitting our brand of nonsense." />
+<meta name="keywords" content="Computer Science,Machine Learning,LLMs,Bot," />
+
+
+<meta property="og:title" content="LLMs are a strong baseline for shitposting" />
+<meta property="og:description" content="Last weekend I was talking with some friends online, as I do most of my weekends. I asked one of them to elaborate on something, he got lazy and jokingly answered with an obvious ChatGPT answer. Someone else wondered if we couldn&rsquo;t just plug a GPT to the discord server, as a bot for instance. I said I had a better idea. A few sleep-deprived days later, we had a new friend, Zizou, spitting our brand of nonsense." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/drafts/finetuning_shitpost/" /><meta property="article:section" content="drafts" />
+<meta property="article:published_time" content="2025-11-29T18:08:29+01:00" />
+<meta property="article:modified_time" content="2025-11-29T18:08:29+01:00" />
+
+
+
+
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="LLMs are a strong baseline for shitposting"/>
+<meta name="twitter:description" content="Last weekend I was talking with some friends online, as I do most of my weekends. I asked one of them to elaborate on something, he got lazy and jokingly answered with an obvious ChatGPT answer. Someone else wondered if we couldn&rsquo;t just plug a GPT to the discord server, as a bot for instance. I said I had a better idea. A few sleep-deprived days later, we had a new friend, Zizou, spitting our brand of nonsense."/>
+
+
+
+<meta itemprop="name" content="LLMs are a strong baseline for shitposting">
+<meta itemprop="description" content="Last weekend I was talking with some friends online, as I do most of my weekends. I asked one of them to elaborate on something, he got lazy and jokingly answered with an obvious ChatGPT answer. Someone else wondered if we couldn&rsquo;t just plug a GPT to the discord server, as a bot for instance. I said I had a better idea. A few sleep-deprived days later, we had a new friend, Zizou, spitting our brand of nonsense."><meta itemprop="datePublished" content="2025-11-29T18:08:29+01:00" />
+<meta itemprop="dateModified" content="2025-11-29T18:08:29+01:00" />
+<meta itemprop="wordCount" content="1040">
+<meta itemprop="keywords" content="Computer Science,Machine Learning,LLMs,Bot," />
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  :root {
+    --width: 1024px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #01242e;
+    --heading-color: #eee;
+    --text-color: #ddd;
+    --link-color: #8cc2dd;
+    --visited-color: #8b6fcb;
+    --blockquote-color: #ccc;
+
+
+  }
+
+  @media (prefers-color-scheme: white) {
+    :root {
+      --background-color: #fff;
+      --heading-color: #222;
+      --text-color: #444;
+      --link-color: #3273dc;
+      --visited-color: #8b6fcb;
+      --blockquote-color: #222;
+    }
+  }
+
+  body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+  }
+
+  a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  nav a {
+    margin-right: 8px;
+  }
+
+  strong,
+  b {
+    color: var(--heading-color);
+  }
+
+  button {
+    margin: 0;
+    cursor: pointer;
+  }
+
+  time {
+    font-family: monospace;
+    font-style: normal;
+    font-size: 15px;
+  }
+
+  main {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px dashed;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    font-family: monospace;
+    padding: 2px;
+    border-radius: 3px;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: var(--blockquote-color);
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px 0;
+    text-align: center;
+  }
+
+  .title:hover {
+    text-decoration: none;
+  }
+
+  .title h1 {
+    font-size: 1.5em;
+  }
+
+  .inline {
+    width: auto !important;
+  }
+
+  .highlight,
+  .code {
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+  }
+
+  .highlight pre,
+  .code pre {
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 5px;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: var(--visited-color);
+  }
+</style>
+
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+
+<script>
+  MathJax = {
+    tex: {
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],  
+      inlineMath: [['$', '$']]                  
+    },
+    loader:{
+      load: ['ui/safe']
+    },
+  };
+</script>
+  
+</head>
+
+<body>
+  <header><a href="/" class="title">
+  <h2>Slow Data</h2>
+</a>
+<nav>
+<a href="/blog/">Blog</a>
+
+</nav>
+</header>
+  <main>
+
+<content>
+  <p>Last weekend I was talking with some friends online, as I do most of my weekends. I asked one of them to elaborate on something, he got lazy and jokingly answered with an obvious ChatGPT answer. Someone else wondered if we couldn&rsquo;t just plug a GPT to the discord server, as a bot for instance. I said I had a better idea. A few sleep-deprived days later, we had a new friend, <a href="https://wikipedia.com/wiki/Zinedine_Zidane">Zizou</a>, spitting our brand of nonsense. Here&rsquo;s the whole story.</p>
+<h1 id="the-data">The data</h1>
+<p>The first step was getting the data. I used <a href="https://github.com/tyrrrz/discordchatexporter">DiscordChatExporter</a>, a scraper in Python that crawls through our server and exported about 1 million messages. That&rsquo;s a lot, but most of it is noise. Single word messages, links to YouTube videos nobody watched, random GIFs, etc. I didn&rsquo;t want to train on all of that, I wanted the model to learn the <em>good</em> stuff.</p>
+<p>So I filtered by reactions. Any message that received at least N reactions from the group (I tuned this threshold until the dataset felt right, about 10k messages made the cut) got labeled a &ldquo;banger&rdquo; and kept. Pretty much crowdsourced quality filtering<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
+<p>I want the bot to be able to &ldquo;complete&rdquo; the context with a joke, so the training setup is fairly simple. I feed it the last few messages before the banger and it tries to predict the joke.</p>
+<h1 id="working-around-my-hardware-qlora">Working around my hardware: (Q)LoRA</h1>
+<p>Before I get into the training saga, a quick note on LoRA (Low-Rank Adaptation), since I&rsquo;ll be mentioning it a lot.</p>
+<p>Finetuning a model the traditional way means updating all its weights, as you would do when first training it. Basically, for a 3B parameter model, that&rsquo;s 3 billion 16-bit floats (= 6 billion bytes ~ 6 GB) you need to store, and then all the gradients that come with them. I am doing all this on my laptop GPU, a RTX 2050 with 4GB of VRAM: that&rsquo;s a hard no.</p>
+<p>LoRA works around this with a clever approximation: instead of updating the weight matrix $W$ directly, you freeze it and add a low-rank perturbation $\Delta W = AB$ where $A \in \mathbb{R}^{d \times r}$ and $B \in \mathbb{R}^{r \times k}$, with rank $r \ll \min(d, k)$, and you only train $A$ and $B$.</p>
+<p>The bet is that you don&rsquo;t need to touch the whole weight space to specialize a model; a small low-rank update is enough. I tried $r = 8$ and $r = 16$, which is less than 1% of the original parameters.</p>
+<p>If you&rsquo;re following, you noticed that 6GB is still above the 4GB I have: to load a 3B model, LoRA or not, I still need to load it into GPU memory to run the inference. I could load it one layer at a time, but that would make everything magnitudes slower: remember, I only have the weekend. That&rsquo;s where my next trick comes in:</p>
+<p>QLoRA (Quantized LoRA) pushes the above idea further. As the remaining VRAM cost in plain LoRA is the frozen base model itself, QLoRA quantizes those frozen weights to 4 bits, which cuts the base model&rsquo;s footprint by roughly 4x. A 7B model that would eat ~14GB at fp16 fits in ~4GB quantized. The LoRA adapters themselves are kept as floating points and trained normally, only the frozen part is quantized. At inference, weights are dequantized on the fly<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> just before each matrix multiplication, so the computation itself still happens in a reasonable precision.</p>
+<p>The accuracy loss from all this is supposedly small, and in our case it will be, but in general it is non-zero<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.</p>
+<h1 id="the-training-saga">The training saga</h1>
+<p>Models under a certain size are basically useless for this. I tried GPT-2 Medium (0.35B), Qwen 2.5 0.5B, 1.5B, and then 3B with QLoRA. Same result every time: bits of rhythm, occasional vocabulary, context basically gone. Ask a question and 80% of the time the reply wasn’t even remotely related. The 3B was marginally better; it would at least stay on topic, sometimes. It was also right at the edge of what my 4GB card could handle, and very slow to train. I accepted I wasn’t going to get what I wanted out of my hardware.</p>
+<p>I probably would’ve stopped there, except out of roughly 500 messages, maybe five actually got it right. Those rare moments where the model clearly understood the context, the jokes were actually funny.</p>
+<h2 id="qwen3-8b-on-runpod--this-is-the-one">Qwen3 8B on RunPod — this is the one</h2>
+<p>I spent about $30 on a RunPod instance with a proper GPU and finetuned Qwen3 8B-Instruct with no quantization, full LoRA. It&rsquo;s just better. The model actually gets context. It calls back to something said three messages ago, responds to the vibe of a message rather than just its literal content, and sometimes produces something that genuinely sounds like it came from one of us.</p>
+<p>Sadly, hosting an LLM is costly, and once there was nothing left of the $30 to host it, we had to kill Zizou.</p>
+<h1 id="what-id-do-differently">What I&rsquo;d do differently</h1>
+<p>The reaction threshold worked okay as a quality filter, but it&rsquo;s pretty crude. It probably throws out dry humor and niche references that only get one or two reactions. Weighting by reaction count and using a softer cutoff would probably do better.</p>
+<p>But for now, the bot occasionally says something funny enough that people forget I extracted all our private conversations to feed them into an LLM. That&rsquo;s good enough.</p>
+<h1 id="comments">Comments</h1>
+<p>Sorry, I&rsquo;m too lazy to load a proper comment system plugin: see the associated <a href="https://github.com/Shika-B/Shika-B.github.io/issues/3">github issue</a>.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>No underpaid third-worlders were involved!&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>The specific format used for quantization is NF4 (NormalFloat 4-bit), introduced in the QLoRA paper. It exploits the fact that neural network weights are approximately normally distributed (most values cluster near 0, with exponentially fewer values in the tails). Standard quantization is uniform, which wastes most of its precision on regions where almost no weights live. NF4 instead places its 16 levels at the <strong>quantiles</strong> of a standard normal distribution. The only catch is that GPUs have no native NF4 arithmetic, so weights are dequantized to f16 on the fly before each matrix multiply, adding a small compute overhead.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p>When Anthropic quantizes the models I am paying a subscription for, it&rsquo;s not okay. When I do it, it&rsquo;s fine.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+</content>
+
+
+
+<p>
+  
+  <a href="http://localhost:1313/tags/computer-science/">#Computer Science</a>
+  
+  <a href="http://localhost:1313/tags/machine-learning/">#Machine Learning</a>
+  
+  <a href="http://localhost:1313/tags/llms/">#LLMs</a>
+  
+  <a href="http://localhost:1313/tags/bot/">#Bot</a>
+  
+</p>
+
+  </main>
+  <footer>Made with <a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ Bear</a>
+</footer>
+
+  
+</body>
+
+</html>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Bot on Slow Data</title>
+    <link>http://localhost:1313/tags/bot/</link>
+    <description>Recent content in Bot on Slow Data</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 29 Nov 2025 18:08:29 +0100</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/bot/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>LLMs are a strong baseline for shitposting</title>
+      <link>http://localhost:1313/drafts/finetuning_shitpost/</link>
+      <pubDate>Sat, 29 Nov 2025 18:08:29 +0100</pubDate>
+      <guid>http://localhost:1313/drafts/finetuning_shitpost/</guid>
+      <description>Last weekend I was talking with some friends online, as I do most of my weekends. I asked one of them to elaborate on something, he got lazy and jokingly answered with an obivous ChatGPT answer. Someone else wondered if we couldn&amp;rsquo;t just plug a GPT to the discord server, as a bot for instance. I said I had a better idea. A few sleep-deprived days later, we had a new friend, Zizou, that spits our brand of nonsense.</description>
+    </item>
+  </channel>
+</rss>
