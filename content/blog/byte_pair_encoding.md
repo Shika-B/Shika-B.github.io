@@ -554,8 +554,9 @@ for m in range(m):
     fresh_id = fresh() # O(1)
 # Final complexity is still O(m * n)
 ```
+Feels like time to dust off that old cookbook. What we need is a data structure that tracks multiplicities while still supporting a fast max operation. One approach is a hybrid between a multiset and a binary heap: keep the heap for ordering, and maintain a separate mapping from keys to their positions in the heap.
 
-I think it is time to reopen that old cookbook. We're looking for a data structure that is able to keep track of multiplicity, while giving us access to a fast `max` operation. My personal answer is some kind of bastard between multisets and binary heaps, maintaing a mapping from keys to position in the heap. Double the memory size, but also O(1) max, O(log(n)) insertion/deletion time-wise. We need to be careful during siftdown/up operations because each swap of heap elements needs to be followed by the appropriate update in the dictionary. I'm not going over all the binary heap logic, but if you're interested check [this page](https://runestone.academy/ns/books/published/pythonds/Trees/BinaryHeapImplementation.html) which has crystal clear[^1] explanations.
+This does come at the cost of roughly doubling memory usage, but in return you get O(1) access to the maximum and O(log n) for insertions and deletions. The main caveat is during sift-up and sift-down operations—every time elements are swapped in the heap, the position map has to be updated accordingly.I'm not going over all the binary heap logic, but if you're interested check [this page](https://runestone.academy/ns/books/published/pythonds/Trees/BinaryHeapImplementation.html) which has crystal clear[^1] explanations.
 The code for the `MultisetHeap` class is [here](https://github.com/Shika-B/speedy-bpe/blob/main/python/multiheap.py).
 
 We change our `merge`, `train` and `get_stats` functions to use this new data structure instead of a dictionary.
@@ -635,12 +636,12 @@ sys	0m0,934s
 ```
 
 And the final results in a nice little table:
-| Code                               |   Time    |
-|:---------------------------        |:---------:|
-| Python Naive                       | 4h48m     |
-| Rust Naive + small strings         | 5m40s     |
-| Python Optimized                   | 17s       |
-| HuggingFace tokenizers in Rust     | 0.9s      |
+| Code                           | Time  |
+| :----------------------------- | :---: |
+| Python Naive                   | 4h48m |
+| Rust Naive + small strings     | 5m40s |
+| Python Optimized               |  17s  |
+| HuggingFace tokenizers in Rust | 0.9s  |
 
 The full code is available [here](https://github.com/Shika-B/speedy-bpe/).
 
