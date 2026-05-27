@@ -271,7 +271,7 @@ it has been trained on a lot of diverse data. Promptable models, both for text a
 this category. 
 [^3]: Something something Central Limit Theorem
 [^4]: TabPFN (Hollmann et al., [2022](https://arxiv.org/abs/2207.01848)) is the canonical example. The same authors 
-later released a much-improved TabPFN v2 in *Nature*. Recently, they announced TabPFN v3
+later released a much-improved TabPFN v2 in *Nature*. Recently, they announced TabPFN v3.
 [here](https://arxiv.org/pdf/2605.13986). 
 [^5]: Except for winning the lottery I guess.
 [^6]: In practice this is batched on GPU, of course.
