@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Tabular Prediction on Slow Data</title>
+		<link>http://localhost:1313/tags/tabular-prediction/</link>
+		<description>Recent content in Tabular Prediction on Slow Data</description>
+		<generator>Hugo</generator>
+		<language>en-us</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 09 Nov 2025 13:44:57 +0100</lastBuildDate>
+		
+			<atom:link href="http://localhost:1313/tags/tabular-prediction/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>One-shot tabular predictions</title>
+				<link>http://localhost:1313/blog/tabular_foundation_models/</link>
+				<pubDate>Sun, 09 Nov 2025 13:44:57 +0100</pubDate>
+				<guid>http://localhost:1313/blog/tabular_foundation_models/</guid>
+				<description>&lt;p&gt;Most of the data that actually runs the world lives in spreadsheets. Hospital records, bank transactions, sensor logs,&#xA;messy CSV your colleague emailed you last Tuesday, it&amp;rsquo;s really rows and columns all the way down. While we have been&#xA;hearing quite a lot about language models writing poetry and code (both?) and image models painting cathedrals, the&#xA;humble tabular prediction task was left to older methods&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt; for quite a long time. That changed a few years ago, with&#xA;the introduction of various tabular foundation models&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

@@ -11,26 +11,36 @@
 <meta name="keywords" content="Computer Science,Machine Learning,LLMs,Tokenizers," />
 
 
-<meta property="og:title" content="Fast and meaningful tokenization for LLMs" />
-<meta property="og:description" content="I&rsquo;m currently taking a deep learning course and I have an assignment that is basically: write a Google Trad/DeepL for French to English translation with minimal data (130k paired sentences) and training time (we need to make it trainable on a laptop). The goal of the assignment is to learn about modern LLMs architectures, specifically about attention and transformers, the deep learning part really. Naturally, this is not what I did: this blog post recounts my wanderings." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="http://localhost:1313/blog/byte_pair_encoding/" /><meta property="article:section" content="blog" />
-<meta property="article:published_time" content="2025-11-29T18:08:29+01:00" />
-<meta property="article:modified_time" content="2025-11-29T18:08:29+01:00" />
+<meta property="og:url" content="http://localhost:1313/blog/byte_pair_encoding/">
+	<meta property="og:site_name" content="Slow Data">
+	<meta property="og:title" content="Fast and meaningful tokenization for LLMs">
+	<meta property="og:description" content="I’m currently taking a deep learning course and I have an assignment that is basically: write a Google Trad/DeepL for French to English translation with minimal data (130k paired sentences) and training time (we need to make it trainable on a laptop). The goal of the assignment is to learn about modern LLMs architectures, specifically about attention and transformers, the deep learning part really. Naturally, this is not what I did: this blog post recounts my wanderings.">
+	<meta property="og:locale" content="en_us">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="blog">
+		<meta property="article:published_time" content="2025-11-29T18:08:29+01:00">
+		<meta property="article:modified_time" content="2025-11-29T18:08:29+01:00">
+		<meta property="article:tag" content="Computer Science">
+		<meta property="article:tag" content="Machine Learning">
+		<meta property="article:tag" content="LLMs">
+		<meta property="article:tag" content="Tokenizers">
 
 
 
 
-<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Fast and meaningful tokenization for LLMs"/>
-<meta name="twitter:description" content="I&rsquo;m currently taking a deep learning course and I have an assignment that is basically: write a Google Trad/DeepL for French to English translation with minimal data (130k paired sentences) and training time (we need to make it trainable on a laptop). The goal of the assignment is to learn about modern LLMs architectures, specifically about attention and transformers, the deep learning part really. Naturally, this is not what I did: this blog post recounts my wanderings."/>
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Fast and meaningful tokenization for LLMs">
+	<meta name="twitter:description" content="I’m currently taking a deep learning course and I have an assignment that is basically: write a Google Trad/DeepL for French to English translation with minimal data (130k paired sentences) and training time (we need to make it trainable on a laptop). The goal of the assignment is to learn about modern LLMs architectures, specifically about attention and transformers, the deep learning part really. Naturally, this is not what I did: this blog post recounts my wanderings.">
 
 
 
-<meta itemprop="name" content="Fast and meaningful tokenization for LLMs">
-<meta itemprop="description" content="I&rsquo;m currently taking a deep learning course and I have an assignment that is basically: write a Google Trad/DeepL for French to English translation with minimal data (130k paired sentences) and training time (we need to make it trainable on a laptop). The goal of the assignment is to learn about modern LLMs architectures, specifically about attention and transformers, the deep learning part really. Naturally, this is not what I did: this blog post recounts my wanderings."><meta itemprop="datePublished" content="2025-11-29T18:08:29+01:00" />
-<meta itemprop="dateModified" content="2025-11-29T18:08:29+01:00" />
-<meta itemprop="wordCount" content="3996">
-<meta itemprop="keywords" content="Computer Science,Machine Learning,LLMs,Tokenizers," />
+
+	<meta itemprop="name" content="Fast and meaningful tokenization for LLMs">
+	<meta itemprop="description" content="I’m currently taking a deep learning course and I have an assignment that is basically: write a Google Trad/DeepL for French to English translation with minimal data (130k paired sentences) and training time (we need to make it trainable on a laptop). The goal of the assignment is to learn about modern LLMs architectures, specifically about attention and transformers, the deep learning part really. Naturally, this is not what I did: this blog post recounts my wanderings.">
+	<meta itemprop="datePublished" content="2025-11-29T18:08:29+01:00">
+	<meta itemprop="dateModified" content="2025-11-29T18:08:29+01:00">
+	<meta itemprop="wordCount" content="3996">
+	<meta itemprop="keywords" content="Computer Science,Machine Learning,LLMs,Tokenizers">
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
   <style>
@@ -254,7 +264,7 @@
 <p>Now the transformers part is fun, but everyone is already talking about it. Let&rsquo;s focus on the first part, how do we get tokens ?</p>
 <h2 id="why-bother-">Why bother ?</h2>
 <p>I am lazy, so I will simply list all words in English, write this:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>ENGLISH_WORDS <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;cup&#39;</span>: <span style="color:#ae81ff">34874</span>, <span style="color:#e6db74">&#39;of&#39;</span>: <span style="color:#ae81ff">54123</span>, <span style="color:#e6db74">&#39;tea&#39;</span>: <span style="color:#ae81ff">15879</span>, <span style="color:#f92672">...</span>}
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>ENGLISH_WORDS <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;cup&#39;</span>: <span style="color:#ae81ff">34874</span>, <span style="color:#e6db74">&#39;of&#39;</span>: <span style="color:#ae81ff">54123</span>, <span style="color:#e6db74">&#39;tea&#39;</span>: <span style="color:#ae81ff">15879</span>, <span style="color:#f92672">...</span>}
 </span></span><span style="display:flex;"><span>REVERSE_ENGLISH_WORDS <span style="color:#f92672">=</span> {<span style="color:#ae81ff">34874</span>: <span style="color:#e6db74">&#39;cup&#39;</span>, <span style="color:#ae81ff">54123</span>: <span style="color:#e6db74">&#39;of&#39;</span>, <span style="color:#ae81ff">15879</span>: <span style="color:#e6db74">&#39;tea&#39;</span>, <span style="color:#f92672">...</span>}
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">tokenize</span>(context):
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> [ENGLISH_WORDS[word] <span style="color:#66d9ef">for</span> word <span style="color:#f92672">in</span> context<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39; &#39;</span>)]
@@ -273,10 +283,10 @@
 <p>Conclusion: we need to compromise on our goals. What is the middle ground between splitting on whitespaces and a full linguistics lexeme split, you ask ? A compression algorithm obviously!</p>
 <h2 id="byte-pair-encoding">Byte-Pair encoding</h2>
 <p>Consider the following string <code>s = &quot;aaabdaaabace&quot;</code> and imagine a perfect world where all the data is perfectly packed into memory. As the string is formed over an alphabet of 5 tokens, every character can be coded on 3 bits, and we actually get an extra 3 unused token values. Let&rsquo;s use them to compress the string:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>VOCAB <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;a&#39;</span>: <span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#39;b&#39;</span>: <span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#39;c&#39;</span>: <span style="color:#ae81ff">2</span>, <span style="color:#e6db74">&#39;d&#39;</span>: <span style="color:#ae81ff">3</span>, <span style="color:#e6db74">&#39;e&#39;</span>: <span style="color:#ae81ff">4</span>, <span style="color:#e6db74">&#39;aaabdaaabace&#39;</span>: <span style="color:#ae81ff">5</span>}
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>VOCAB <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;a&#39;</span>: <span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#39;b&#39;</span>: <span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#39;c&#39;</span>: <span style="color:#ae81ff">2</span>, <span style="color:#e6db74">&#39;d&#39;</span>: <span style="color:#ae81ff">3</span>, <span style="color:#e6db74">&#39;e&#39;</span>: <span style="color:#ae81ff">4</span>, <span style="color:#e6db74">&#39;aaabdaaabace&#39;</span>: <span style="color:#ae81ff">5</span>}
 </span></span></code></pre></div><p>Easy, right? Yeah, but now our compression scheme is completely unable to generalize to similarly structured but different data. Let&rsquo;s instead enforce that each new token must be the concatenation of two preexisting tokens.</p>
 <p>Choosing the extra tokens so that they reduce as much as possible the length of the final string is a hard problem, so let&rsquo;s not solve it exactly and do greedy instead: choose at each step the most common pair of tokens:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>s <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;aaabdaaabace&#34;</span>  <span style="color:#75715e"># step 0</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>s <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;aaabdaaabace&#34;</span>  <span style="color:#75715e"># step 0</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;FabdFabace&#34;</span>    <span style="color:#75715e"># F = aa, occurs 4 times</span>
 </span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;FGdFGace&#34;</span>      <span style="color:#75715e"># G = ab, occurs 2 times</span>
@@ -290,12 +300,12 @@
 </span></span></code></pre></div><p>Now, once we trained our vocab on our initial string, we know <code>MERGE_LIST</code> and <code>FINAL_VOCAB</code>. To compress any string defined on the same initial alphabet, we go over <code>MERGE_LIST</code> and apply merges iteratively. To get our initial string back, we reverse the process.</p>
 <h2 id="tokenization-as-compression">Tokenization as compression</h2>
 <p>In 2016, <a href="https://arxiv.org/abs/1508.07909?utm_source=chatgpt.com">Snnrich, Haddow and Birch noticed</a> we can actually use this to get a reasonable approximation of the lexeme extraction process. Let&rsquo;s say the dataset contains exactly the following English words:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># POV: training a model on a toaster</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># POV: training a model on a toaster</span>
 </span></span><span style="display:flex;"><span>ENG_DATASET_WORDS <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;low&#39;</span>, <span style="color:#e6db74">&#39;lower&#39;</span>, <span style="color:#e6db74">&#39;hard&#39;</span>, <span style="color:#e6db74">&#39;harder&#39;</span>}
 </span></span></code></pre></div><p>Extracting meaningful lexemes from this dataset amounts to extracting repetitive patterns inside words: &rsquo;low&rsquo;, &rsquo;er&rsquo; and &lsquo;hard&rsquo; all occur two times. From that observation, we get a very reasonable token vocabulary of size 3</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>ENG_VOCAB <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;low&#39;</span>: <span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#39;hard&#39;</span>: <span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#39;er&#39;</span>: <span style="color:#ae81ff">2</span>}
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>ENG_VOCAB <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;low&#39;</span>: <span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#39;hard&#39;</span>: <span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#39;er&#39;</span>: <span style="color:#ae81ff">2</span>}
 </span></span></code></pre></div><p>Instead, if we apply the compression algorithm with 6 merges, we get the following merges:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>l, o <span style="color:#f92672">-&gt;</span> lo
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>l, o <span style="color:#f92672">-&gt;</span> lo
 </span></span><span style="display:flex;"><span>e, r <span style="color:#f92672">-&gt;</span> er
 </span></span><span style="display:flex;"><span>h, a <span style="color:#f92672">-&gt;</span> ha
 </span></span><span style="display:flex;"><span>r, d <span style="color:#f92672">-&gt;</span> rd
@@ -304,18 +314,18 @@
 </span></span></code></pre></div><p>and we get the same final tokens, with some extra intermediate tokens.</p>
 <h2 id="a-naive-bpe-tokenizer">A naive BPE tokenizer</h2>
 <p>Let&rsquo;s put that into code. For convenience, we define a token class that stores the token representation, its id and the word it comes from.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> collections <span style="color:#f92672">import</span> Counter
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> collections <span style="color:#f92672">import</span> Counter
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Token</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self, s, tok_id, word_id):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self, s, tok_id, word_id):
 </span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>s <span style="color:#f92672">=</span> s
 </span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>tok_id <span style="color:#f92672">=</span> tok_id
 </span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>word_id <span style="color:#f92672">=</span> word_id
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __repr__(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__repr__</span>(self):
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Token(</span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>s<span style="color:#e6db74">}</span><span style="color:#e6db74">, tok_id: </span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>tok_id<span style="color:#e6db74">}</span><span style="color:#e6db74"> word_id:</span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>word_id<span style="color:#e6db74">}</span><span style="color:#e6db74">)&#34;</span>
 </span></span></code></pre></div><p>We also define some helper functions respectively building a vocabulary (a <code>dict[str, int]</code>) out of a list of words, and counting pairs of token ids coming from the same word</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> collections <span style="color:#f92672">import</span> Counter
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> collections <span style="color:#f92672">import</span> Counter
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">initial_vocab</span>(words):
 </span></span><span style="display:flex;"><span>    fresh_tok <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
@@ -334,7 +344,7 @@
 </span></span><span style="display:flex;"><span>            stats[(tok1<span style="color:#f92672">.</span>tok_id, tok2<span style="color:#f92672">.</span>tok_id)] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> stats
 </span></span></code></pre></div><p>Now we need some function that takes a list of tokens and a target pair and merges all consecutive pairs of tokens (inside the same word!) matching the given target pair. The simplest way to do that is to completely rebuild the token list:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">merge</span>(tokens, pair, fresh_token):
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">merge</span>(tokens, pair, fresh_token):
 </span></span><span style="display:flex;"><span>    new_tokens <span style="color:#f92672">=</span> []
 </span></span><span style="display:flex;"><span>    i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> i <span style="color:#f92672">&lt;</span> len(tokens) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>:
@@ -349,7 +359,7 @@
 </span></span><span style="display:flex;"><span>        new_tokens<span style="color:#f92672">.</span>append(tokens[i])
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> new_tokens
 </span></span></code></pre></div><p>Finally, we define a function that trains our tokenizer with a number of merges threshold.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">train</span>(words, num_merges, verbose<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>):
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">train</span>(words, num_merges, verbose<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>):
 </span></span><span style="display:flex;"><span>    vocab <span style="color:#f92672">=</span> initial_vocab(words)
 </span></span><span style="display:flex;"><span>    reverse_vocab <span style="color:#f92672">=</span> {vocab[c]: c <span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> vocab<span style="color:#f92672">.</span>keys()}
 </span></span><span style="display:flex;"><span>    tokens <span style="color:#f92672">=</span> [Token(c, vocab[c], word_id) <span style="color:#66d9ef">for</span> word_id, word <span style="color:#f92672">in</span> enumerate(words) <span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> word]
@@ -377,7 +387,7 @@
 </span></span><span style="display:flex;"><span>    
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> vocab, merge_tree
 </span></span></code></pre></div><p>Encoding a list of words is just applying the merges we got from training, and decoding is straightforward</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">encode</span>(vocab, merge_tree, words):
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">encode</span>(vocab, merge_tree, words):
 </span></span><span style="display:flex;"><span>    tokens <span style="color:#f92672">=</span> [Token(c, vocab[c], word_id) <span style="color:#66d9ef">for</span> word_id, word <span style="color:#f92672">in</span> enumerate(words) <span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> word]
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> ((left, right), new) <span style="color:#f92672">in</span> merge_tree:
@@ -423,7 +433,7 @@ Decoded tokens:  [&#39;low&#39;, &#39;lower&#39;, &#39;hard&#39;, &#39;harder&#3
 I don&#39;t want to speak ill of the dead.	Je ne veux pas dire du mal des morts.
 I would&#39;ve drowned if you hadn&#39;t saved me.	Je me serais noyé si vous ne m&#39;aviez pas sauvé.	
 </code></pre><p>We open the file:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#39;data/fra.txt&#39;</span>, <span style="color:#e6db74">&#39;r&#39;</span>, encoding<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;utf-8&#39;</span>) <span style="color:#66d9ef">as</span> file:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#39;data/fra.txt&#39;</span>, <span style="color:#e6db74">&#39;r&#39;</span>, encoding<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;utf-8&#39;</span>) <span style="color:#66d9ef">as</span> file:
 </span></span><span style="display:flex;"><span>    txt <span style="color:#f92672">=</span> file<span style="color:#f92672">.</span>read()
 </span></span><span style="display:flex;"><span>    lines <span style="color:#f92672">=</span> txt<span style="color:#f92672">.</span>strip()<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)
 </span></span><span style="display:flex;"><span>    fra, eng <span style="color:#f92672">=</span> [], []
@@ -434,7 +444,7 @@ I would&#39;ve drowned if you hadn&#39;t saved me.	Je me serais noyé si vous ne
 </span></span><span style="display:flex;"><span>print(fra[<span style="color:#ae81ff">50</span>], eng[<span style="color:#ae81ff">50</span>])
 </span></span></code></pre></div><pre tabindex="0"><code>Hello! Bonjour !
 </code></pre><p>Let&rsquo;s split into words (we remove punctuation) and train our BPE on English words:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> re
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> re
 </span></span><span style="display:flex;"><span>regex <span style="color:#f92672">=</span> re<span style="color:#f92672">.</span>compile(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">s|</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">.|</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">!|</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">?&#34;</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>eng_words <span style="color:#f92672">=</span> []
@@ -465,19 +475,19 @@ Merging the pair (l, l)
 Merging the pair (i, t)
 Merging the pair (&#39;, t)
 </code></pre><p>That looks very nice&hellip; except these 20 merges took almost a whole minute:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>&gt; time python naive.py
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>&gt; time python naive.py
 </span></span><span style="display:flex;"><span>real	0m48,403s
 </span></span><span style="display:flex;"><span>user	0m47,198s
 </span></span><span style="display:flex;"><span>sys	0m0,886s
 </span></span></code></pre></div><p>I tried to let it run it&rsquo;s whole course (10k merges) and it took almost 5 hours to train. We need to make things faster if we don&rsquo;t want to leave it running all night long everytime we make a change. We could just Rewrite It In Rust and get insane speed-ups because Python is slow.
 Okay, <a href="https://github.com/Shika-B/speedy-bpe/tree/main/rust">challenge accepted</a>, there we go for 10k merges</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>&gt; time cargo run --release
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>&gt; time cargo run --release
 </span></span><span style="display:flex;"><span>real	5m39,627s
 </span></span><span style="display:flex;"><span>user	4m9,633s
 </span></span><span style="display:flex;"><span>sys	1m26,246s
 </span></span></code></pre></div><p>Now it is actually usable, but definitely not fast enough, in real life we do hundreds of thousands of merges and the dataset is magnitudes larger. I feel we can do better, even on a laptop. My Rust code above is clearly not optimized memory-wise, I could avoid quite a few copies by using references over the original string (str slices for those familiar with Rust) instead. Still, I&rsquo;m using small-strings optimization, and I don&rsquo;t think we could get anything more than a 2x speed-up avoiding these copies and doing a few other small optimizations. It wouldn&rsquo;t get us that last speed-up magnitude we&rsquo;re looking for, so we need to change the actual logic.</p>
 <p>If we look at our code, we can sum it up in Pseudo-Python as:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># Say we&#39;re training on n words, for m merges</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># Say we&#39;re training on n words, for m merges</span>
 </span></span><span style="display:flex;"><span>vocab <span style="color:#f92672">=</span> build_vocab(words) <span style="color:#75715e"># O(n)</span>
 </span></span><span style="display:flex;"><span>tokens <span style="color:#f92672">=</span> initial_tokenize(words) <span style="color:#75715e"># O(n)</span>
 </span></span><span style="display:flex;"><span>merge_tree <span style="color:#f92672">=</span> []
@@ -491,7 +501,7 @@ Okay, <a href="https://github.com/Shika-B/speedy-bpe/tree/main/rust">challenge a
 </span></span></code></pre></div><p>which means we&rsquo;re asymptotically doing $mn$ operations. Can we do better ? Yes, we can.</p>
 <h2 id="a-faster-merge-function">A faster merge function</h2>
 <p>Let&rsquo;s go back to the merge function first</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">merge</span>(tokens, pair, fresh_token):
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">merge</span>(tokens, pair, fresh_token):
 </span></span><span style="display:flex;"><span>    new_tokens <span style="color:#f92672">=</span> []
 </span></span><span style="display:flex;"><span>    i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> i <span style="color:#f92672">&lt;</span> len(tokens) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>:
@@ -514,8 +524,8 @@ Okay, <a href="https://github.com/Shika-B/speedy-bpe/tree/main/rust">challenge a
 <p>For Problem 2, we could maintain a big map <code>d: dict[(int, int), list[int]]</code> such that <code>d[(tok1.tok_id, tok2.tok_id)]</code> is a big list containing all the nodes of the linked list such that <code>node.tok_id = tok1.tok_id</code> and <code>node.next.tok_id = tok2.tok_id</code>.
 Expanding it is easy but maintaining seems hard, because we the values inside the nodes are modified after merges. Lazy is the way: we just check after querying it if the entries are stale by checking if <code>node.tok_id == tok1.tok_id</code> and <code>node.next.tok_id == tok2.tok_id</code> !</p>
 <p>We replace the <code>Token</code> class by</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TokenNode</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self, s, tok_id, word_id, nxt <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>, prev <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>):
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TokenNode</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self, s, tok_id, word_id, nxt <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>, prev <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>):
 </span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>s <span style="color:#f92672">=</span> s
 </span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>tok_id <span style="color:#f92672">=</span> tok_id
 </span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>word_id <span style="color:#f92672">=</span> word_id
@@ -534,9 +544,9 @@ Expanding it is easy but maintaining seems hard, because we the values inside th
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>nxt <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span>:
 </span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>nxt<span style="color:#f92672">.</span>prev <span style="color:#f92672">=</span> self
 </span></span></code></pre></div><p>In a few places, we have the line</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>tokens <span style="color:#f92672">=</span> [Token(c, vocab[c], word_id) <span style="color:#66d9ef">for</span> word_id, word <span style="color:#f92672">in</span> enumerate(words) <span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> word]
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>tokens <span style="color:#f92672">=</span> [Token(c, vocab[c], word_id) <span style="color:#66d9ef">for</span> word_id, word <span style="color:#f92672">in</span> enumerate(words) <span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> word]
 </span></span></code></pre></div><p>The list comprehension cannot build a linked list, so we replace it by the following function. While we&rsquo;re at it, we build the pairs dictionary</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">tokens_and_pairs</span>(words, vocab):
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">tokens_and_pairs</span>(words, vocab):
 </span></span><span style="display:flex;"><span>    dummy <span style="color:#f92672">=</span> TokenNode(<span style="color:#e6db74">&#39;&#39;</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
 </span></span><span style="display:flex;"><span>    node <span style="color:#f92672">=</span> dummy
 </span></span><span style="display:flex;"><span>    pairs <span style="color:#f92672">=</span> defaultdict(list)
@@ -551,7 +561,7 @@ Expanding it is easy but maintaining seems hard, because we the values inside th
 </span></span><span style="display:flex;"><span>    root<span style="color:#f92672">.</span>prev <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> root, pairs
 </span></span></code></pre></div><p>and then in encode and train we get</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">encode</span>(vocab, merge_tree, words):
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">encode</span>(vocab, merge_tree, words):
 </span></span><span style="display:flex;"><span>    tokens, pairs <span style="color:#f92672">=</span> tokens_and_pairs(words, vocab) <span style="color:#75715e"># only change</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> ((left, right), new) <span style="color:#f92672">in</span> merge_tree:
@@ -565,7 +575,7 @@ Expanding it is easy but maintaining seems hard, because we the values inside th
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e"># ...</span>
 </span></span></code></pre></div><p>In decode we replace iterating over tokens by a linked list traversal</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decode</span>(root):
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decode</span>(root):
 </span></span><span style="display:flex;"><span>    words <span style="color:#f92672">=</span> []
 </span></span><span style="display:flex;"><span>    curr_word <span style="color:#f92672">=</span> []
 </span></span><span style="display:flex;"><span>    node <span style="color:#f92672">=</span> root
@@ -579,7 +589,7 @@ Expanding it is easy but maintaining seems hard, because we the values inside th
 </span></span><span style="display:flex;"><span>    words<span style="color:#f92672">.</span>append(<span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">.</span>join(curr_word)) 
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> words
 </span></span></code></pre></div><p>all of this is just the same logic but . Now for the merge function, we will only iterates over the pairs we care about and check that they are still valid.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># The faster function is actually a little shorter !</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># The faster function is actually a little shorter !</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">merge</span>(pair_nodes, pair_to_merge, fresh_token):
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> node <span style="color:#f92672">in</span> pair_nodes[pair_to_merge]:
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> node<span style="color:#f92672">.</span>nxt <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span> <span style="color:#f92672">or</span> (node<span style="color:#f92672">.</span>tok_id, node<span style="color:#f92672">.</span>nxt<span style="color:#f92672">.</span>tok_id) <span style="color:#f92672">!=</span> pair_to_merge:
@@ -590,12 +600,12 @@ Expanding it is easy but maintaining seems hard, because we the values inside th
 </span></span><span style="display:flex;"><span>            pair_nodes[(fresh_token, node<span style="color:#f92672">.</span>nxt<span style="color:#f92672">.</span>nxt<span style="color:#f92672">.</span>tok_id)]<span style="color:#f92672">.</span>append(node)        
 </span></span><span style="display:flex;"><span>        node<span style="color:#f92672">.</span>merge_with_nxt(fresh_token)
 </span></span></code></pre></div><p>Now that our optimization is up and running, let&rsquo;s test it again on 20 merges:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>&gt; python fast.py
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>&gt; python fast.py
 </span></span><span style="display:flex;"><span>real	0m28,841s
 </span></span><span style="display:flex;"><span>user	0m28,149s
 </span></span><span style="display:flex;"><span>sys	0m0,514s
 </span></span></code></pre></div><p>Yeeeah&hellip; Still going with the Rust code for the moment. We cut off about 10 seconds. Since there&rsquo;s a new overhead at warm-up in the new code, how different is it if we test it with 40 merges:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#ae81ff">40</span> merges
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#ae81ff">40</span> merges
 </span></span><span style="display:flex;"><span>&gt; time python naive.py
 </span></span><span style="display:flex;"><span>real	1m28,715s
 </span></span><span style="display:flex;"><span>user	1m27,198s
@@ -609,7 +619,7 @@ Expanding it is easy but maintaining seems hard, because we the values inside th
 <p>What is the complexity of the new merge function ? It&rsquo;s the number of nodes we had stored in <code>pair_nodes[pair_to_merge]</code>, and the total amount of nodes we can merge across all calls is at most the length of the initial token linked list, i.e. n.</p>
 <h2 id="updating-statistics">Updating statistics</h2>
 <p>Our pseudo-Python code is now</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># n words, for m merges</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># n words, for m merges</span>
 </span></span><span style="display:flex;"><span>vocab <span style="color:#f92672">=</span> build_vocab(words) <span style="color:#75715e"># O(n)</span>
 </span></span><span style="display:flex;"><span>root, pair_nodes <span style="color:#f92672">=</span> tokens_and_pairs(words) <span style="color:#75715e"># O(n)</span>
 </span></span><span style="display:flex;"><span>merge_tree <span style="color:#f92672">=</span> []
@@ -622,10 +632,10 @@ Expanding it is easy but maintaining seems hard, because we the values inside th
 </span></span><span style="display:flex;"><span>    fresh_id <span style="color:#f92672">=</span> fresh() <span style="color:#75715e"># O(1)</span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># Final: O(m * n)</span>
 </span></span></code></pre></div><p>The bottleneck is now in these two lines:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>stats <span style="color:#f92672">=</span> aggregate_stats(root) <span style="color:#75715e"># O(n)</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>stats <span style="color:#f92672">=</span> aggregate_stats(root) <span style="color:#75715e"># O(n)</span>
 </span></span><span style="display:flex;"><span>top_pair, _ <span style="color:#f92672">=</span> max(stats) <span style="color:#75715e"># O(n)</span>
 </span></span></code></pre></div><p>Instead of rebuilding statistics at each step, we can actually update them after each merge: we just pass it as a parameter of the <code>merge</code> function.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">merge</span>(pair_nodes, pair_to_merge, fresh_token, stats<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">merge</span>(pair_nodes, pair_to_merge, fresh_token, stats<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> stats:
 </span></span><span style="display:flex;"><span>        stats[pair_to_merge] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> node <span style="color:#f92672">in</span> pair_nodes[pair_to_merge]:
@@ -643,11 +653,11 @@ Expanding it is easy but maintaining seems hard, because we the values inside th
 </span></span><span style="display:flex;"><span>                stats[(node<span style="color:#f92672">.</span>nxt<span style="color:#f92672">.</span>tok_id, node<span style="color:#f92672">.</span>nxt<span style="color:#f92672">.</span>nxt<span style="color:#f92672">.</span>tok_id)] <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1</span>
 </span></span><span style="display:flex;"><span>        node<span style="color:#f92672">.</span>merge_with_nxt(fresh_token)
 </span></span></code></pre></div><p>and in the <code>train</code> function, we avoid reconstructing the stats dictionary everytime</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>stats <span style="color:#f92672">=</span> get_stats(root) <span style="color:#75715e"># move it out of the loop</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>stats <span style="color:#f92672">=</span> get_stats(root) <span style="color:#75715e"># move it out of the loop</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(num_merges): 
 </span></span></code></pre></div><p>Note that in the merge function, the stats dictionary may be None because once the tokenizer is trained when we are encoding words, we use the merge function but we do not care about tracking statistics anymore.</p>
 <p>How much faster does that get us ?</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>&gt; time python fast.py
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>&gt; time python fast.py
 </span></span><span style="display:flex;"><span>real	0m33,924s
 </span></span><span style="display:flex;"><span>user	0m33,127s
 </span></span><span style="display:flex;"><span>sys	0m0,627s
@@ -656,7 +666,7 @@ Expanding it is easy but maintaining seems hard, because we the values inside th
 <div class="tenor-gif-embed" data-postid="14031708" data-share-method="host" data-aspect-ratio="1.9685" data-width="70%"><a href="https://tenor.com/view/speed-i-am-speed-lightning-mcqueen-cars-meme-gif-14031708">Speed I Am Speed GIF</a>from <a href="https://tenor.com/search/speed-gifs">Speed GIFs</a></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
 <h2 id="actually-fixing-the-complexity">Actually fixing the complexity</h2>
 <p>I&rsquo;ve been ranting about the complexity of the initial code for quite a while now, but I still made no actual improvement to the overall complexity. Sure, making our implementation more efficient was important, but theoretically nothing changed, we still iterate over the whole dictionary to find the top pair:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># n words, for m merges</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># n words, for m merges</span>
 </span></span><span style="display:flex;"><span>vocab <span style="color:#f92672">=</span> build_vocab(words) <span style="color:#75715e"># O(n)</span>
 </span></span><span style="display:flex;"><span>root, pair_nodes <span style="color:#f92672">=</span> tokens_and_pairs(words) <span style="color:#75715e"># O(n)</span>
 </span></span><span style="display:flex;"><span>merge_tree <span style="color:#f92672">=</span> []
@@ -672,7 +682,7 @@ Expanding it is easy but maintaining seems hard, because we the values inside th
 <p>This does come at the cost of roughly doubling memory usage, but in return you get O(1) access to the maximum and O(log n) for insertions and deletions. The main caveat is during sift-up and sift-down operations—every time elements are swapped in the heap, the position map has to be updated accordingly.I&rsquo;m not going over all the binary heap logic, but if you&rsquo;re interested check <a href="https://runestone.academy/ns/books/published/pythonds/Trees/BinaryHeapImplementation.html">this page</a> which has crystal clear<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> explanations.
 The code for the <code>MultisetHeap</code> class is <a href="https://github.com/Shika-B/speedy-bpe/blob/main/python/multiheap.py">here</a>.</p>
 <p>We change our <code>merge</code>, <code>train</code> and <code>get_stats</code> functions to use this new data structure instead of a dictionary.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># In `get_stats`</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># In `get_stats`</span>
 </span></span><span style="display:flex;"><span>stats<span style="color:#f92672">.</span>add((root<span style="color:#f92672">.</span>tok_id, root<span style="color:#f92672">.</span>nxt<span style="color:#f92672">.</span>tok_id), <span style="color:#ae81ff">1</span>) <span style="color:#75715e"># updated</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># In `merge`</span>
@@ -685,7 +695,7 @@ The code for the <code>MultisetHeap</code> class is <a href="https://github.com/
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># In `train`</span>
 </span></span><span style="display:flex;"><span>(_count, (left, right)) <span style="color:#f92672">=</span> stats<span style="color:#f92672">.</span>popmax() <span style="color:#75715e"># updated</span>
 </span></span></code></pre></div><p>Let&rsquo;s try running it&hellip; and if you&rsquo;re following along you&rsquo;ll get a weird <code>KeyError</code> message. It took me some time to understand this was not a problem in my multiheap implementation but in my logic: When the max is <code>pop</code>-ed, <code>stats[(left, right)]</code> gives a key error. Now, if <code>(node.prev.tok_id, node.tok_id) = (left, right)</code> for instance, boom KeyError. This can happens only if there is a sequence of three characters that are the same, so that&rsquo;s really a PAIN to debug. The fix is, however, very simple:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># In `merge`</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># In `merge`</span>
 </span></span><span style="display:flex;"><span>stats<span style="color:#f92672">.</span>add((node<span style="color:#f92672">.</span>prev<span style="color:#f92672">.</span>tok_id, fresh_token), <span style="color:#ae81ff">1</span>)
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (node<span style="color:#f92672">.</span>prev<span style="color:#f92672">.</span>tok_id, node<span style="color:#f92672">.</span>tok_id) <span style="color:#f92672">!=</span> pair_to_merge: <span style="color:#75715e"># updated</span>
 </span></span><span style="display:flex;"><span>    stats<span style="color:#f92672">.</span>sub((node<span style="color:#f92672">.</span>prev<span style="color:#f92672">.</span>tok_id, node<span style="color:#f92672">.</span>tok_id), <span style="color:#ae81ff">1</span>)
@@ -695,7 +705,7 @@ The code for the <code>MultisetHeap</code> class is <a href="https://github.com/
 </span></span><span style="display:flex;"><span>    stats<span style="color:#f92672">.</span>sub((node<span style="color:#f92672">.</span>nxt<span style="color:#f92672">.</span>tok_id, node<span style="color:#f92672">.</span>nxt<span style="color:#f92672">.</span>nxt<span style="color:#f92672">.</span>tok_id), <span style="color:#ae81ff">1</span>)
 </span></span></code></pre></div><h2 id="final-clean-up">Final clean up</h2>
 <p>While we&rsquo;re at it, let&rsquo;s do a little clean up. Since we&rsquo;re only doing it once, we can build the initial statistics and the linked list in one pass:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">tokens_pairs_and_stats</span>(words, vocab, keep_stats<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>):
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">tokens_pairs_and_stats</span>(words, vocab, keep_stats<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>):
 </span></span><span style="display:flex;"><span>    dummy <span style="color:#f92672">=</span> TokenNode(<span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
 </span></span><span style="display:flex;"><span>    node <span style="color:#f92672">=</span> dummy
 </span></span><span style="display:flex;"><span>    pairs <span style="color:#f92672">=</span> defaultdict(list)
@@ -718,43 +728,43 @@ The code for the <code>MultisetHeap</code> class is <a href="https://github.com/
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> root, pairs, stats
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> root, pairs, <span style="color:#66d9ef">None</span>
 </span></span></code></pre></div><p>and we replace</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># In train</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># In train</span>
 </span></span><span style="display:flex;"><span>_root, pairs, stats <span style="color:#f92672">=</span> tokens_pairs_and_stats(words, vocab, keep_stats<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># In encode</span>
 </span></span><span style="display:flex;"><span>tokens, pairs, _ <span style="color:#f92672">=</span> tokens_pairs_and_stats(words, vocab, keep_stats<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
 </span></span></code></pre></div><h2 id="results-and-conclusion">Results and conclusion</h2>
 <p>Running it, we get:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>&gt; time python fast.py
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>&gt; time python fast.py
 </span></span><span style="display:flex;"><span>real	0m17,884s
 </span></span><span style="display:flex;"><span>user	0m16,950s
 </span></span><span style="display:flex;"><span>sys	0m0,934s
 </span></span></code></pre></div><p>And the final results in a nice little table:</p>
 <table>
-<thead>
-<tr>
-<th style="text-align:left">Code</th>
-<th style="text-align:center">Time</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Python Naive</td>
-<td style="text-align:center">4h48m</td>
-</tr>
-<tr>
-<td style="text-align:left">Rust Naive + small strings</td>
-<td style="text-align:center">5m40s</td>
-</tr>
-<tr>
-<td style="text-align:left">Python Optimized</td>
-<td style="text-align:center">17s</td>
-</tr>
-<tr>
-<td style="text-align:left">HuggingFace tokenizers in Rust</td>
-<td style="text-align:center">0.9s</td>
-</tr>
-</tbody>
+	<thead>
+			<tr>
+					<th style="text-align: left">Code</th>
+					<th style="text-align: center">Time</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td style="text-align: left">Python Naive</td>
+					<td style="text-align: center">4h48m</td>
+			</tr>
+			<tr>
+					<td style="text-align: left">Rust Naive + small strings</td>
+					<td style="text-align: center">5m40s</td>
+			</tr>
+			<tr>
+					<td style="text-align: left">Python Optimized</td>
+					<td style="text-align: center">17s</td>
+			</tr>
+			<tr>
+					<td style="text-align: left">HuggingFace tokenizers in Rust</td>
+					<td style="text-align: center">0.9s</td>
+			</tr>
+	</tbody>
 </table>
 <p>The full code is available <a href="https://github.com/Shika-B/speedy-bpe/">here</a>.</p>
 <p>I am curious as to how close I can get to hugging face perfs by porting the Python optimized code to Rust. The linked list part is definitely not suited to Rust, but we can <a href="https://docs.rs/indexlist/latest/indexlist/">get around that</a>. Maybe I&rsquo;ll try doing that and update that blog post in the future: stay tuned.</p>

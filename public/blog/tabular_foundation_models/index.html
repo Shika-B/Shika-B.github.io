@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>One-shot tabular predictions | Slow Data</title>
+<meta name="title" content="One-shot tabular predictions" />
+<meta name="description" content="Most of the data that actually runs the world lives in spreadsheets. Hospital records, bank transactions, sensor logs,
+messy CSV your colleague emailed you last Tuesday: it&rsquo;s really rows and columns all the way down. While we have been
+hearing quite a lot about language models writing poetry and code and image models painting cathedrals, the
+humble tabular prediction task was left to older methods1 for quite a long time. That changed a few years ago, with
+the introduction of various tabular foundation models2." />
+<meta name="keywords" content="Computer Science,Machine Learning,Tabular Prediction,Foundation Models," />
+
+
+<meta property="og:url" content="http://localhost:1313/blog/tabular_foundation_models/">
+	<meta property="og:site_name" content="Slow Data">
+	<meta property="og:title" content="One-shot tabular predictions">
+	<meta property="og:description" content="Most of the data that actually runs the world lives in spreadsheets. Hospital records, bank transactions, sensor logs, messy CSV your colleague emailed you last Tuesday: it’s really rows and columns all the way down. While we have been hearing quite a lot about language models writing poetry and code and image models painting cathedrals, the humble tabular prediction task was left to older methods1 for quite a long time. That changed a few years ago, with the introduction of various tabular foundation models2.">
+	<meta property="og:locale" content="en_us">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="blog">
+		<meta property="article:published_time" content="2026-05-27T13:44:57+01:00">
+		<meta property="article:modified_time" content="2026-05-27T13:44:57+01:00">
+		<meta property="article:tag" content="Computer Science">
+		<meta property="article:tag" content="Machine Learning">
+		<meta property="article:tag" content="Tabular Prediction">
+		<meta property="article:tag" content="Foundation Models">
+
+
+
+
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="One-shot tabular predictions">
+	<meta name="twitter:description" content="Most of the data that actually runs the world lives in spreadsheets. Hospital records, bank transactions, sensor logs, messy CSV your colleague emailed you last Tuesday: it’s really rows and columns all the way down. While we have been hearing quite a lot about language models writing poetry and code and image models painting cathedrals, the humble tabular prediction task was left to older methods1 for quite a long time. That changed a few years ago, with the introduction of various tabular foundation models2.">
+
+
+
+
+	<meta itemprop="name" content="One-shot tabular predictions">
+	<meta itemprop="description" content="Most of the data that actually runs the world lives in spreadsheets. Hospital records, bank transactions, sensor logs, messy CSV your colleague emailed you last Tuesday: it’s really rows and columns all the way down. While we have been hearing quite a lot about language models writing poetry and code and image models painting cathedrals, the humble tabular prediction task was left to older methods1 for quite a long time. That changed a few years ago, with the introduction of various tabular foundation models2.">
+	<meta itemprop="datePublished" content="2026-05-27T13:44:57+01:00">
+	<meta itemprop="dateModified" content="2026-05-27T13:44:57+01:00">
+	<meta itemprop="wordCount" content="2181">
+	<meta itemprop="keywords" content="Computer Science,Machine Learning,Tabular Prediction,Foundation Models">
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  :root {
+    --width: 1024px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #01242e;
+    --heading-color: #eee;
+    --text-color: #ddd;
+    --link-color: #8cc2dd;
+    --visited-color: #8b6fcb;
+    --blockquote-color: #ccc;
+
+
+  }
+
+  @media (prefers-color-scheme: white) {
+    :root {
+      --background-color: #fff;
+      --heading-color: #222;
+      --text-color: #444;
+      --link-color: #3273dc;
+      --visited-color: #8b6fcb;
+      --blockquote-color: #222;
+    }
+  }
+
+  body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+  }
+
+  a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  nav a {
+    margin-right: 8px;
+  }
+
+  strong,
+  b {
+    color: var(--heading-color);
+  }
+
+  button {
+    margin: 0;
+    cursor: pointer;
+  }
+
+  time {
+    font-family: monospace;
+    font-style: normal;
+    font-size: 15px;
+  }
+
+  main {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px dashed;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    font-family: monospace;
+    padding: 2px;
+    border-radius: 3px;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: var(--blockquote-color);
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px 0;
+    text-align: center;
+  }
+
+  .title:hover {
+    text-decoration: none;
+  }
+
+  .title h1 {
+    font-size: 1.5em;
+  }
+
+  .inline {
+    width: auto !important;
+  }
+
+  .highlight,
+  .code {
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+  }
+
+  .highlight pre,
+  .code pre {
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 5px;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: var(--visited-color);
+  }
+</style>
+
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+
+<script>
+  MathJax = {
+    tex: {
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],  
+      inlineMath: [['$', '$']]                  
+    },
+    loader:{
+      load: ['ui/safe']
+    },
+  };
+</script>
+  
+</head>
+
+<body>
+  <header><a href="/" class="title">
+  <h2>Slow Data</h2>
+</a>
+<nav>
+<a href="/blog/">Blog</a>
+
+</nav>
+</header>
+  <main>
+
+<h1>One-shot tabular predictions</h1>
+<p>
+  <i>
+    <time datetime='2026-05-27'>
+      27 May, 2026
+    </time>
+  </i>
+</p>
+
+<content>
+  <p>Most of the data that actually runs the world lives in spreadsheets. Hospital records, bank transactions, sensor logs,
+messy CSV your colleague emailed you last Tuesday: it&rsquo;s really rows and columns all the way down. While we have been
+hearing quite a lot about language models writing poetry and code and image models painting cathedrals, the
+humble tabular prediction task was left to older methods<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> for quite a long time. That changed a few years ago, with
+the introduction of various tabular foundation models<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
+<p>Consider the following table, where unknown entries are marked by red question
+marks:</p>
+<table>
+	<thead>
+			<tr>
+					<th style="text-align: right">Cloud cover (%)</th>
+					<th style="text-align: right">Humidity (%)</th>
+					<th style="text-align: right">Pressure (hPa)</th>
+					<th style="text-align: right">Wind (km/h)</th>
+					<th style="text-align: center">Season</th>
+					<th style="text-align: center">Rain tomorrow</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td style="text-align: right">20</td>
+					<td style="text-align: right">45</td>
+					<td style="text-align: right">1021</td>
+					<td style="text-align: right">8</td>
+					<td style="text-align: center">summer</td>
+					<td style="text-align: center">no</td>
+			</tr>
+			<tr>
+					<td style="text-align: right">85</td>
+					<td style="text-align: right">88</td>
+					<td style="text-align: right">998</td>
+					<td style="text-align: right">22</td>
+					<td style="text-align: center">autumn</td>
+					<td style="text-align: center">yes</td>
+			</tr>
+			<tr>
+					<td style="text-align: right">60</td>
+					<td style="text-align: right">72</td>
+					<td style="text-align: right">1009</td>
+					<td style="text-align: right">12</td>
+					<td style="text-align: center">spring</td>
+					<td style="text-align: center">no</td>
+			</tr>
+			<tr>
+					<td style="text-align: right">90</td>
+					<td style="text-align: right">80</td>
+					<td style="text-align: right">1002</td>
+					<td style="text-align: right"><span style="color:red">?</span></td>
+					<td style="text-align: center">winter</td>
+					<td style="text-align: center">yes</td>
+			</tr>
+			<tr>
+					<td style="text-align: right">40</td>
+					<td style="text-align: right">55</td>
+					<td style="text-align: right">1015</td>
+					<td style="text-align: right">10</td>
+					<td style="text-align: center">summer</td>
+					<td style="text-align: center">no</td>
+			</tr>
+			<tr>
+					<td style="text-align: right">75</td>
+					<td style="text-align: right">90</td>
+					<td style="text-align: right">1005</td>
+					<td style="text-align: right">6</td>
+					<td style="text-align: center">spring</td>
+					<td style="text-align: center">yes</td>
+			</tr>
+			<tr>
+					<td style="text-align: right">30</td>
+					<td style="text-align: right">65</td>
+					<td style="text-align: right">1018</td>
+					<td style="text-align: right">15</td>
+					<td style="text-align: center">autumn</td>
+					<td style="text-align: center">no</td>
+			</tr>
+			<tr>
+					<td style="text-align: right">80</td>
+					<td style="text-align: right">78</td>
+					<td style="text-align: right">1007</td>
+					<td style="text-align: right">14</td>
+					<td style="text-align: center">winter</td>
+					<td style="text-align: center"><span style="color:red">?</span></td>
+			</tr>
+	</tbody>
+</table>
+<p>On tables like this one, the task of filling the red question marks with guesses is called a <em>tabular prediction tasks</em>.
+One way to fill the remaining entries is to make the most probable guess given what&rsquo;s known about the row (i.e. the
+other known entries in the same row). It&rsquo;s winter, and it&rsquo;s cloudy, so I guess it will rain. I know that because I
+have an idea of what the fields mean and how they correlate. That&rsquo;s better than random guessing, but it&rsquo;s probably even
+better to also lean on the rows that are fully known, so as to learn the general relations and correlations between the
+columns. This is pretty much the Bayesian approach. Unsurprisingly, the Bayesian approach completely dominates the
+field of tabular prediction.</p>
+<p>Before introducing modern methods, it&rsquo;s worth spending a minute on the two methods that have been winning at this game
+for years. Both are built out of <em>decision trees</em>.</p>
+<h2 id="the-binning-trick">The binning trick</h2>
+<p>One small but useful trick before we start. From here on we&rsquo;ll pretend every target is categorical, even when it&rsquo;s
+really a continuous number. Predicting a real-valued $y_\star$ (wind speed, say) gets turned into a classification
+problem by <em>binning</em>: chop the range of $y$ into $B$ buckets $[b_0, b_1), [b_1, b_2), \dots, [b_{B-1}, b_B]$ and replace
+each true value with the index of the bucket it falls into. The model then predicts a distribution over $B$ classes
+instead of a single scalar. You lose a bit of resolution (you&rsquo;re capped by the bin width), but you can work with a
+single uniform output head for your model.</p>
+<h2 id="decision-trees">Decision trees</h2>
+<p>A decision tree is a little flowchart. At each internal node, it asks a yes/no question about one feature, for instance
+&ldquo;is season = winter&rdquo; or &ldquo;is humidity &gt; 70%?&rdquo;, and routes the row left or right. At the leaves, it spits out a
+prediction: a class label if we&rsquo;re trying to predict a categorical value.</p>
+<p>To build a decision tree that fits your data, you must train it. A common method is to greedily pick, at each node, the
+feature and threshold that best separates the data. &ldquo;Best&rdquo; is measured by some impurity criterion. For classification,
+the most common one (Gini impurity) evaluates the probability that two rows reaching this node have different class
+labels. Formally, if the node &ldquo;contains&rdquo; class proportions $p_1, \dots, p_K$ then the Gini impurity of the node is
+defined as</p>
+$$G = 1 - \sum_{k=1}^{K} p_k^2$$<p>A split is good if it produces child nodes with lower (weighted) impurity than the parent. You keep splitting until some
+stopping rule kicks in — minimum samples per leaf, maximum depth, etc.</p>
+<p>For categorical values, code would look something like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">gini</span>(y):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 1 - sum_k p_k^2 over the classes present in y</span>
+</span></span><span style="display:flex;"><span>    _, counts <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>unique(y, return_counts<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> counts <span style="color:#f92672">/</span> len(y)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">-</span> sum(p <span style="color:#f92672">**</span> <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">split_score</span>(y_left, y_right):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># weighted impurity of the two children</span>
+</span></span><span style="display:flex;"><span>    n <span style="color:#f92672">=</span> len(y_left) <span style="color:#f92672">+</span> len(y_right)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> (len(y_left)  <span style="color:#f92672">/</span> n) <span style="color:#f92672">*</span> gini(y_left) \
+</span></span><span style="display:flex;"><span>         <span style="color:#f92672">+</span> (len(y_right) <span style="color:#f92672">/</span> n) <span style="color:#f92672">*</span> gini(y_right)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">candidate_thresholds</span>(column):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># midpoints between consecutive unique values:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># any t between v_i and v_{i+1} produces the same split,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># so the midpoint is the canonical representative.</span>
+</span></span><span style="display:flex;"><span>    v <span style="color:#f92672">=</span> sorted(set(column))
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> [(v[i] <span style="color:#f92672">+</span> v[i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>]) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span> <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(v) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">best_split</span>(X, y):
+</span></span><span style="display:flex;"><span>    best <span style="color:#f92672">=</span> (<span style="color:#66d9ef">None</span>, <span style="color:#66d9ef">None</span>, <span style="color:#f92672">+</span>inf)   <span style="color:#75715e"># (feature, threshold, score)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(num_features(X)):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> t <span style="color:#f92672">in</span> candidate_thresholds(X[:, j]):
+</span></span><span style="display:flex;"><span>            left  <span style="color:#f92672">=</span> X[:, j] <span style="color:#f92672">&lt;=</span> t
+</span></span><span style="display:flex;"><span>            right <span style="color:#f92672">=</span> X[:, j] <span style="color:#f92672">&gt;</span>  t
+</span></span><span style="display:flex;"><span>            s <span style="color:#f92672">=</span> split_score(y[left], y[right])
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> s <span style="color:#f92672">&lt;</span> best[<span style="color:#ae81ff">2</span>]:
+</span></span><span style="display:flex;"><span>                best <span style="color:#f92672">=</span> (j, t, s)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> best[<span style="color:#ae81ff">0</span>], best[<span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">fit_decision_tree</span>(X, y, depth<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, max_depth<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>, min_samples<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> depth <span style="color:#f92672">&gt;=</span> max_depth <span style="color:#f92672">or</span> len(y) <span style="color:#f92672">&lt;</span> min_samples <span style="color:#f92672">or</span> gini(y) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> Leaf(prediction<span style="color:#f92672">=</span>majority_class(y))
+</span></span><span style="display:flex;"><span>    j, t <span style="color:#f92672">=</span> best_split(X, y)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> j <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:                       <span style="color:#75715e"># no useful split exists</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> Leaf(prediction<span style="color:#f92672">=</span>majority_class(y))
+</span></span><span style="display:flex;"><span>    left, right <span style="color:#f92672">=</span> X[:, j] <span style="color:#f92672">&lt;=</span> t, X[:, j] <span style="color:#f92672">&gt;</span> t
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> Node(
+</span></span><span style="display:flex;"><span>        feature<span style="color:#f92672">=</span>j, threshold<span style="color:#f92672">=</span>t,
+</span></span><span style="display:flex;"><span>        left  <span style="color:#f92672">=</span> fit_decision_tree(X[left],  y[left],  depth <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, max_depth, min_samples),
+</span></span><span style="display:flex;"><span>        right <span style="color:#f92672">=</span> fit_decision_tree(X[right], y[right], depth <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, max_depth, min_samples),
+</span></span><span style="display:flex;"><span>    )
+</span></span></code></pre></div><p>Once the decision tree is trained, it is straightforward to use it for inference on new rows where the label to
+predict is not directly known. A single tree is interpretable and fast, but also a very poor model: small changes to
+the data can produce significantly different trees, and deep trees overfit. The two methods below are both ways of
+taming this fragility by combining many trees.</p>
+<h2 id="random-forests">Random forests</h2>
+<p>The idea: grow a lot of trees, each on a random subset of the rows and a random subset of the columns, then average
+their predictions. Each tree is a noisy, biased guess on its own, but the noise tends to cancel out when you average<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.</p>
+<p>Formally, if $T_1, \dots, T_B$ are trees fit on samples of the data, the forest&rsquo;s prediction is</p>
+$$\hat{y}(x) = \frac{1}{B} \sum_{b=1}^{B} T_b(x)$$<p>for regression, or a majority vote for classification.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">predict_row</span>(tree, x):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># walk the tree from root to a leaf, branching on x[feature] &lt;= threshold</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> isinstance(tree, Leaf):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> tree<span style="color:#f92672">.</span>prediction
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> x[tree<span style="color:#f92672">.</span>feature] <span style="color:#f92672">&lt;=</span> tree<span style="color:#f92672">.</span>threshold:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> predict_row(tree<span style="color:#f92672">.</span>left, x)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> predict_row(tree<span style="color:#f92672">.</span>right, x)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">predict_all</span>(tree, X):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># one prediction per row of X</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> np<span style="color:#f92672">.</span>array([predict_row(tree, x) <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> X])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">random_forest</span>(X, y, B<span style="color:#f92672">=</span><span style="color:#ae81ff">500</span>):
+</span></span><span style="display:flex;"><span>    trees <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(B):
+</span></span><span style="display:flex;"><span>        rows <span style="color:#f92672">=</span> bootstrap_sample(X)             <span style="color:#75715e"># sample with replacement</span>
+</span></span><span style="display:flex;"><span>        cols <span style="color:#f92672">=</span> random_subset(features(X))      <span style="color:#75715e"># pick a random feature subset</span>
+</span></span><span style="display:flex;"><span>        trees<span style="color:#f92672">.</span>append(fit_decision_tree(X[rows, cols], y[rows]))
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> trees
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">predict_forest</span>(trees, x):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> mean(predict_row(t, x) <span style="color:#66d9ef">for</span> t <span style="color:#f92672">in</span> trees)
+</span></span></code></pre></div><p>The trees don&rsquo;t talk to each other, which allows for parallelisation in real life implementations.</p>
+<h2 id="gradient-boosting">Gradient boosting</h2>
+<p>Boosting plays a different game. Instead of growing trees independently, it grows them <em>sequentially</em>, where each new
+tree tries to fix the mistakes of the set of trees so far. If the current ensemble predicts $\hat{y}_t(x)$, the next
+tree $T_{t+1}$ is fit to the <em>residuals</em>: the difference between the true class and the predictions.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">gradient_boost</span>(X, y, T<span style="color:#f92672">=</span><span style="color:#ae81ff">500</span>, eta<span style="color:#f92672">=</span><span style="color:#ae81ff">0.1</span>): <span style="color:#75715e"># eta is a tunable learning rate</span>
+</span></span><span style="display:flex;"><span>    pred <span style="color:#f92672">=</span> full(len(y), mean(y)) <span style="color:#75715e"># start with any bad prediction</span>
+</span></span><span style="display:flex;"><span>    trees <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(T):
+</span></span><span style="display:flex;"><span>        residuals <span style="color:#f92672">=</span> y <span style="color:#f92672">-</span> pred 
+</span></span><span style="display:flex;"><span>        tree <span style="color:#f92672">=</span> fit_decision_tree(X, residuals)  <span style="color:#75715e"># tree learns to predict residuals</span>
+</span></span><span style="display:flex;"><span>        pred <span style="color:#f92672">=</span> pred <span style="color:#f92672">+</span> eta <span style="color:#f92672">*</span> predict_all(tree, X)  <span style="color:#75715e"># nudge each prediction toward y</span>
+</span></span><span style="display:flex;"><span>        trees<span style="color:#f92672">.</span>append(tree)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> trees
+</span></span></code></pre></div><p>The catch is that this iterative correction can overfit if you let it run too long, so tuning $T$ and $\eta$ matters.
+The payoff is that boosted trees are very hard to beat on tabular data.</p>
+<h2 id="one-shot-prediction">One-shot prediction</h2>
+<p>The biggest downside of these methods is that they require careful finetuning of hyperparameters, and training. This
+turns out to be a big bottleneck in real life, and people work around it by letting humongous grid searches run for days
+to optimize these hyperparameters. And the actual training in itself also takes a lot of time.</p>
+<p>If only we could just  <em>show</em> the model a table and have it tell us what&rsquo;s in the missing cells. After all,
+LLMs don&rsquo;t get retrained every time you hand them a new document. They were pretrained once, on enormous amounts of
+text, and from that they learned something general enough that &ldquo;what&rsquo;s the next token in this paragraph&rdquo; can be answered
+in one forward pass.</p>
+<p>The hope is that the same trick works for tables: pretrain a model on millions of synthetic (or real) tables of all
+shapes and sizes, and it learns the meta-task of &ldquo;given a few rows, predict the missing cell&rdquo; well enough that,
+at inference time, you just feed it your CSV and read off the answer. Hence the name <em>one-shot prediction</em>.</p>
+<p>The rest of this post is about some of the ideas that actually make this possible.</p>
+<h2 id="pretraining-on-a-synthetic-prior">Pretraining on a synthetic prior</h2>
+<p>The main trick that makes this work, popularized by TabPFN<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>, is to <strong>generate the training data instead of collecting
+it</strong>. Collecting billions of real tables with reliable labels to learn on is basically impossible. Instead, they imagine
+a prior $p(\text{table})$ over all the kinds of tables you might ever encounter: how many rows, how many columns, what
+the relationships between columns look like, how much noise sits on top. If you can sample from that prior, you can
+produce an infinite stream of synthetic tables, each with a known &ldquo;ground-truth&rdquo; missing cell, because you generated it
+yourself.</p>
+<p>Crucially, tables are <em>not</em> random matrices. The goal is to sample tables that have meaningful relations between
+columns, so that some kind of Bayesian prediction is possible, since sheets in real life do have those kinds of
+relations. Predicting values that are uniformly distributed is both impossible and useless anyway.<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup></p>
+<p>In practice, the prior is built out of small random Bayesian networks. You sample a Directed Acyclic Graph (DAG), sample
+functional relationships along the edges (often parameterized by tiny neural networks), push noise through, and read off
+a table. The schema looks roughly like:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sample_table</span>():
+</span></span><span style="display:flex;"><span>    n_features <span style="color:#f92672">=</span> randint(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">100</span>)
+</span></span><span style="display:flex;"><span>    n_rows     <span style="color:#f92672">=</span> randint(<span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">1000</span>)
+</span></span><span style="display:flex;"><span>    graph      <span style="color:#f92672">=</span> sample_random_dag(n_features <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)        <span style="color:#75715e"># +1 for the target</span>
+</span></span><span style="display:flex;"><span>    functions  <span style="color:#f92672">=</span> {edge: sample_random_function() <span style="color:#66d9ef">for</span> edge <span style="color:#f92672">in</span> graph<span style="color:#f92672">.</span>edges}
+</span></span><span style="display:flex;"><span>    noise      <span style="color:#f92672">=</span> sample_noise_levels(graph<span style="color:#f92672">.</span>nodes)
+</span></span><span style="display:flex;"><span>    X, y <span style="color:#f92672">=</span> simulate(graph, functions, noise, n_rows)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> X, y
+</span></span></code></pre></div><p>Each call gives you a new synthetic dataset, complete with the right answer, without ever needing a human to curate it.</p>
+<h2 id="the-transformer-as-a-posterior-approximator">The transformer as a posterior approximator</h2>
+<p>Now you take a transformer and train it as you would with an LLM, but instead of &ldquo;predict the next token&rdquo;, the input
+is a whole table: a <em>context</em> of labeled rows $(x_1, y_1), \dots, (x_n, y_n)$ plus a <em>query</em> row $x_\star$ whose
+label $y_\star$ is hidden. The output is a distribution over $y_\star$.</p>
+<p>The loss is the cross-entropy of that distribution against the true label you generated.
+In <a href="https://arxiv.org/abs/2112.10510">Müller et al.</a> they prove something that feels fairly intuitive: optimizing for
+this loss is exactly optimizing for the posterior prediction distribution, i.e when you know both about the prior and
+the context.</p>
+<p>The transformer isn&rsquo;t being told &ldquo;here&rsquo;s a dataset, fit it&rdquo;. The prior lives in the weights and only the posterior
+update happens in the attention layers, in a single forward pass.</p>
+<p>For instance, for our weather table, the six full rows go in as context and each row containing a red <code>?</code> goes in as a
+separate<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup> query. The model spits out a probability over <code>{yes, no}</code> for the rain column and a distribution over wind
+speeds for the other, and you&rsquo;re done.</p>
+<h2 id="where-this-breaks">Where this breaks</h2>
+<p>The pretty story has limits. Current tabular foundation models do best on small-to-medium tables with up to a few
+thousand rows and a hundred or so columns, the regime the prior was trained to cover and the only regime the
+architecture is capable of handling right now. Pushing them to a million-row dataset with hundreds of categorical
+features is ongoing work (TabPFN v3 apparently managed to reach this milestone but I haven&rsquo;t verified it).</p>
+<p>The main bottleneck is memory: attention is quadratic in the context length, and the context <em>is</em> the dataset.
+There&rsquo;s also the hard question of designing synthetic priors that properly cover the weirdness that real tables
+exhibit. Older methods still beat them on Kaggle for instance, often comfortably.</p>
+<p>Still, the idea that one day we may have a strong and general foundation model for this kind of task is really
+exciting.</p>
+<p>For anyone interested, there is also a pedagogical paper (with associated code that can be run on a laptop) that goes
+into much more detail on the technical side of how Tabular Foundation Models (and more specifically TabPFN-family
+models) work, called <a href="https://arxiv.org/pdf/2511.03634">nanoTabPFN</a>. The code is available
+<a href="https://github.com/automl/nanoTabPFN">here</a>.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Maybe because Random forests and gradient boosting methods are still extremely strong baselines.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p><em>Foundation model</em> is a general term that basically means a model that can do a large variety of tasks because
+it has been trained on a lot of diverse data. Promptable models, both for text and image generation, typically lie in
+this category.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p>Something something Central Limit Theorem&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4">
+<p>TabPFN (Hollmann et al., <a href="https://arxiv.org/abs/2207.01848">2022</a>) is the canonical example. The same authors
+later released a much-improved TabPFN v2 in <em>Nature</em>. Recently, they announced TabPFN v3
+<a href="https://arxiv.org/pdf/2605.13986">here</a>.&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:5">
+<p>Except for winning the lottery I guess.&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:6">
+<p>In practice this is batched on GPU, of course.&#160;<a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+</content>
+
+
+
+<p>
+  
+  <a href="http://localhost:1313/tags/computer-science/">#Computer Science</a>
+  
+  <a href="http://localhost:1313/tags/machine-learning/">#Machine Learning</a>
+  
+  <a href="http://localhost:1313/tags/tabular-prediction/">#Tabular Prediction</a>
+  
+  <a href="http://localhost:1313/tags/foundation-models/">#Foundation Models</a>
+  
+</p>
+
+  </main>
+  <footer>Made with <a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ Bear</a>
+</footer>
+
+  
+</body>
+
+</html>
