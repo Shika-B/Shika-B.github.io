@@ -1,5 +1,5 @@
 +++
-title = "One-shot tabular predictions"
+title = "One-shot tabular prediction"
 date = "2026-05-27T13:44:57+01:00"
 
 #
@@ -263,6 +263,10 @@ For anyone interested, there is also a pedagogical paper (with associated code t
 into much more detail on the technical side of how Tabular Foundation Models (and more specifically TabPFN-family 
 models) work, called [nanoTabPFN](https://arxiv.org/pdf/2511.03634). The code is available
 [here](https://github.com/automl/nanoTabPFN).
+
+# Comments
+
+Sorry, I'm too lazy to load a proper comment system plugin: see the associated [github issue](https://github.com/Shika-B/Shika-B.github.io/issues/3).
 
 
 [^1]: Maybe because Random forests and gradient boosting methods are still extremely strong baselines.

@@ -178,3 +178,7 @@ $$
 and that whenever either one has a solution, the other also has one and the objectives are equal. It’s a nice exercise to use the framework developed here to prove it.
 
 This implies that finding a feasible point for a general LP is as hard as finding an optimal one. Can you see why?
+
+# Comments
+
+Sorry, I'm too lazy to load a proper comment system plugin: see the associated [github issue](https://github.com/Shika-B/Shika-B.github.io/issues/4).

@@ -56,7 +56,7 @@ But for now, the bot occasionally says something funny enough that people forget
 
 # Comments
 
-Sorry, I'm too lazy to load a proper comment system plugin: see the associated [github issue](https://github.com/Shika-B/Shika-B.github.io/issues/3).
+Sorry, I'm too lazy to load a proper comment system plugin: see the associated [github issue](https://github.com/Shika-B/Shika-B.github.io/issues/5).
 
 [^1]: No underpaid third-worlders were involved! 
 
