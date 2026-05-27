@@ -254,7 +254,7 @@ features is ongoing work (TabPFN v3 apparently managed to reach this milestone b
 
 The main bottleneck is memory: attention is quadratic in the context length, and the context *is* the dataset. 
 There's also the hard question of designing synthetic priors that properly cover the weirdness that real tables 
-exhibit. Older methods still beat them on Kaggle for instance, often comfortably.
+exhibit. Older methods still beat foundation models on Kaggle competitions for instance, often comfortably.
 
 Still, the idea that one day we may have a strong and general foundation model for this kind of task is really 
 exciting.

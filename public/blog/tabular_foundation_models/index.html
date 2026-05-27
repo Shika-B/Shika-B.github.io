@@ -43,7 +43,7 @@ the introduction of various tabular foundation models2." />
 	<meta itemprop="description" content="Most of the data that actually runs the world lives in spreadsheets. Hospital records, bank transactions, sensor logs, messy CSV your colleague emailed you last Tuesday: it’s really rows and columns all the way down. While we have been hearing quite a lot about language models writing poetry and code and image models painting cathedrals, the humble tabular prediction task was left to older methods1 for quite a long time. That changed a few years ago, with the introduction of various tabular foundation models2.">
 	<meta itemprop="datePublished" content="2026-05-27T13:44:57+01:00">
 	<meta itemprop="dateModified" content="2026-05-27T13:44:57+01:00">
-	<meta itemprop="wordCount" content="2181">
+	<meta itemprop="wordCount" content="2183">
 	<meta itemprop="keywords" content="Computer Science,Machine Learning,Tabular Prediction,Foundation Models">
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
@@ -508,7 +508,7 @@ architecture is capable of handling right now. Pushing them to a million-row dat
 features is ongoing work (TabPFN v3 apparently managed to reach this milestone but I haven&rsquo;t verified it).</p>
 <p>The main bottleneck is memory: attention is quadratic in the context length, and the context <em>is</em> the dataset.
 There&rsquo;s also the hard question of designing synthetic priors that properly cover the weirdness that real tables
-exhibit. Older methods still beat them on Kaggle for instance, often comfortably.</p>
+exhibit. Older methods still beat foundation models on Kaggle competitions for instance, often comfortably.</p>
 <p>Still, the idea that one day we may have a strong and general foundation model for this kind of task is really
 exciting.</p>
 <p>For anyone interested, there is also a pedagogical paper (with associated code that can be run on a laptop) that goes
