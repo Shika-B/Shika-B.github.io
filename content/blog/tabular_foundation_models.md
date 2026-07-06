@@ -29,16 +29,13 @@ marks:
 |              30 |           65 |           1018 |                               15 | autumn |                no                |
 |              80 |           78 |           1007 |                               14 | winter | <span style="color:red">?</span> |
 
-On tables like this one, the task of filling the red question marks with guesses is called a *tabular prediction tasks*.
-One way to fill the remaining entries is to make the most probable guess given what's known about the row (i.e. the 
+On tables like this one, the task of filling the red question marks with reasonable guesses is a *tabular prediction task*.
+One wishes to fill the remaining entries by choosing the most probable value given what's known about the row (i.e. the 
 other known entries in the same row). It's winter, and it's cloudy, so I guess it will rain. I know that because I 
 have an idea of what the fields mean and how they correlate. That's better than random guessing, but it's probably even
 better to also lean on the rows that are fully known, so as to learn the general relations and correlations between the
-columns. This is pretty much the Bayesian approach. Unsurprisingly, the Bayesian approach completely dominates the 
-field of tabular prediction.
-
-
-
+columns. This is pretty much the Bayesian approach. Unsurprisingly, the Bayesian approach completely is the standard 
+framework for tabular prediction.
 
 Before introducing modern methods, it's worth spending a minute on the two methods that have been winning at this game 
 for years. Both are built out of *decision trees*.
