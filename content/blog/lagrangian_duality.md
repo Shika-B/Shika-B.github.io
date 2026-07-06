@@ -7,7 +7,7 @@ date = "2025-11-09T13:44:57+01:00"
 #
 # description = "An optional description for SEO. If not provided, an automatically created summary will be used."
 
-tags = ["Math", "Optimization", "KKT", "Convex optimization", "Linear Programming"]
+tags = ["Mathematics", "Optimization", "KKT", "Convex optimization", "Linear Programming"]
 +++
 
 ## Optimization context
@@ -18,7 +18,7 @@ $$\begin{align*}
                         &&h_j(x) = 0, \text{ for } 1 \leq j \leq n
 \end{align*} 
 $$
-where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. What is a reasonable strategy to solve this ?
+where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. What is a reasonable strategy to solve this?
 
 
 <!---
@@ -71,7 +71,7 @@ The inequality $d^* \leq p^*$ is known as *weak* Lagrangian duality and it is of
 The reverse inequality can be false, and we say *strong* Lagrangian duality holds when it is true, i.e. $p^* = d^*$. The difference $p^* - d^*$ is called the *duality gap*.
 
 {{< details title="Click for counter-example to strong duality">}}
-The example is crafted to make Slatter condition fail (see next section):
+The example is crafted to make Slater's condition fail (see next section):
 
 
 Consider the convex problem (!) given by
@@ -100,7 +100,7 @@ One can actually remove the smoothness condition completely, and work with subgr
 
 {{< /details >}}
 
-The proof is highly geometric and full details can be found in [Convex Optimization, by Boyd and Vandenberghe](https://stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf), at the end of page 234. The drawings and motivation in the book is very nice, and the following proof is only a partial, concise, reconstruction of these.
+The proof is highly geometric and full details can be found in [Convex Optimization, by Boyd and Vandenberghe](https://stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf), at the end of page 234. The drawings and motivation in the book are very nice, and the following proof is only a partial, concise, reconstruction of these.
 
 
 {{< details title="The reconstruction">}}
@@ -127,22 +127,22 @@ The case $\mu = 0$ cannot happen. Indeed, by writing the condition for $\mathcal
 $$\sum_{i = 1}^m \tilde{\lambda}_i f_i(x^0) + \nu^T (Ax^0 - b) \geq \alpha \geq \mu p^* = 0$$
 that $\tilde{\lambda} = 0$ since $f_i(x^0) < 0$.
 
-As $(\tilde{\lambda}, \tilde{\nu}, \mu) \neq 0$, we must have $\tilde{\nu} \neq 0$. From $v^T(Ax^0 - b) \geq 0$, and $x^0$ being in the interior of the domain of definition, we must have a point $x$ with $v^T(Ax - b) \leq 0$, unless $v^T A = 0$, contradicting $\text{rank } A = p$.
+As $(\tilde{\lambda}, \tilde{\nu}, \mu) \neq 0$, we must have $\tilde{\nu} \neq 0$. From $\nu^T(Ax^0 - b) \geq 0$, and $x^0$ being in the interior of the domain of definition, we must have a point $x$ with $\nu^T(Ax - b) \leq 0$, unless $\nu^T A = 0$, contradicting $\text{rank } A = p$.
 
 {{< /details >}}
 
 ## The Karush-Kuhn-Tucker conditions
 
-Strong Lagrangian duality allows us to derive general necessary conditions for a point $x^*$ to be an optimum (at least whenever the duality gap is zero). We go back, for the moment, to the general where $\mathcal{C}$ is any class of smooth functions.
+Strong Lagrangian duality allows us to derive general necessary conditions for a point $x^*$ to be an optimum (at least whenever the duality gap is zero). We go back, for the moment, to the general case where $\mathcal{C}$ is any class of smooth functions.
 
 > __KKT necessary conditions__ (smooth case)
 >
 > Let $x^*$ be an optimal point for a smooth $(P)$ and assume that the duality gap for $(P)$ is zero. Then the KKT conditions state that there exists $\lambda^*, \mu^*$ such that:
 > - The gradient of the Lagrangian w.r.t $x$ is zero at $(x^*, \lambda^*, \mu^*)$:
-> $$ \nabla f(x^*) + \sum_{i = 1}^m \lambda_i^* \nabla g_i(x^*) + \sum_{j = 1}^n \mu_j^* \nabla h_j(x) = 0 $$
+> $$ \nabla f(x^*) + \sum_{i = 1}^m \lambda_i^* \nabla g_i(x^*) + \sum_{j = 1}^n \mu_j^* \nabla h_j(x^*) = 0 $$
 > - $\lambda^* \succeq 0$ and $\lambda_i^* g_i(x^*) = 0$ for each $1 \leq i \leq m$
 
-Pick $(\lambda^*, \mu^*)$ a dual optimal point. The gradient vanishing is given by the fact $x^*$ solves $(P)$, $\lambda^* \succeq 0$ follows from constraints and $\lambda_i^* g_i(x^*)$ follows from $f(x^*) = \mathcal{L}(x^*, \lambda^*, \mu^*)$ and the combination of $\lambda^*_i \leq 0$ and $g_i(x^*) \leq 0$.
+Pick $(\lambda^*, \mu^*)$ a dual optimal point. The gradient vanishing is given by the fact $x^*$ solves $(P)$, $\lambda^* \succeq 0$ follows from constraints and $\lambda_i^* g_i(x^*) = 0$ follows from $f(x^*) = \mathcal{L}(x^*, \lambda^*, \mu^*)$ and the combination of $\lambda^*_i \geq 0$ and $g_i(x^*) \leq 0$.
 
 Note that in the unconstrained case, the conditions reduce to being a critical point.
 

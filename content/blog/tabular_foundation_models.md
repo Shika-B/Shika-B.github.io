@@ -34,7 +34,7 @@ One wishes to fill the remaining entries by choosing the most probable value giv
 other known entries in the same row). It's winter, and it's cloudy, so I guess it will rain. I know that because I 
 have an idea of what the fields mean and how they correlate. That's better than random guessing, but it's probably even
 better to also lean on the rows that are fully known, so as to learn the general relations and correlations between the
-columns. This is pretty much the Bayesian approach. Unsurprisingly, the Bayesian approach completely is the standard 
+columns. This is pretty much the Bayesian approach. Unsurprisingly, the Bayesian approach is the standard 
 framework for tabular prediction.
 
 Before introducing modern methods, it's worth spending a minute on the two methods that have been winning at this game 
@@ -183,7 +183,7 @@ The biggest downside of these methods is that they require careful finetuning of
 turns out to be a big bottleneck in real life, and people work around it by letting humongous grid searches run for days
 to optimize these hyperparameters. And the actual training in itself also takes a lot of time. 
 
-If only we could just  *show* the model a table and have it tell us what's in the missing cells. After all,
+If only we could just *show* the model a table and have it tell us what's in the missing cells. After all,
 LLMs don't get retrained every time you hand them a new document. They were pretrained once, on enormous amounts of 
 text, and from that they learned something general enough that "what's the next token in this paragraph" can be answered
 in one forward pass.
@@ -232,7 +232,7 @@ label $y_\star$ is hidden. The output is a distribution over $y_\star$.
 
 The loss is the cross-entropy of that distribution against the true label you generated. 
 In [Müller et al.](https://arxiv.org/abs/2112.10510) they prove something that feels fairly intuitive: optimizing for 
-this loss is exactly optimizing for the posterior prediction distribution, i.e when you know both about the prior and 
+this loss is exactly optimizing for the posterior prediction distribution, i.e. when you know both about the prior and 
 the context.
 
 The transformer isn't being told "here's a dataset, fit it". The prior lives in the weights and only the posterior 
@@ -270,9 +270,8 @@ Sorry, I'm too lazy to load a proper comment system plugin: see the associated [
 [^2]: *Foundation model* is a general term that basically means a model that can do a large variety of tasks because 
 it has been trained on a lot of diverse data. Promptable models, both for text and image generation, typically lie in 
 this category. 
-[^3]: Something something Central Limit Theorem
+[^3]: Something something Central Limit Theorem.
 [^4]: TabPFN (Hollmann et al., [2022](https://arxiv.org/abs/2207.01848)) is the canonical example. The same authors 
-later released a much-improved TabPFN v2 in *Nature*. Recently, they announced TabPFN v3.
-[here](https://arxiv.org/pdf/2605.13986). 
+later released a much-improved TabPFN v2 in *Nature*. Recently, they announced TabPFN v3 [here](https://arxiv.org/pdf/2605.13986). 
 [^5]: Except for winning the lottery I guess.
 [^6]: In practice this is batched on GPU, of course.

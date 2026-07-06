@@ -23,37 +23,37 @@ The teasing: It will be able to extremely confidently recognize songs from such 
 
 Our goal is to design a fingerprinting algorithm for songs, so that even from an extremely partial and noisy sample from the song, we may recognize parts of its unique fingerprint and match it to the right song in our database. To design such a thing, we need to understand what is a `.wav` or `.mp3` file in a computer, and this is actually closely related to what "sound" means in physics.
 
-## What's a sound, really ?
+## What's a sound, really?
 
 Wikipedia states that:
-> In physics, sound is a vibration that propagates as an acoustic wave through a transmission medium such as a gas, liquid or solid. In human physiology and psychology, sound is the reception of such waves and their perception by the brain. Only acoustic waves that have frequencies lying between about 20 Hz and 20 kHz, the audio frequency range, elicit an auditory percept Sound waves above 20 kHz are known as ultrasound and are not audible to humans. Sound waves below 20 Hz are known as infrasound. Different animal species have varying hearing ranges, allowing some to even hear ultrasounds. 
+> In physics, sound is a vibration that propagates as an acoustic wave through a transmission medium such as a gas, liquid or solid. In human physiology and psychology, sound is the reception of such waves and their perception by the brain. Only acoustic waves that have frequencies lying between about 20 Hz and 20 kHz, the audio frequency range, elicit an auditory percept. Sound waves above 20 kHz are known as ultrasound and are not audible to humans. Sound waves below 20 Hz are known as infrasound. Different animal species have varying hearing ranges, allowing some to even hear ultrasounds. 
 
 What matters in that paragraph is that our human ears hear sounds by sensing variations of the air pressure. In Audacity (a free software for editing audio files), when you open a file, you may visualize it like this:
 
 ![Soundwave and spectrogram](https://manual.audacityteam.org/m/images/b/b7/multi_view_mono_default_50_50.png)
 
-In the top part, a fairly familiar sight: the x-axis is time and the y-axis is the amplitude, i.e the pressure. As we just said, what really matters is the variation of that amplitude, so when we're recording a sound numerically, we need to sample the air pressure very very often. Wikipedia states that we can hear sounds up to 20kHz, so we need atleast 20 000 samples per second ! Actually, to avoid [aliasing](https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem) it is better to have atleast twice that, i.e 40kHz. In a computer, if we ignore compression to save memory, a sound will be represented as a header with some metadata (notably the duration, the sample rate and the number of channels) and then a big list of all these samples. This is exactly how the [`.wav` file format](en.wikipedia.org/wiki/WAV) is designed.
+In the top part, a fairly familiar sight: the x-axis is time and the y-axis is the amplitude, i.e. the pressure. As we just said, what really matters is the variation of that amplitude, so when we're recording a sound numerically, we need to sample the air pressure very very often. Wikipedia states that we can hear sounds up to 20kHz, so we need at least 20 000 samples per second! Actually, to avoid [aliasing](https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem) it is better to have at least twice that, i.e. 40kHz. In a computer, if we ignore compression to save memory, a sound will be represented as a header with some metadata (notably the duration, the sample rate and the number of channels) and then a big list of all these samples. This is exactly how the [`.wav` file format](https://en.wikipedia.org/wiki/WAV) is designed.
 
-Back to that image: in the bottom part, we see something completely different. The x-axis is still time, and the color is the intensity of the sound at a given time, but then what's the  y-axis ? The answer is frequency, in this case it seems to be varying between 0 and 12kHz, with most signal being below 2.6kHz. As I am more a mathematician than a physicist, I understand this through the following theorem from Fourier analysis:
+Back to that image: in the bottom part, we see something completely different. The x-axis is still time, and the color is the intensity of the sound at a given time, but then what's the y-axis? The answer is frequency, in this case it seems to be varying between 0 and 12kHz, with most signal being below 2.6kHz. As I am more a mathematician than a physicist, I understand this through the following theorem from Fourier analysis:
 
 > For $f: \mathbb{R} \to \mathbb{R}$ sufficiently smooth (for instance, $\mathcal{C}^1$ is enough) and $1$-periodic, there exists a unique sequence $(a_n)_{n \in \mathbb{Z}}$ such that $$f(x) = \sum_{n \in \mathbb{Z}} a_n e^{2 i \pi n x}$$
 > Moreover the coefficients $a_n$, called the frequencies composing $f$, can be retrieved through the formula $$a_n = \int_0^1 f(x) e^{-2i \pi nx} \mathrm{d}x$$
 
-The second part of that statement is easy to deduce from the first, by swapping both integrals and using the identity $\int_0^1 e^{2 i \pi n x} = 0$ whenever $n \neq 0$. The first part requires some work and I we will not go down this rabbit hole. Going back to the physics, if we think of $f$ as representing a sound (that is the air pressure as a function of the time), we see that any (periodic, it will matter later) sound can be decomposed as a sum of pure trigonometric waves. Pure sin/cosine soundwaves are called pure tones in music, and they sound kind of like when you hit a single note on a piano. 
+The second part of that statement is easy to deduce from the first, by swapping both integrals and using the identity $\int_0^1 e^{2 i \pi n x} = 0$ whenever $n \neq 0$. The first part requires some work and we will not go down this rabbit hole. Going back to the physics, if we think of $f$ as representing a sound (that is the air pressure as a function of the time), we see that any (periodic, it will matter later) sound can be decomposed as a sum of pure trigonometric waves. Pure sin/cosine soundwaves are called pure tones in music, and they sound kind of like when you hit a single note on a piano. 
 
 ## The infamous FFT
 
-Leaving the physicist realm, we go back to our computers: given an audio file, we need a way to go from the amplitude representation to the frequency representation. The above theorem (up to discretization, i.e replacing integrals by sums over the points of the sampling grid), this amounts to computing enough fourier transforms, that is the above integrals [^2], which is about `2 * SAMPLE_RATE ^2 * DURATION_IN_SECONDS` operations. Even at the extremely low `SAMPLE_RATE = 12_000` for a 3 min audio, we would need 25 920 000 000 operations. Luckily for us, there is a clever algorithm designed in a divide-and-conquer fashion that speeds up this process significantly and runs in quasi-linear time: the Fast Fourier Transform (FFT). For a fairly clear explanation of the algorithm, see [this wikipedia page](https://en.wikipedia.org/wiki/Cooley%E2%80%93Tukey_FFT_algorithm#The_radix-2_DIT_case). 
+Leaving the physicist realm, we go back to our computers: given an audio file, we need a way to go from the amplitude representation to the frequency representation. By the above theorem (up to discretization, i.e. replacing integrals by sums over the points of the sampling grid), this amounts to computing enough Fourier transforms, that is the above integrals [^2], which is about `2 * SAMPLE_RATE ^2 * DURATION_IN_SECONDS` operations. Even at the extremely low `SAMPLE_RATE = 12_000` for a 3 min audio, we would need 25 920 000 000 operations. Luckily for us, there is a clever algorithm designed in a divide-and-conquer fashion that speeds up this process significantly and runs in quasi-linear time: the Fast Fourier Transform (FFT). For a fairly clear explanation of the algorithm, see [this wikipedia page](https://en.wikipedia.org/wiki/Cooley%E2%80%93Tukey_FFT_algorithm#The_radix-2_DIT_case). 
 
 ## Spectrograms
 
-I actually put something under the rug earlier, when I talked about that frequency sound representation (which is called a _spectrogram_ btw). We have a tool (the Fourier transform) to extract frequencies from a sound, but how do we extract frequencies for a sound.. at a given time $t_0$. It turns out we cannot do that, so we do the next best thing: we pick a very small window $[t_0 - \varepsilon, t_0 + \varepsilon]$ and use the Fourier Transform to extract the frequencies of that new sound. Sadly, Fourier transform is designed to work on periodic signal and there is no reason to believe that sound will be periodic. The discontinuities at the edges introduce aliasing defects, and to avoid that we use a [smoothing window function](https://en.wikipedia.org/wiki/Window_function) $\omega(t)$ that is supported on $[t_0 - \varepsilon, t_0 + \varepsilon]$ and zero elsewhere, and we take the Fourier transform of the sound multiplied by this window function over a larger time frame. This avoids aliasing almost completely, at the expense of introducing parasitic frequencies that come from the window function.  
+I actually put something under the rug earlier, when I talked about that frequency sound representation (which is called a _spectrogram_ btw). We have a tool (the Fourier transform) to extract frequencies from a sound, but how do we extract frequencies for a sound.. at a given time $t_0$. It turns out we cannot do that, so we do the next best thing: we pick a very small window $[t_0 - \varepsilon, t_0 + \varepsilon]$ and use the Fourier Transform to extract the frequencies of that new sound. Sadly, Fourier transform is designed to work on periodic signals and there is no reason to believe that sound will be periodic. The discontinuities at the edges introduce aliasing defects, and to avoid that we use a [smoothing window function](https://en.wikipedia.org/wiki/Window_function) $\omega(t)$ that is supported on $[t_0 - \varepsilon, t_0 + \varepsilon]$ and zero elsewhere, and we take the Fourier transform of the sound multiplied by this window function over a larger time frame. This avoids aliasing almost completely, at the expense of introducing parasitic frequencies that come from the window function.  
 
 ## Listing the dependencies
-In essence, the algorithm is fairly easy to map into pure, clean and simple Python, but it will never be fast enough for comfortable use. I wanted to be able to quickly iterate over changes and waiting 20 secondes every time I need the frequency representation of my 3 minute audio was not an option, so I used the [librosa](https://librosa.org/doc/latest/index.html) library in Python. Similarly, audio files I/O is also handled by librosa, even though `.wav` is fairly simple and I could have just parsed it by hand. For speed, comfort and many other very good reasons, I also use [numpy](https://numpy.org/).
+In essence, the algorithm is fairly easy to map into pure, clean and simple Python, but it will never be fast enough for comfortable use. I wanted to be able to quickly iterate over changes and waiting 20 seconds every time I need the frequency representation of my 3 minute audio was not an option, so I used the [librosa](https://librosa.org/doc/latest/index.html) library in Python. Similarly, audio files I/O is also handled by librosa, even though `.wav` is fairly simple and I could have just parsed it by hand. For speed, comfort and many other very good reasons, I also use [numpy](https://numpy.org/).
 
 
-That's it, we are set up, no more new specific theory, no more dependencies. The rest is really about 100 line of codes of pure Python, and a working reasonable proof-of-concept Shazam clone that works reasonably fast with very good noise and distortion resistance (see below for some tests). No magic theorem or unknown data structure, that's a promise ! 
+That's it, we are set up, no more new specific theory, no more dependencies. The rest is really about 100 lines of code of pure Python, and a working reasonable proof-of-concept Shazam clone that works reasonably fast with very good noise and distortion resistance (see below for some tests). No magic theorem or unknown data structure, that's a promise! 
 
 
 # The strategy
@@ -67,7 +67,7 @@ Then, when we're querying the database with a given noisy recording, we apply th
 
 # The data
 
-I used the yt-dlp library/command-line tool to download a few famous musical `.wav` files from YouTube and put them in a `audios/` folder at the root of the project. The list is composed of about 100 very famous songs ChatGPT put together + 3 randoms songs I added in there (can you find them ?). Note that I downloaded everything as `.wav` files because I wanted everything to be as simple as possible, but in real life you would definitely use `.mp3` files. 
+I used the yt-dlp library/command-line tool to download a few famous musical `.wav` files from YouTube and put them in a `audios/` folder at the root of the project. The list is composed of about 100 very famous songs ChatGPT put together + 3 random songs I added in there (can you find them?). Note that I downloaded everything as `.wav` files because I wanted everything to be as simple as possible, but in real life you would definitely use `.mp3` files. 
 
 {{< details title="The quick&dirty download script">}}
 
@@ -204,7 +204,7 @@ songs = [
 ```
 {{< /details >}}
 
-For benchmarking, I also recorded with my phone in noisy environments/squashed together through scripting and audacity diverses kind of noisy recordings, either by adding a noisy cafe environment, adding gaussian noise or recording over with my phone and talking over it. All of these got recognized by the algorithm, needing at most 20 seconds of recording for the most noisy environments (approx. signal to noise ratio equal to 1).
+For benchmarking, I also recorded with my phone in noisy environments/squashed together through scripting and audacity diverse kinds of noisy recordings, either by adding a noisy cafe environment, adding gaussian noise or recording over with my phone and talking over it. All of these got recognized by the algorithm, needing at most 20 seconds of recording for the most noisy environments (approx. signal to noise ratio equal to 1).
 
 # The code
 
@@ -240,7 +240,7 @@ audio, _ = librosa.load(audio_path, sr=SAMPLE_RATE, mono=True, dtype=np.float32)
 
 There's actually *lot* happening here, so let's go through the parameters one by one:
 - We load the audio by giving its path to librosa
-- We force librosa to resample[^4] it to the given `SAMPLE_RATE` constant. The reason we resample is 1) we want all our audios to have the same frequency bands and 2) to reduce the computational load 3) the main melodic frequencies lie below 4kHz, so we don't need more than twice the samples per seconds to hear them without aliasing. YouTube audios have a default sample rate of 44kHz, definitely too much for signal analysis. We set `SAMPLE_RATE = 8_000`. There will be a lot of tunable constants like these along the way so we'll add them one after another at the beginning of the file.
+- We force librosa to resample[^4] it to the given `SAMPLE_RATE` constant. The reason we resample is 1) we want all our audios to have the same frequency bands and 2) to reduce the computational load 3) the main melodic frequencies lie below 4kHz, so we don't need more than twice the samples per second to hear them without aliasing. YouTube audios have a default sample rate of 44kHz, definitely too much for signal analysis. We set `SAMPLE_RATE = 8_000`. There will be a lot of tunable constants like these along the way so we'll add them one after another at the beginning of the file.
 - We ask it to give a mono (i.e 1-dimensional, as opposed to hearing different things in both ears when you wear headphones for instance). This is simply done by averaging over all the channels.
 - Finally, we ask for our signal to be read as 32bit floating points numbers.
 
@@ -254,11 +254,11 @@ def build_spectrogram(audio, window_size, hop_length, smoothing_window):
     """
     frames = 1 + (len(audio) - window_size) // hop_length 
 
-    spectrogram = np.zeros((frames, 1 + window_size // 2), dtype=np.complex)
-    for i in range(0, len(audio), hop_length)
+    spectrogram = np.zeros((frames, 1 + window_size // 2), dtype=np.complex128)
+    for i in range(0, len(audio), hop_length):
         if i + window_size >= len(audio):
             break
-        spectrogram[k, :] = np.fft.rfft(audio[i:i+window_size] * smoothing_window)
+        spectrogram[i // hop_length, :] = np.fft.rfft(audio[i:i+window_size] * smoothing_window)
     return np.abs(spectrogram)
 ```
 
@@ -268,9 +268,9 @@ The nice thing about librosa is that it already provides a function that builds 
 ```python
 spectrogram = np.abs(librosa.stft(audio, n_fft=WINDOW_SIZE, hop_length=HOP_LENGTH, window="hamming"))
 ```
-For the constants, we set at the beginning of the file `WINDOW_SIZE = 2048, HOP_LENGTH = 256` which are approximately equal to `250ms` and `25ms`, given a sampling_rate of `8000`. The `window="hamming"` parameter tells librosa to use a Hamming smoothing window function. Why this function and not another one  ? It seems to be the one that better preserves peak frequencies. I checked that by drawing the spectrograms of a few sums of sinusoids with matplotlib.
+For the constants, we set at the beginning of the file `WINDOW_SIZE = 2048, HOP_LENGTH = 256` which are approximately equal to `250ms` and `25ms`, given a sampling_rate of `8000`. The `window="hamming"` parameter tells librosa to use a Hamming smoothing window function. Why this function and not another one? It seems to be the one that better preserves peak frequencies. I checked that by drawing the spectrograms of a few sums of sinusoids with matplotlib.
 
-To get a better feel as to what we're doing here, Here is the spectrogram of the 20 first seconds of Get Lucky from the Daft Punk, first built with a hamming window and then without any smoothing window (i.e a rectangular window). We can clearly see the rough cut-offs created by the aliasing in the second picture. 
+To get a better feel as to what we're doing here, here is the spectrogram of the 20 first seconds of Get Lucky from Daft Punk, first built with a hamming window and then without any smoothing window (i.e a rectangular window). We can clearly see the rough cut-offs created by the aliasing in the second picture. 
 ![A spectrogram with a hamming window](/images/spectrogram_get_lucky.png)
 ![A spectrogram with no windowing](/images/spectrogram_no_window_get_lucky.png)
 
@@ -306,7 +306,7 @@ for band_idx, band in enumerate(bands):
 
     (band_freq_indexes, sample_indexes) = (local_maximums & strong).nonzero()
     global_freq_indexes = band_freq_indexes + BAND_INDEXES[band_idx][0] # 
-    peaks.append(global_freq_indexes, sample_indexes)
+    peaks.append((global_freq_indexes, sample_indexes))
 
 ```
 
@@ -361,12 +361,12 @@ I extracted the `bands_peaks` logic in another function since we'll reuse it in 
 
 ## Matching a recording
 
-To match a recording to the database we built, we first compute its spectrogram and extract the band peaks. Then, for each of the recording's peak, we compare the matching frequencies in the database and we compute the offset (time/sample_index difference) between the database peak and the recording peak. If a given song has enough matching offsets, we found a likely match !
+To match a recording to the database we built, we first compute its spectrogram and extract the band peaks. Then, for each of the recording's peak, we compare the matching frequencies in the database and we compute the offset (time/sample_index difference) between the database peak and the recording peak. If a given song has enough matching offsets, we found a likely match!
 
 ```python
 from collections import Counter
 
-# Some testing showed allow for a little margin for the scoring helped getting more robust scores, 
+# Some testing showed that allowing for a little margin for the scoring helped getting more robust scores, 
 # since on noisy data the magnitude peaks may happen a few m.s before/after the peak on the original audio
 
 def score_offsets(offsets, window=2):    
@@ -419,7 +419,7 @@ Song lose_yourself__eminem scored 31
 Many improvements are possible: 
 - All of the matching is pretty fast but could be made *significantly* faster by using pairs of temporally close peaks instead of singles peaks as keys for the database. That would drastically reduce the number of useless matches.
 - All these arbitrary defined constants could be tuned to better match the reality of noisy musics we hear outside
-- We could make things faster by first trying to use only the first 5 seconds of the recording, then the 10 first seconds etc, as the real Shazam does. Often the audio will be clear enough that 5 seconds will.
+- We could make things faster by first trying to use only the first 5 seconds of the recording, then the 10 first seconds etc, as the real Shazam does. Often the audio will be clear enough that 5 seconds will suffice.
 etc.
 
 # Comments
@@ -427,8 +427,8 @@ etc.
 Sorry, I'm too lazy to load a proper comment system plugin: see the associated [github issue](https://github.com/Shika-B/Shika-B.github.io/issues/2).
 
 
-[^1]: The algorithm could handle a lot more songs in the database, the bottleneck really is that I did not download more songs from YouTube because of the timeout yt-dlp enforces
-[^2]: In the discretized case we are concerned with, I actually mean computing enough sums
+[^1]: The algorithm could handle a lot more songs in the database, the bottleneck really is that I did not download more songs from YouTube because of the timeout yt-dlp enforces.
+[^2]: In the discretized case we are concerned with, I actually mean computing enough sums.
 [^3]: Because the human ear hears high frequencies before the low ones. 
-[^4]: Downsampling by an integer factor of $k$ should be easy: keep samples that are at indexes a multiple of $k$. Sadly, this introduce aliasing so we need to first filter higher frequencies before doing that, by applying a low-pass filter. Nothing unmanageable, but since this is all done by librosa automatically, we don't need to be concerned with that.
-[^5]: Note the spectrogram has shape `(1 + WINDOW_SIZE // 2, number_of_frames)`, where the number of frames depends on hop_length, because on a real signal with $n$ samples, rfft returns $\lfloor n / 2 \rfloor + 1$ frequency bins. See [the note here](https://numpy.org/doc/stable/reference/generated/numpy.fft.rfft.html)
+[^4]: Downsampling by an integer factor of $k$ should be easy: keep samples that are at indexes a multiple of $k$. Sadly, this introduces aliasing so we need to first filter higher frequencies before doing that, by applying a low-pass filter. Nothing unmanageable, but since this is all done by librosa automatically, we don't need to be concerned with that.
+[^5]: Note the spectrogram has shape `(1 + WINDOW_SIZE // 2, number_of_frames)`, where the number of frames depends on hop_length, because on a real signal with $n$ samples, rfft returns $\lfloor n / 2 \rfloor + 1$ frequency bins. See [the note here](https://numpy.org/doc/stable/reference/generated/numpy.fft.rfft.html).

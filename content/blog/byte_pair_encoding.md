@@ -21,9 +21,9 @@ From a very high-level perspective, today's LLMs take a context string as an inp
     - Pick the most probable token, append it to the context string
     - If that token is not the "shut up" token, we go back to the start of step 3.
 
-Now the transformers part is fun, but everyone is already talking about it. Let's focus on the first part, how do we get tokens ?
+Now the transformers part is fun, but everyone is already talking about it. Let's focus on the first part, how do we get tokens?
 
-## Why bother ?
+## Why bother?
 
 I am lazy, so I will simply list all words in English, write this:
 ```python
@@ -36,16 +36,16 @@ def detokenize(tokens):
     return " ".join(REVERSE_ENGLISH_WORDS[token] for token in tokens)
 ```
 
-and call it a day? Except for the extra/missing spaces these functions introduce, that is a reasonable option. There a few problems, however:
+and call it a day? Except for the extra/missing spaces these functions introduce, that is a reasonable option. There are a few problems, however:
 - We can't have any input that is ill-formed, even a single mistyped word breaks the tokenizing process
-- There are a lot of words: almost [a million in English and half a million in French](https://en.wikipedia.org/wiki/List_of_dictionaries_by_number_of_words). That means atleast that many dimensions in our inputs to the model, and that makes for a lot of parameters (I'm training it on a laptop, remember ?)
+- There are a lot of words: almost [a million in English and half a million in French](https://en.wikipedia.org/wiki/List_of_dictionaries_by_number_of_words). That means at least that many dimensions in our inputs to the model, and that makes for a lot of parameters (I'm training it on a laptop, remember?)
 - The model needs to do everything by itself. Words are often formed by appending meaningful prefixes and suffixes to meaningful roots: take the words low, lowest, lower, hard, hardest and harder. Per word tokenization erases all this information. 
-- Some words are very rare, so it is extremely hard to get a dataset where they have enough statistical presence. But most of these words are.. composition of more common roots, prefixes suffixes.
+- Some words are very rare, so it is extremely hard to get a dataset where they have enough statistical presence. But most of these words are.. a composition of more common roots, prefixes, suffixes.
 - The preceding point is also true across languages especially when working with Romance languages! Words like "attack" in English and "attaque" in French mean the same thing and have an obvious common root.
 
 In an ideal world, we would thus break sentences into words and words themselves into [lexemes](https://en.wikipedia.org/wiki/Lexeme). It turns out the second task is extremely hard even in reasonable generality, and there is a lot of research going on in the machine learning community to solve it, even among Romance languages.
 
-Conclusion: we need to compromise on our goals. What is the middle ground between splitting on whitespaces and a full linguistics lexeme split, you ask ? A compression algorithm obviously!
+Conclusion: we need to compromise on our goals. What is the middle ground between splitting on whitespaces and a full linguistics lexeme split, you ask? A compression algorithm obviously!
 
 ## Byte-Pair encoding
 
@@ -74,7 +74,7 @@ compressed_s = [7, 3, 7, 0, 2, 4]
 Now, once we trained our vocab on our initial string, we know `MERGE_LIST` and `FINAL_VOCAB`. To compress any string defined on the same initial alphabet, we go over `MERGE_LIST` and apply merges iteratively. To get our initial string back, we reverse the process.
 
 ## Tokenization as compression
-In 2016, [Snnrich, Haddow and Birch noticed](https://arxiv.org/abs/1508.07909?utm_source=chatgpt.com) we can actually use this to get a reasonable approximation of the lexeme extraction process. Let's say the dataset contains exactly the following English words:
+In 2016, [Sennrich, Haddow and Birch noticed](https://arxiv.org/abs/1508.07909) we can actually use this to get a reasonable approximation of the lexeme extraction process. Let's say the dataset contains exactly the following English words:
 
 ```python
 # POV: training a model on a toaster
@@ -299,7 +299,7 @@ user	0m47,198s
 sys	0m0,886s
 ```
 
-I tried to let it run it's whole course (10k merges) and it took almost 5 hours to train. We need to make things faster if we don't want to leave it running all night long everytime we make a change. We could just Rewrite It In Rust and get insane speed-ups because Python is slow. 
+I tried to let it run its whole course (10k merges) and it took almost 5 hours to train. We need to make things faster if we don't want to leave it running all night long every time we make a change. We could just Rewrite It In Rust and get insane speed-ups because Python is slow. 
 Okay, [challenge accepted](https://github.com/Shika-B/speedy-bpe/tree/main/rust), there we go for 10k merges
 ```bash
 > time cargo run --release
@@ -324,7 +324,7 @@ for m in range(m):
     fresh_id = fresh() # O(1)
 ```
 
-which means we're asymptotically doing $mn$ operations. Can we do better ? Yes, we can.
+which means we're asymptotically doing $mn$ operations. Can we do better? Yes, we can.
 
 ## A faster merge function
 
@@ -345,14 +345,14 @@ def merge(tokens, pair, fresh_token):
         new_tokens.append(tokens[i])
     return new_tokens
 ```
-What is taking so much time ? We are rebuilding the whole token list even if we are only merging a few pairs among millions of tokens. There are two problems:
+What is taking so much time? We are rebuilding the whole token list even if we are only merging a few pairs among millions of tokens. There are two problems:
 - Problem 1: Merging elements inside a list costs a lot, since we need to rebuild the whole list.  
 - Problem 2: We do not already know where the tokens we need to merge are.
 
 Problem 1 is solved by consulting the good old cookbook of algorithmics and data structures: we store tokens as a doubly-linked list, and then merging any node with the previous is a piece of cake.
 
 For Problem 2, we could maintain a big map `d: dict[(int, int), list[int]]` such that `d[(tok1.tok_id, tok2.tok_id)]` is a big list containing all the nodes of the linked list such that `node.tok_id = tok1.tok_id` and `node.next.tok_id = tok2.tok_id`. 
-Expanding it is easy but maintaining seems hard, because we the values inside the nodes are modified after merges. Lazy is the way: we just check after querying it if the entries are stale by checking if `node.tok_id == tok1.tok_id` and `node.next.tok_id == tok2.tok_id` !
+Expanding it is easy but maintaining seems hard, because the values inside the nodes are modified after merges. Lazy is the way: we just check after querying it if the entries are stale by checking if `node.tok_id == tok1.tok_id` and `node.next.tok_id == tok2.tok_id`!
 
 We replace the `Token` class by
 ```py
@@ -434,7 +434,7 @@ def decode(root):
     return words
 ```
 
-all of this is just the same logic but . Now for the merge function, we will only iterates over the pairs we care about and check that they are still valid.
+all of this is just the same logic. Now for the merge function, we will only iterate over the pairs we care about and check that they are still valid.
 ```python
 # The faster function is actually a little shorter !
 def merge(pair_nodes, pair_to_merge, fresh_token):
@@ -473,7 +473,7 @@ sys	0m0,521s
 
 Doubling the amount of merges, we get a 50% increase of compute time with `fast.py` and almost 80% with `naive.py`.
 
-What is the complexity of the new merge function ? It's the number of nodes we had stored in `pair_nodes[pair_to_merge]`, and the total amount of nodes we can merge across all calls is at most the length of the initial token linked list, i.e. n. 
+What is the complexity of the new merge function? It's the number of nodes we had stored in `pair_nodes[pair_to_merge]`, and the total amount of nodes we can merge across all calls is at most the length of the initial token linked list, i.e. n. 
 
 ## Updating statistics
 
@@ -487,7 +487,7 @@ fresh_id = fresh()
 for m in range(m):
     stats = aggregate_stats(root) # O(n)
     top_pair, _ = max(stats) # O(n)
-    tokens = merge(top_pair, root, pair_nodes fresh_id) # O(n) across all calls
+    tokens = merge(top_pair, root, pair_nodes, fresh_id) # O(n) across all calls
     merge_tree.append((top_pair, fresh_id)) # O(1)
     fresh_id = fresh() # O(1)
 # Final: O(m * n)
@@ -524,7 +524,7 @@ for i in range(num_merges):
 ```
 Note that in the merge function, the stats dictionary may be None because once the tokenizer is trained when we are encoding words, we use the merge function but we do not care about tracking statistics anymore.
 
-How much faster does that get us ?
+How much faster does that get us?
 ```bash
 > time python fast.py
 real	0m33,924s
@@ -549,14 +549,14 @@ fresh_id = fresh()
 stats = aggregate_stats(root)
 for m in range(m):
     top_pair, _ = max(stats) # O(n) !!
-    tokens = merge(top_pair, root, pair_nodes fresh_id) # O(n) across all calls
+    tokens = merge(top_pair, root, pair_nodes, fresh_id) # O(n) across all calls
     merge_tree.append((top_pair, fresh_id)) # O(1)
     fresh_id = fresh() # O(1)
 # Final complexity is still O(m * n)
 ```
 Feels like time to dust off that old cookbook. What we need is a data structure that tracks multiplicities while still supporting a fast max operation. One approach is a hybrid between a multiset and a binary heap: keep the heap for ordering, and maintain a separate mapping from keys to their positions in the heap.
 
-This does come at the cost of roughly doubling memory usage, but in return you get O(1) access to the maximum and O(log n) for insertions and deletions. The main caveat is during sift-up and sift-down operations—every time elements are swapped in the heap, the position map has to be updated accordingly.I'm not going over all the binary heap logic, but if you're interested check [this page](https://runestone.academy/ns/books/published/pythonds/Trees/BinaryHeapImplementation.html) which has crystal clear[^1] explanations.
+This does come at the cost of roughly doubling memory usage, but in return you get O(1) access to the maximum and O(log n) for insertions and deletions. The main caveat is during sift-up and sift-down operations—every time elements are swapped in the heap, the position map has to be updated accordingly. I'm not going over all the binary heap logic, but if you're interested check [this page](https://runestone.academy/ns/books/published/pythonds/Trees/BinaryHeapImplementation.html) which has crystal clear[^1] explanations.
 The code for the `MultisetHeap` class is [here](https://github.com/Shika-B/speedy-bpe/blob/main/python/multiheap.py).
 
 We change our `merge`, `train` and `get_stats` functions to use this new data structure instead of a dictionary.
@@ -576,7 +576,7 @@ stats.sub((node.nxt.tok_id, node.nxt.nxt.tok_id), 1) # updated
 (_count, (left, right)) = stats.popmax() # updated
 ```
 
-Let's try running it... and if you're following along you'll get a weird `KeyError` message. It took me some time to understand this was not a problem in my multiheap implementation but in my logic: When the max is `pop`-ed, `stats[(left, right)]` gives a key error. Now, if `(node.prev.tok_id, node.tok_id) = (left, right)` for instance, boom KeyError. This can happens only if there is a sequence of three characters that are the same, so that's really a PAIN to debug. The fix is, however, very simple:
+Let's try running it... and if you're following along you'll get a weird `KeyError` message. It took me some time to understand this was not a problem in my multiheap implementation but in my logic: When the max is `pop`-ed, `stats[(left, right)]` gives a key error. Now, if `(node.prev.tok_id, node.tok_id) = (left, right)` for instance, boom KeyError. This can happen only if there is a sequence of three characters that are the same, so that's really a PAIN to debug. The fix is, however, very simple:
 ```python
 # In `merge`
 stats.add((node.prev.tok_id, fresh_token), 1)
@@ -653,4 +653,4 @@ I am curious as to how close I can get to hugging face perfs by porting the Pyth
 
 Sorry, I'm too lazy to load a proper comment system plugin: see the associated [github issue](https://github.com/Shika-B/Shika-B.github.io/issues/1).
 
-[^1]: except for the fact they use an extra dummy head for a reason I fail to understand (less arithmetic ops ?)
+[^1]: except for the fact they use an extra dummy head for a reason I fail to understand (less arithmetic ops?)

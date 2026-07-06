@@ -1,6 +1,6 @@
 +++
 title = "LLMs are a strong baseline for shitposting"
-date = "2026-04-18T6:08:29+01:00"
+date = "2026-04-18T06:08:29+01:00"
 
 #
 # description is optional
@@ -10,7 +10,7 @@ date = "2026-04-18T6:08:29+01:00"
 tags = ["Computer Science", "Machine Learning", "LLMs", "Bot"]
 +++
 
-Last weekend I was talking with some friends online, as I do most of my weekends. I asked one of them to elaborate on something, he got lazy and jokingly answered with an obvious ChatGPT answer. Someone else wondered if we couldn't just plug a GPT to the discord server, as a bot for instance. I said I had a better idea. A few sleep-deprived days later, we had a new friend, [Zizou](https://wikipedia.com/wiki/Zinedine_Zidane), spitting our brand of nonsense. Here's the whole story.
+Last weekend I was talking with some friends online, as I do most of my weekends. I asked one of them to elaborate on something, he got lazy and jokingly answered with an obvious ChatGPT answer. Someone else wondered if we couldn't just plug a GPT to the Discord server, as a bot for instance. I said I had a better idea. A few sleep-deprived days later, we had a new friend, [Zizou](https://en.wikipedia.org/wiki/Zinedine_Zidane), spitting our brand of nonsense. Here's the whole story.
 
 # The data
 
@@ -24,7 +24,7 @@ I want the bot to be able to "complete" the context with a joke, so the training
 
 Before I get into the training saga, a quick note on LoRA (Low-Rank Adaptation), since I'll be mentioning it a lot.
 
-Finetuning a model the traditional way means updating all its weights, as you would do when first training it. Basically, for a 3B parameter model, that's 3 billion 16-bit floats (= 6 billion bytes ~ 6 GB) you need to store, and then all the gradients that come with them. I am doing all this on my laptop GPU, a RTX 2050 with 4GB of VRAM: that's a hard no.
+Finetuning a model the traditional way means updating all its weights, as you would do when first training it. Basically, for a 3B parameter model, that's 3 billion 16-bit floats (= 6 billion bytes ~ 6 GB) you need to store, and then all the gradients that come with them. I am doing all this on my laptop GPU, an RTX 2050 with 4GB of VRAM: that's a hard no.
  
 LoRA works around this with a clever approximation: instead of updating the weight matrix $W$ directly, you freeze it and add a low-rank perturbation $\Delta W = AB$ where $A \in \mathbb{R}^{d \times r}$ and $B \in \mathbb{R}^{r \times k}$, with rank $r \ll \min(d, k)$, and you only train $A$ and $B$.
 
