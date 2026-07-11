@@ -43,7 +43,7 @@ the introduction of various tabular foundation models2." />
 	<meta itemprop="description" content="Most of the data that actually runs the world lives in spreadsheets. Hospital records, bank transactions, sensor logs, messy CSV your colleague emailed you last Tuesday: it’s really rows and columns all the way down. While we have been hearing quite a lot about language models writing poetry and code and image models painting cathedrals, the humble tabular prediction task was left to older methods1 for quite a long time. That changed a few years ago, with the introduction of various tabular foundation models2.">
 	<meta itemprop="datePublished" content="2026-05-27T13:44:57+01:00">
 	<meta itemprop="dateModified" content="2026-05-27T13:44:57+01:00">
-	<meta itemprop="wordCount" content="2200">
+	<meta itemprop="wordCount" content="2199">
 	<meta itemprop="keywords" content="Computer Science,Machine Learning,Tabular Prediction,Foundation Models">
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
@@ -237,6 +237,8 @@ the introduction of various tabular foundation models2." />
 <nav>
 <a href="/blog/">Blog</a>
 
+<a href="/research/">Research</a>
+
 </nav>
 </header>
   <main>
@@ -336,13 +338,13 @@ marks:</p>
 			</tr>
 	</tbody>
 </table>
-<p>On tables like this one, the task of filling the red question marks with guesses is called a <em>tabular prediction tasks</em>.
-One way to fill the remaining entries is to make the most probable guess given what&rsquo;s known about the row (i.e. the
+<p>On tables like this one, the task of filling the red question marks with reasonable guesses is a <em>tabular prediction task</em>.
+One wishes to fill the remaining entries by choosing the most probable value given what&rsquo;s known about the row (i.e. the
 other known entries in the same row). It&rsquo;s winter, and it&rsquo;s cloudy, so I guess it will rain. I know that because I
 have an idea of what the fields mean and how they correlate. That&rsquo;s better than random guessing, but it&rsquo;s probably even
 better to also lean on the rows that are fully known, so as to learn the general relations and correlations between the
-columns. This is pretty much the Bayesian approach. Unsurprisingly, the Bayesian approach completely dominates the
-field of tabular prediction.</p>
+columns. This is pretty much the Bayesian approach. Unsurprisingly, the Bayesian approach is the standard
+framework for tabular prediction.</p>
 <p>Before introducing modern methods, it&rsquo;s worth spending a minute on the two methods that have been winning at this game
 for years. Both are built out of <em>decision trees</em>.</p>
 <h2 id="the-binning-trick">The binning trick</h2>
@@ -458,7 +460,7 @@ The payoff is that boosted trees are very hard to beat on tabular data.</p>
 <p>The biggest downside of these methods is that they require careful finetuning of hyperparameters, and training. This
 turns out to be a big bottleneck in real life, and people work around it by letting humongous grid searches run for days
 to optimize these hyperparameters. And the actual training in itself also takes a lot of time.</p>
-<p>If only we could just  <em>show</em> the model a table and have it tell us what&rsquo;s in the missing cells. After all,
+<p>If only we could just <em>show</em> the model a table and have it tell us what&rsquo;s in the missing cells. After all,
 LLMs don&rsquo;t get retrained every time you hand them a new document. They were pretrained once, on enormous amounts of
 text, and from that they learned something general enough that &ldquo;what&rsquo;s the next token in this paragraph&rdquo; can be answered
 in one forward pass.</p>
@@ -494,7 +496,7 @@ is a whole table: a <em>context</em> of labeled rows $(x_1, y_1), \dots, (x_n, y
 label $y_\star$ is hidden. The output is a distribution over $y_\star$.</p>
 <p>The loss is the cross-entropy of that distribution against the true label you generated.
 In <a href="https://arxiv.org/abs/2112.10510">Müller et al.</a> they prove something that feels fairly intuitive: optimizing for
-this loss is exactly optimizing for the posterior prediction distribution, i.e when you know both about the prior and
+this loss is exactly optimizing for the posterior prediction distribution, i.e. when you know both about the prior and
 the context.</p>
 <p>The transformer isn&rsquo;t being told &ldquo;here&rsquo;s a dataset, fit it&rdquo;. The prior lives in the weights and only the posterior
 update happens in the attention layers, in a single forward pass.</p>
@@ -529,12 +531,11 @@ it has been trained on a lot of diverse data. Promptable models, both for text a
 this category.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:3">
-<p>Something something Central Limit Theorem&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>Something something Central Limit Theorem.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:4">
 <p>TabPFN (Hollmann et al., <a href="https://arxiv.org/abs/2207.01848">2022</a>) is the canonical example. The same authors
-later released a much-improved TabPFN v2 in <em>Nature</em>. Recently, they announced TabPFN v3.
-<a href="https://arxiv.org/pdf/2605.13986">here</a>.&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+later released a much-improved TabPFN v2 in <em>Nature</em>. Recently, they announced TabPFN v3 <a href="https://arxiv.org/pdf/2605.13986">here</a>.&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:5">
 <p>Except for winning the lottery I guess.&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>

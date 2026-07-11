@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
-		<title>Slow Data</title>
+		<title>About on Slow Data</title>
 		<link>http://localhost:1313/</link>
-		<description>Recent content on Slow Data</description>
+		<description>Recent content in About on Slow Data</description>
 		<generator>Hugo</generator>
 		<language>en-us</language>
 		
@@ -13,6 +13,13 @@
 			<lastBuildDate>Wed, 27 May 2026 13:44:57 +0100</lastBuildDate>
 		
 			<atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Research</title>
+				<link>http://localhost:1313/research/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/research/</guid>
+				<description>&lt;h2 id=&#34;publications&#34;&gt;Publications&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://arxiv.org/abs/2602.06542&#34;&gt;Reinforcement Learning Foundation Models Should Already Be A Thing&lt;/a&gt; &lt;br&gt;&#xA;&lt;strong&gt;A.Zighem&lt;/strong&gt;, JJ.Vie at GFM@ICML2026&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://arxiv.org/abs/2602.06542&#34;&gt;Live Knowledge Tracing: Real-Time Adaptation using Tabular Foundation Models&lt;/a&gt; &lt;br&gt;&#xA;M.Lbath, A.Paresy, A.Kaddouri, &lt;strong&gt;A.Zighem&lt;/strong&gt;, JJ.Vie at AIED2026&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
+			</item>
 			<item>
 				<title>One-shot tabular prediction</title>
 				<link>http://localhost:1313/blog/tabular_foundation_models/</link>
@@ -25,7 +32,7 @@
 				<link>http://localhost:1313/blog/finetuning_shitpost/</link>
 				<pubDate>Sat, 18 Apr 2026 06:08:29 +0100</pubDate>
 				<guid>http://localhost:1313/blog/finetuning_shitpost/</guid>
-				<description>&lt;p&gt;Last weekend I was talking with some friends online, as I do most of my weekends. I asked one of them to elaborate on something, he got lazy and jokingly answered with an obvious ChatGPT answer. Someone else wondered if we couldn&amp;rsquo;t just plug a GPT to the discord server, as a bot for instance. I said I had a better idea. A few sleep-deprived days later, we had a new friend, &lt;a href=&#34;https://wikipedia.com/wiki/Zinedine_Zidane&#34;&gt;Zizou&lt;/a&gt;, spitting our brand of nonsense. Here&amp;rsquo;s the whole story.&lt;/p&gt;</description>
+				<description>&lt;p&gt;Last weekend I was talking with some friends online, as I do most of my weekends. I asked one of them to elaborate on something, he got lazy and jokingly answered with an obvious ChatGPT answer. Someone else wondered if we couldn&amp;rsquo;t just plug a GPT to the Discord server, as a bot for instance. I said I had a better idea. A few sleep-deprived days later, we had a new friend, &lt;a href=&#34;https://en.wikipedia.org/wiki/Zinedine_Zidane&#34;&gt;Zizou&lt;/a&gt;, spitting our brand of nonsense. Here&amp;rsquo;s the whole story.&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>Shazam algorithm in 100 lines of code</title>
@@ -42,6 +49,13 @@
 				<description>&lt;p&gt;I&amp;rsquo;m currently taking a &lt;a href=&#34;https://jjv.ie/&#34;&gt;deep learning course&lt;/a&gt; and I have an assignment that is basically: write a Google Trad/DeepL for French to English translation with minimal data (130k paired sentences) and training time (we need to make it trainable on a laptop). The goal of the assignment is to learn about modern LLMs architectures, specifically about attention and transformers, the deep learning part really. Naturally, this is not what I did: this blog post recounts my wanderings.&lt;/p&gt;</description>
 			</item>
 			<item>
+				<title>Poisson surface reconstruction</title>
+				<link>http://localhost:1313/drafts/cloud_mesh/</link>
+				<pubDate>Sat, 29 Nov 2025 18:08:29 +0100</pubDate>
+				<guid>http://localhost:1313/drafts/cloud_mesh/</guid>
+				<description>&lt;p&gt;A laser scan of a 3D object hands you a set of point and a set of vectors:&#xA;samples sitting on the object&amp;rsquo;s surface and the normals at each of these points.&#xA;That&amp;rsquo;s awkward, because almost everything you&amp;rsquo;d want to do with the object&#xA;(render it, 3D-print it, measure it, drop it in a physics engine) needs an&#xA;actual surface, not a point cloud. So the question is: given only these samples,&#xA;how do we recover the surface they came from?&lt;/p&gt;</description>
+			</item>
+			<item>
 				<title>Matrix reconstruction and denoising</title>
 				<link>http://localhost:1313/drafts/matrix_reconstruction/</link>
 				<pubDate>Mon, 10 Nov 2025 02:47:29 +0100</pubDate>
@@ -53,7 +67,21 @@
 				<link>http://localhost:1313/blog/lagrangian_duality/</link>
 				<pubDate>Sun, 09 Nov 2025 13:44:57 +0100</pubDate>
 				<guid>http://localhost:1313/blog/lagrangian_duality/</guid>
-				<description>&lt;h2 id=&#34;optimization-context&#34;&gt;Optimization context&lt;/h2&gt;&#xA;&lt;p&gt;Let&amp;rsquo;s imagine for a moment we are trying to solve a class of &lt;em&gt;constrained&lt;/em&gt; optimization problems of the form&#xA;&lt;/p&gt;&#xA;$$\begin{align*}&#xA;    &amp;\inf_x f(x) \\&#xA;    &amp;\text{subject to } &amp;g_i(x) \leq 0 \text{ for } 1 \leq i \leq m \\&#xA;                        &amp;&amp;h_j(x) = 0, \text{ for } 1 \leq j \leq n&#xA;\end{align*} &#xA;$$&lt;p&gt;&#xA;where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. What is a reasonable strategy to solve this ?&lt;/p&gt;</description>
+				<description>&lt;h2 id=&#34;optimization-context&#34;&gt;Optimization context&lt;/h2&gt;&#xA;&lt;p&gt;Let&amp;rsquo;s imagine for a moment we are trying to solve a class of &lt;em&gt;constrained&lt;/em&gt; optimization problems of the form&#xA;&lt;/p&gt;&#xA;$$\begin{align*}&#xA;    &amp;\inf_x f(x) \\&#xA;    &amp;\text{subject to } &amp;g_i(x) \leq 0 \text{ for } 1 \leq i \leq m \\&#xA;                        &amp;&amp;h_j(x) = 0, \text{ for } 1 \leq j \leq n&#xA;\end{align*} &#xA;$$&lt;p&gt;&#xA;where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. What is a reasonable strategy to solve this?&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title></title>
+				<link>http://localhost:1313/drafts/machine_learning/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/drafts/machine_learning/</guid>
+				<description>&lt;p&gt;TODO&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title></title>
+				<link>http://localhost:1313/drafts/network_simplex/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/drafts/network_simplex/</guid>
+				<description>&lt;p&gt;TODO (use the notebook on github gist)&lt;/p&gt;</description>
 			</item>
 	</channel>
 </rss>

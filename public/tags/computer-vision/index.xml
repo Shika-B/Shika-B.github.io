@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Computer Vision on Slow Data</title>
+		<link>http://localhost:1313/tags/computer-vision/</link>
+		<description>Recent content in Computer Vision on Slow Data</description>
+		<generator>Hugo</generator>
+		<language>en-us</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 29 Nov 2025 18:08:29 +0100</lastBuildDate>
+		
+			<atom:link href="http://localhost:1313/tags/computer-vision/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Poisson surface reconstruction</title>
+				<link>http://localhost:1313/drafts/cloud_mesh/</link>
+				<pubDate>Sat, 29 Nov 2025 18:08:29 +0100</pubDate>
+				<guid>http://localhost:1313/drafts/cloud_mesh/</guid>
+				<description>&lt;p&gt;A laser scan of a 3D object hands you a set of point and a set of vectors:&#xA;samples sitting on the object&amp;rsquo;s surface and the normals at each of these points.&#xA;That&amp;rsquo;s awkward, because almost everything you&amp;rsquo;d want to do with the object&#xA;(render it, 3D-print it, measure it, drop it in a physics engine) needs an&#xA;actual surface, not a point cloud. So the question is: given only these samples,&#xA;how do we recover the surface they came from?&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

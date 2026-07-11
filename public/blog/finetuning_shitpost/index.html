@@ -7,14 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>LLMs are a strong baseline for shitposting | Slow Data</title>
 <meta name="title" content="LLMs are a strong baseline for shitposting" />
-<meta name="description" content="Last weekend I was talking with some friends online, as I do most of my weekends. I asked one of them to elaborate on something, he got lazy and jokingly answered with an obvious ChatGPT answer. Someone else wondered if we couldn&rsquo;t just plug a GPT to the discord server, as a bot for instance. I said I had a better idea. A few sleep-deprived days later, we had a new friend, Zizou, spitting our brand of nonsense. Here&rsquo;s the whole story." />
+<meta name="description" content="Last weekend I was talking with some friends online, as I do most of my weekends. I asked one of them to elaborate on something, he got lazy and jokingly answered with an obvious ChatGPT answer. Someone else wondered if we couldn&rsquo;t just plug a GPT to the Discord server, as a bot for instance. I said I had a better idea. A few sleep-deprived days later, we had a new friend, Zizou, spitting our brand of nonsense. Here&rsquo;s the whole story." />
 <meta name="keywords" content="Computer Science,Machine Learning,LLMs,Bot," />
 
 
 <meta property="og:url" content="http://localhost:1313/blog/finetuning_shitpost/">
 	<meta property="og:site_name" content="Slow Data">
 	<meta property="og:title" content="LLMs are a strong baseline for shitposting">
-	<meta property="og:description" content="Last weekend I was talking with some friends online, as I do most of my weekends. I asked one of them to elaborate on something, he got lazy and jokingly answered with an obvious ChatGPT answer. Someone else wondered if we couldn’t just plug a GPT to the discord server, as a bot for instance. I said I had a better idea. A few sleep-deprived days later, we had a new friend, Zizou, spitting our brand of nonsense. Here’s the whole story.">
+	<meta property="og:description" content="Last weekend I was talking with some friends online, as I do most of my weekends. I asked one of them to elaborate on something, he got lazy and jokingly answered with an obvious ChatGPT answer. Someone else wondered if we couldn’t just plug a GPT to the Discord server, as a bot for instance. I said I had a better idea. A few sleep-deprived days later, we had a new friend, Zizou, spitting our brand of nonsense. Here’s the whole story.">
 	<meta property="og:locale" content="en_us">
 	<meta property="og:type" content="article">
 		<meta property="article:section" content="blog">
@@ -30,13 +30,13 @@
 
 	<meta name="twitter:card" content="summary">
 	<meta name="twitter:title" content="LLMs are a strong baseline for shitposting">
-	<meta name="twitter:description" content="Last weekend I was talking with some friends online, as I do most of my weekends. I asked one of them to elaborate on something, he got lazy and jokingly answered with an obvious ChatGPT answer. Someone else wondered if we couldn’t just plug a GPT to the discord server, as a bot for instance. I said I had a better idea. A few sleep-deprived days later, we had a new friend, Zizou, spitting our brand of nonsense. Here’s the whole story.">
+	<meta name="twitter:description" content="Last weekend I was talking with some friends online, as I do most of my weekends. I asked one of them to elaborate on something, he got lazy and jokingly answered with an obvious ChatGPT answer. Someone else wondered if we couldn’t just plug a GPT to the Discord server, as a bot for instance. I said I had a better idea. A few sleep-deprived days later, we had a new friend, Zizou, spitting our brand of nonsense. Here’s the whole story.">
 
 
 
 
 	<meta itemprop="name" content="LLMs are a strong baseline for shitposting">
-	<meta itemprop="description" content="Last weekend I was talking with some friends online, as I do most of my weekends. I asked one of them to elaborate on something, he got lazy and jokingly answered with an obvious ChatGPT answer. Someone else wondered if we couldn’t just plug a GPT to the discord server, as a bot for instance. I said I had a better idea. A few sleep-deprived days later, we had a new friend, Zizou, spitting our brand of nonsense. Here’s the whole story.">
+	<meta itemprop="description" content="Last weekend I was talking with some friends online, as I do most of my weekends. I asked one of them to elaborate on something, he got lazy and jokingly answered with an obvious ChatGPT answer. Someone else wondered if we couldn’t just plug a GPT to the Discord server, as a bot for instance. I said I had a better idea. A few sleep-deprived days later, we had a new friend, Zizou, spitting our brand of nonsense. Here’s the whole story.">
 	<meta itemprop="datePublished" content="2026-04-18T06:08:29+01:00">
 	<meta itemprop="dateModified" content="2026-04-18T06:08:29+01:00">
 	<meta itemprop="wordCount" content="1039">
@@ -233,6 +233,8 @@
 <nav>
 <a href="/blog/">Blog</a>
 
+<a href="/research/">Research</a>
+
 </nav>
 </header>
   <main>
@@ -247,14 +249,14 @@
 </p>
 
 <content>
-  <p>Last weekend I was talking with some friends online, as I do most of my weekends. I asked one of them to elaborate on something, he got lazy and jokingly answered with an obvious ChatGPT answer. Someone else wondered if we couldn&rsquo;t just plug a GPT to the discord server, as a bot for instance. I said I had a better idea. A few sleep-deprived days later, we had a new friend, <a href="https://wikipedia.com/wiki/Zinedine_Zidane">Zizou</a>, spitting our brand of nonsense. Here&rsquo;s the whole story.</p>
+  <p>Last weekend I was talking with some friends online, as I do most of my weekends. I asked one of them to elaborate on something, he got lazy and jokingly answered with an obvious ChatGPT answer. Someone else wondered if we couldn&rsquo;t just plug a GPT to the Discord server, as a bot for instance. I said I had a better idea. A few sleep-deprived days later, we had a new friend, <a href="https://en.wikipedia.org/wiki/Zinedine_Zidane">Zizou</a>, spitting our brand of nonsense. Here&rsquo;s the whole story.</p>
 <h1 id="the-data">The data</h1>
 <p>The first step was getting the data. I used <a href="https://github.com/tyrrrz/discordchatexporter">DiscordChatExporter</a>, a scraper in Python that crawls through servers, and exported about 1 million messages. That&rsquo;s a lot, but most of it is noise. Single word messages, links to YouTube videos nobody watched, random GIFs, etc. I didn&rsquo;t want to train on all of that, I wanted the model to learn the <em>good</em> stuff.</p>
 <p>So I filtered by reactions. Any message that received at least N reactions from the group (I tuned this threshold until the dataset felt right, about 10k messages made the cut) got labeled a &ldquo;banger&rdquo; and kept. Pretty much crowdsourced quality filtering<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
 <p>I want the bot to be able to &ldquo;complete&rdquo; the context with a joke, so the training setup is fairly simple. I feed it the last few messages before the banger and it tries to predict the joke.</p>
 <h1 id="working-around-my-hardware-qlora">Working around my hardware: (Q)LoRA</h1>
 <p>Before I get into the training saga, a quick note on LoRA (Low-Rank Adaptation), since I&rsquo;ll be mentioning it a lot.</p>
-<p>Finetuning a model the traditional way means updating all its weights, as you would do when first training it. Basically, for a 3B parameter model, that&rsquo;s 3 billion 16-bit floats (= 6 billion bytes ~ 6 GB) you need to store, and then all the gradients that come with them. I am doing all this on my laptop GPU, a RTX 2050 with 4GB of VRAM: that&rsquo;s a hard no.</p>
+<p>Finetuning a model the traditional way means updating all its weights, as you would do when first training it. Basically, for a 3B parameter model, that&rsquo;s 3 billion 16-bit floats (= 6 billion bytes ~ 6 GB) you need to store, and then all the gradients that come with them. I am doing all this on my laptop GPU, an RTX 2050 with 4GB of VRAM: that&rsquo;s a hard no.</p>
 <p>LoRA works around this with a clever approximation: instead of updating the weight matrix $W$ directly, you freeze it and add a low-rank perturbation $\Delta W = AB$ where $A \in \mathbb{R}^{d \times r}$ and $B \in \mathbb{R}^{r \times k}$, with rank $r \ll \min(d, k)$, and you only train $A$ and $B$.</p>
 <p>The bet is that you don&rsquo;t need to touch the whole weight space to specialize a model; a small low-rank update is enough. I tried $r = 8$ and $r = 16$, which is less than 1% of the original parameters.</p>
 <p>If you&rsquo;re following, you noticed that 6GB is still above the 4GB I have: to load a 3B model, LoRA or not, I still need to load it into GPU memory to run the inference. I could load it one layer at a time, but that would make everything magnitudes slower: remember, I only have the weekend. That&rsquo;s where my next trick comes in:</p>

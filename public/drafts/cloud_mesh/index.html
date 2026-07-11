@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Poisson surface reconstruction | Slow Data</title>
+<meta name="title" content="Poisson surface reconstruction" />
+<meta name="description" content="A laser scan of a 3D object hands you a set of point and a set of vectors:
+samples sitting on the object&rsquo;s surface and the normals at each of these points.
+That&rsquo;s awkward, because almost everything you&rsquo;d want to do with the object
+(render it, 3D-print it, measure it, drop it in a physics engine) needs an
+actual surface, not a point cloud. So the question is: given only these samples,
+how do we recover the surface they came from?" />
+<meta name="keywords" content="Computer Science,Mathematics,Computer Vision,Differential Equations," />
+
+
+<meta property="og:url" content="http://localhost:1313/drafts/cloud_mesh/">
+	<meta property="og:site_name" content="Slow Data">
+	<meta property="og:title" content="Poisson surface reconstruction">
+	<meta property="og:description" content="A laser scan of a 3D object hands you a set of point and a set of vectors: samples sitting on the object’s surface and the normals at each of these points. That’s awkward, because almost everything you’d want to do with the object (render it, 3D-print it, measure it, drop it in a physics engine) needs an actual surface, not a point cloud. So the question is: given only these samples, how do we recover the surface they came from?">
+	<meta property="og:locale" content="en_us">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="drafts">
+		<meta property="article:published_time" content="2025-11-29T18:08:29+01:00">
+		<meta property="article:modified_time" content="2025-11-29T18:08:29+01:00">
+		<meta property="article:tag" content="Computer Science">
+		<meta property="article:tag" content="Mathematics">
+		<meta property="article:tag" content="Computer Vision">
+		<meta property="article:tag" content="Differential Equations">
+
+
+
+
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Poisson surface reconstruction">
+	<meta name="twitter:description" content="A laser scan of a 3D object hands you a set of point and a set of vectors: samples sitting on the object’s surface and the normals at each of these points. That’s awkward, because almost everything you’d want to do with the object (render it, 3D-print it, measure it, drop it in a physics engine) needs an actual surface, not a point cloud. So the question is: given only these samples, how do we recover the surface they came from?">
+
+
+
+
+	<meta itemprop="name" content="Poisson surface reconstruction">
+	<meta itemprop="description" content="A laser scan of a 3D object hands you a set of point and a set of vectors: samples sitting on the object’s surface and the normals at each of these points. That’s awkward, because almost everything you’d want to do with the object (render it, 3D-print it, measure it, drop it in a physics engine) needs an actual surface, not a point cloud. So the question is: given only these samples, how do we recover the surface they came from?">
+	<meta itemprop="datePublished" content="2025-11-29T18:08:29+01:00">
+	<meta itemprop="dateModified" content="2025-11-29T18:08:29+01:00">
+	<meta itemprop="wordCount" content="287">
+	<meta itemprop="keywords" content="Computer Science,Mathematics,Computer Vision,Differential Equations">
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  :root {
+    --width: 1024px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #01242e;
+    --heading-color: #eee;
+    --text-color: #ddd;
+    --link-color: #8cc2dd;
+    --visited-color: #8b6fcb;
+    --blockquote-color: #ccc;
+
+
+  }
+
+  @media (prefers-color-scheme: white) {
+    :root {
+      --background-color: #fff;
+      --heading-color: #222;
+      --text-color: #444;
+      --link-color: #3273dc;
+      --visited-color: #8b6fcb;
+      --blockquote-color: #222;
+    }
+  }
+
+  body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+  }
+
+  a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  nav a {
+    margin-right: 8px;
+  }
+
+  strong,
+  b {
+    color: var(--heading-color);
+  }
+
+  button {
+    margin: 0;
+    cursor: pointer;
+  }
+
+  time {
+    font-family: monospace;
+    font-style: normal;
+    font-size: 15px;
+  }
+
+  main {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px dashed;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    font-family: monospace;
+    padding: 2px;
+    border-radius: 3px;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: var(--blockquote-color);
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px 0;
+    text-align: center;
+  }
+
+  .title:hover {
+    text-decoration: none;
+  }
+
+  .title h1 {
+    font-size: 1.5em;
+  }
+
+  .inline {
+    width: auto !important;
+  }
+
+  .highlight,
+  .code {
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+  }
+
+  .highlight pre,
+  .code pre {
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 5px;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: var(--visited-color);
+  }
+</style>
+
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+
+<script>
+  MathJax = {
+    tex: {
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],  
+      inlineMath: [['$', '$']]                  
+    },
+    loader:{
+      load: ['ui/safe']
+    },
+  };
+</script>
+  
+</head>
+
+<body>
+  <header><a href="/" class="title">
+  <h2>Slow Data</h2>
+</a>
+<nav>
+<a href="/blog/">Blog</a>
+
+<a href="/research/">Research</a>
+
+</nav>
+</header>
+  <main>
+
+<content>
+  <p>A laser scan of a 3D object hands you a set of point and a set of vectors:
+samples sitting on the object&rsquo;s surface and the normals at each of these points.
+That&rsquo;s awkward, because almost everything you&rsquo;d want to do with the object
+(render it, 3D-print it, measure it, drop it in a physics engine) needs an
+actual surface, not a point cloud. So the question is: given only these samples,
+how do we recover the surface they came from?</p>
+<p>I asked that to a few people and they all imagined the answer to be a complex
+set of heuristics stacked one on top of the other, which is understandable given
+under-constrained the problem is. It turns out the answer is both simple and
+mathematically pretty.</p>
+<h2 id="a-precise-statement">A precise statement</h2>
+<p>A bounded geometric object $\Omega \subset \mathbb{R}^3$ is watertight if its
+surface $\partial \Omega$ would be able to contain water without spilling any
+of it, no matter how much you play with it<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. We consider a scan of that
+surface, that is a family of points $(s_i)_{i \in I}$ and vectors
+$(n_i)_{i \in I}$ with $s_i \in \partial \Omega$ and $n_i$ being the
+outward-pointing normal vector at $s_i$.</p>
+<h2 id="the-idea">The idea</h2>
+<p>On one hand, this scan can be seen as samples of the gradient<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> of
+$\mathbf{1}_\Omega$. Indeed, the map $\nabla \mathbf{1}_\Omega$ is exactly the
+exterior normal map on $\partial \Omega$, and zero outside.</p>
+<p>On the other hand, the
+<a href="https://en.wikipedia.org/wiki/Divergence_theorem">divergence theorem</a> gives
+</p>
+$$\int\int\!\!\!\!\int_\Omega \nabla \cdot V\ \mathrm{d}V = 
+\int\!\!\!\!\int_{\partial \Omega} V \cdot \hat{n} \ \mathrm{d}\partial\Omega$$<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Formally, we ask $\partial \Omega$ to be a closed $2$-manifold, i.e.
+compact with no boundary.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>Either consider we are talking distributionnal-gradient or that
+we smoothed the function by a convolution with a peaky gaussian.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+</content>
+
+
+
+<p>
+  
+  <a href="http://localhost:1313/tags/computer-science/">#Computer Science</a>
+  
+  <a href="http://localhost:1313/tags/mathematics/">#Mathematics</a>
+  
+  <a href="http://localhost:1313/tags/computer-vision/">#Computer Vision</a>
+  
+  <a href="http://localhost:1313/tags/differential-equations/">#Differential Equations</a>
+  
+</p>
+
+  </main>
+  <footer>Made with <a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ Bear</a>
+</footer>
+
+  
+</body>
+
+</html>

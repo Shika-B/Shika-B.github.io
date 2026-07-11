@@ -25,7 +25,7 @@
 				<link>http://localhost:1313/blog/finetuning_shitpost/</link>
 				<pubDate>Sat, 18 Apr 2026 06:08:29 +0100</pubDate>
 				<guid>http://localhost:1313/blog/finetuning_shitpost/</guid>
-				<description>&lt;p&gt;Last weekend I was talking with some friends online, as I do most of my weekends. I asked one of them to elaborate on something, he got lazy and jokingly answered with an obvious ChatGPT answer. Someone else wondered if we couldn&amp;rsquo;t just plug a GPT to the discord server, as a bot for instance. I said I had a better idea. A few sleep-deprived days later, we had a new friend, &lt;a href=&#34;https://wikipedia.com/wiki/Zinedine_Zidane&#34;&gt;Zizou&lt;/a&gt;, spitting our brand of nonsense. Here&amp;rsquo;s the whole story.&lt;/p&gt;</description>
+				<description>&lt;p&gt;Last weekend I was talking with some friends online, as I do most of my weekends. I asked one of them to elaborate on something, he got lazy and jokingly answered with an obvious ChatGPT answer. Someone else wondered if we couldn&amp;rsquo;t just plug a GPT to the Discord server, as a bot for instance. I said I had a better idea. A few sleep-deprived days later, we had a new friend, &lt;a href=&#34;https://en.wikipedia.org/wiki/Zinedine_Zidane&#34;&gt;Zizou&lt;/a&gt;, spitting our brand of nonsense. Here&amp;rsquo;s the whole story.&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>Shazam algorithm in 100 lines of code</title>
@@ -46,7 +46,7 @@
 				<link>http://localhost:1313/blog/lagrangian_duality/</link>
 				<pubDate>Sun, 09 Nov 2025 13:44:57 +0100</pubDate>
 				<guid>http://localhost:1313/blog/lagrangian_duality/</guid>
-				<description>&lt;h2 id=&#34;optimization-context&#34;&gt;Optimization context&lt;/h2&gt;&#xA;&lt;p&gt;Let&amp;rsquo;s imagine for a moment we are trying to solve a class of &lt;em&gt;constrained&lt;/em&gt; optimization problems of the form&#xA;&lt;/p&gt;&#xA;$$\begin{align*}&#xA;    &amp;\inf_x f(x) \\&#xA;    &amp;\text{subject to } &amp;g_i(x) \leq 0 \text{ for } 1 \leq i \leq m \\&#xA;                        &amp;&amp;h_j(x) = 0, \text{ for } 1 \leq j \leq n&#xA;\end{align*} &#xA;$$&lt;p&gt;&#xA;where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. What is a reasonable strategy to solve this ?&lt;/p&gt;</description>
+				<description>&lt;h2 id=&#34;optimization-context&#34;&gt;Optimization context&lt;/h2&gt;&#xA;&lt;p&gt;Let&amp;rsquo;s imagine for a moment we are trying to solve a class of &lt;em&gt;constrained&lt;/em&gt; optimization problems of the form&#xA;&lt;/p&gt;&#xA;$$\begin{align*}&#xA;    &amp;\inf_x f(x) \\&#xA;    &amp;\text{subject to } &amp;g_i(x) \leq 0 \text{ for } 1 \leq i \leq m \\&#xA;                        &amp;&amp;h_j(x) = 0, \text{ for } 1 \leq j \leq n&#xA;\end{align*} &#xA;$$&lt;p&gt;&#xA;where $f, g_1, \ldots, g_m, h_1, \ldots, h_n \in \mathcal{C}$ for $\mathcal{C}$ a fixed class of smooth functions. We fix such a problem $(P)$. What is a reasonable strategy to solve this?&lt;/p&gt;</description>
 			</item>
 	</channel>
 </rss>
