@@ -10,9 +10,16 @@
 		
 		
 		
-			<lastBuildDate>Sat, 29 Nov 2025 18:08:29 +0100</lastBuildDate>
+			<lastBuildDate>Sat, 18 Apr 2026 06:08:29 +0100</lastBuildDate>
 		
 			<atom:link href="http://localhost:1313/drafts/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Attending the ICML2026 conference</title>
+				<link>http://localhost:1313/drafts/icml2026/</link>
+				<pubDate>Sat, 18 Apr 2026 06:08:29 +0100</pubDate>
+				<guid>http://localhost:1313/drafts/icml2026/</guid>
+				<description>&lt;p&gt;I attended the 2026 edition of International Conference on Machine Learning (ICML) to present our position paper&#xA;&lt;a href=&#34;https://arxiv.org/abs/2602.06542&#34;&gt;Reinforcement Learning Foundation Models Should Already Be A Thing&lt;/a&gt;. I had a really&#xA;great time.&lt;/p&gt;&#xA;&lt;p&gt;There was actually so many great talks and posters presentations that I felt overwhelmed, and now that it is finished I&#xA;feel the need to actually write them down somewhere. I believe writing with the intent to be understood by someone else&#xA;is a nice way to organize one&amp;rsquo;s thought, and so this is what I will attempt here. The points are very roughly in&#xA;chronological order.&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>Poisson surface reconstruction</title>
 				<link>http://localhost:1313/drafts/cloud_mesh/</link>

@@ -3,13 +3,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2026-05-27T13:44:57+01:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/blog/</loc>
     <lastmod>2026-05-27T13:44:57+01:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/research/</loc>
-  </url><url>
-    <loc>http://localhost:1313/</loc>
-    <lastmod>2026-05-27T13:44:57+01:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/computer-science/</loc>
     <lastmod>2026-05-27T13:44:57+01:00</lastmod>
@@ -29,13 +29,25 @@
     <loc>http://localhost:1313/tags/</loc>
     <lastmod>2026-05-27T13:44:57+01:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/drafts/icml2026/</loc>
+    <lastmod>2026-04-18T06:08:29+01:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/tags/bot/</loc>
+    <lastmod>2026-04-18T06:08:29+01:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/conference/</loc>
+    <lastmod>2026-04-18T06:08:29+01:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/drafts/</loc>
     <lastmod>2026-04-18T06:08:29+01:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/llms/</loc>
     <lastmod>2026-04-18T06:08:29+01:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/blog/finetuning_shitpost/</loc>
+    <lastmod>2026-04-18T06:08:29+01:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/reinforcement-learning/</loc>
     <lastmod>2026-04-18T06:08:29+01:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/algorithm/</loc>
@@ -63,9 +75,6 @@
     <lastmod>2025-11-29T18:08:29+01:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/differential-equations/</loc>
-    <lastmod>2025-11-29T18:08:29+01:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/drafts/</loc>
     <lastmod>2025-11-29T18:08:29+01:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/blog/byte_pair_encoding/</loc>
