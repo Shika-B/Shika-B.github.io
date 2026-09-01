@@ -10,16 +10,9 @@
 		
 		
 		
-			<lastBuildDate>Sat, 29 Nov 2025 18:08:29 +0100</lastBuildDate>
+			<lastBuildDate>Sun, 09 Nov 2025 13:44:57 +0100</lastBuildDate>
 		
 			<atom:link href="http://localhost:1313/tags/mathematics/index.xml" rel="self" type="application/rss+xml" />
-			<item>
-				<title>Poisson surface reconstruction</title>
-				<link>http://localhost:1313/drafts/cloud_mesh/</link>
-				<pubDate>Sat, 29 Nov 2025 18:08:29 +0100</pubDate>
-				<guid>http://localhost:1313/drafts/cloud_mesh/</guid>
-				<description>&lt;p&gt;A laser scan of a 3D object hands you a set of point and a set of vectors:&#xA;samples sitting on the object&amp;rsquo;s surface and the normals at each of these points.&#xA;That&amp;rsquo;s awkward, because almost everything you&amp;rsquo;d want to do with the object&#xA;(render it, 3D-print it, measure it, drop it in a physics engine) needs an&#xA;actual surface, not a point cloud. So the question is: given only these samples,&#xA;how do we recover the surface they came from?&lt;/p&gt;</description>
-			</item>
 			<item>
 				<title>Lagrangian Duality, KKT conditions and LP duality</title>
 				<link>http://localhost:1313/blog/lagrangian_duality/</link>

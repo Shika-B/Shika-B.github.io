@@ -10,43 +10,15 @@
 		
 		
 		
-			<lastBuildDate>Sat, 18 Apr 2026 06:08:29 +0100</lastBuildDate>
+			<lastBuildDate>Mon, 24 Aug 2026 13:37:29 +0200</lastBuildDate>
 		
 			<atom:link href="http://localhost:1313/drafts/index.xml" rel="self" type="application/rss+xml" />
 			<item>
-				<title>Attending the ICML2026 conference</title>
-				<link>http://localhost:1313/drafts/icml2026/</link>
-				<pubDate>Sat, 18 Apr 2026 06:08:29 +0100</pubDate>
-				<guid>http://localhost:1313/drafts/icml2026/</guid>
-				<description>&lt;p&gt;I attended the 2026 edition of International Conference on Machine Learning (ICML) to present our position paper&#xA;&lt;a href=&#34;https://arxiv.org/abs/2602.06542&#34;&gt;Reinforcement Learning Foundation Models Should Already Be A Thing&lt;/a&gt;. I had a really&#xA;great time.&lt;/p&gt;&#xA;&lt;p&gt;There was actually so many great talks and posters presentations that I felt overwhelmed, and now that it is finished I&#xA;feel the need to actually write them down somewhere. I believe writing with the intent to be understood by someone else&#xA;is a nice way to organize one&amp;rsquo;s thought, and so this is what I will attempt here. The points are very roughly in&#xA;chronological order.&lt;/p&gt;</description>
-			</item>
-			<item>
-				<title>Poisson surface reconstruction</title>
-				<link>http://localhost:1313/drafts/cloud_mesh/</link>
-				<pubDate>Sat, 29 Nov 2025 18:08:29 +0100</pubDate>
-				<guid>http://localhost:1313/drafts/cloud_mesh/</guid>
-				<description>&lt;p&gt;A laser scan of a 3D object hands you a set of point and a set of vectors:&#xA;samples sitting on the object&amp;rsquo;s surface and the normals at each of these points.&#xA;That&amp;rsquo;s awkward, because almost everything you&amp;rsquo;d want to do with the object&#xA;(render it, 3D-print it, measure it, drop it in a physics engine) needs an&#xA;actual surface, not a point cloud. So the question is: given only these samples,&#xA;how do we recover the surface they came from?&lt;/p&gt;</description>
-			</item>
-			<item>
-				<title>Matrix reconstruction and denoising</title>
-				<link>http://localhost:1313/drafts/matrix_reconstruction/</link>
-				<pubDate>Mon, 10 Nov 2025 02:47:29 +0100</pubDate>
-				<guid>http://localhost:1313/drafts/matrix_reconstruction/</guid>
-				<description>&lt;p&gt;Consider the following matrix, with some entries unknown:&lt;/p&gt;&#xA;$$&#xA;M = \begin{pmatrix}&#xA;? &amp; 2 &amp; ? \\&#xA;2 &amp; 4 &amp; ? \\&#xA;3 &amp; ? &amp; 3&#xA;\end{pmatrix}&#xA;$$&lt;p&gt;What is the full matrix ? That&amp;rsquo;s an absurd question, right ? The only way to get the full matrix is to know all of its entries, after all&amp;hellip;&#xA;Or is it ? For instance if you also know $\text{rank}M = 1$, then you know actually know that&#xA;&lt;/p&gt;</description>
-			</item>
-			<item>
-				<title></title>
-				<link>http://localhost:1313/drafts/machine_learning/</link>
-				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/drafts/machine_learning/</guid>
-				<description>&lt;p&gt;TODO&lt;/p&gt;</description>
-			</item>
-			<item>
-				<title></title>
-				<link>http://localhost:1313/drafts/network_simplex/</link>
-				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/drafts/network_simplex/</guid>
-				<description>&lt;p&gt;TODO (use the notebook on github gist)&lt;/p&gt;</description>
+				<title>Inference_engineering</title>
+				<link>http://localhost:1313/drafts/inference_engineering/</link>
+				<pubDate>Mon, 24 Aug 2026 13:37:29 +0200</pubDate>
+				<guid>http://localhost:1313/drafts/inference_engineering/</guid>
+				<description>&lt;h1 id=&#34;inference-engineering&#34;&gt;Inference engineering&lt;/h1&gt;&#xA;&lt;h2 id=&#34;structured-decoding&#34;&gt;Structured decoding&lt;/h2&gt;&#xA;&lt;p&gt;A computer scientist considers a few lines of text much more complicated than an Excel sheet with millions of rows. The reason for that is that text is not structured&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;, while a table is, making the table easier to process on a computer. One may then be interested in getting an LLM to output textual structured data&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;, to be used further down the road as an input to more traditional algorithms.&lt;/p&gt;</description>
 			</item>
 	</channel>
 </rss>
