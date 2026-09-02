@@ -2,92 +2,92 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/</loc>
+    <loc>https://shika-b.github.io/</loc>
     <lastmod>2026-08-24T13:37:29+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/drafts/</loc>
+    <loc>https://shika-b.github.io/drafts/</loc>
     <lastmod>2026-08-24T13:37:29+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/blog/</loc>
+    <loc>https://shika-b.github.io/blog/</loc>
     <lastmod>2026-05-27T13:44:57+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/research/</loc>
+    <loc>https://shika-b.github.io/research/</loc>
   </url><url>
-    <loc>http://localhost:1313/drafts/inference_engineering/</loc>
+    <loc>https://shika-b.github.io/drafts/inference_engineering/</loc>
     <lastmod>2026-08-24T13:37:29+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/computer-science/</loc>
+    <loc>https://shika-b.github.io/tags/computer-science/</loc>
     <lastmod>2026-05-27T13:44:57+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/foundation-models/</loc>
+    <loc>https://shika-b.github.io/tags/foundation-models/</loc>
     <lastmod>2026-05-27T13:44:57+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/machine-learning/</loc>
+    <loc>https://shika-b.github.io/tags/machine-learning/</loc>
     <lastmod>2026-05-27T13:44:57+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/blog/tabular_foundation_models/</loc>
+    <loc>https://shika-b.github.io/blog/tabular_foundation_models/</loc>
     <lastmod>2026-05-27T13:44:57+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/tabular-prediction/</loc>
+    <loc>https://shika-b.github.io/tags/tabular-prediction/</loc>
     <lastmod>2026-05-27T13:44:57+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/</loc>
+    <loc>https://shika-b.github.io/tags/</loc>
     <lastmod>2026-05-27T13:44:57+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/bot/</loc>
+    <loc>https://shika-b.github.io/tags/bot/</loc>
     <lastmod>2026-04-18T06:08:29+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/llms/</loc>
+    <loc>https://shika-b.github.io/tags/llms/</loc>
     <lastmod>2026-04-18T06:08:29+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/blog/finetuning_shitpost/</loc>
+    <loc>https://shika-b.github.io/blog/finetuning_shitpost/</loc>
     <lastmod>2026-04-18T06:08:29+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/algorithm/</loc>
+    <loc>https://shika-b.github.io/tags/algorithm/</loc>
     <lastmod>2025-12-20T12:30:29+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/engineering/</loc>
+    <loc>https://shika-b.github.io/tags/engineering/</loc>
     <lastmod>2025-12-20T12:30:29+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/hashing/</loc>
+    <loc>https://shika-b.github.io/tags/hashing/</loc>
     <lastmod>2025-12-20T12:30:29+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/math/</loc>
+    <loc>https://shika-b.github.io/tags/math/</loc>
     <lastmod>2025-12-20T12:30:29+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/music/</loc>
+    <loc>https://shika-b.github.io/tags/music/</loc>
     <lastmod>2025-12-20T12:30:29+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/blog/shazam_100_loc/</loc>
+    <loc>https://shika-b.github.io/blog/shazam_100_loc/</loc>
     <lastmod>2025-12-20T12:30:29+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/signal-analysis/</loc>
+    <loc>https://shika-b.github.io/tags/signal-analysis/</loc>
     <lastmod>2025-12-20T12:30:29+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/blog/byte_pair_encoding/</loc>
+    <loc>https://shika-b.github.io/blog/byte_pair_encoding/</loc>
     <lastmod>2025-11-29T18:08:29+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/tokenizers/</loc>
+    <loc>https://shika-b.github.io/tags/tokenizers/</loc>
     <lastmod>2025-11-29T18:08:29+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/convex-optimization/</loc>
+    <loc>https://shika-b.github.io/tags/convex-optimization/</loc>
     <lastmod>2025-11-09T13:44:57+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/kkt/</loc>
+    <loc>https://shika-b.github.io/tags/kkt/</loc>
     <lastmod>2025-11-09T13:44:57+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/blog/lagrangian_duality/</loc>
+    <loc>https://shika-b.github.io/blog/lagrangian_duality/</loc>
     <lastmod>2025-11-09T13:44:57+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/linear-programming/</loc>
+    <loc>https://shika-b.github.io/tags/linear-programming/</loc>
     <lastmod>2025-11-09T13:44:57+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/mathematics/</loc>
+    <loc>https://shika-b.github.io/tags/mathematics/</loc>
     <lastmod>2025-11-09T13:44:57+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/optimization/</loc>
+    <loc>https://shika-b.github.io/tags/optimization/</loc>
     <lastmod>2025-11-09T13:44:57+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/</loc>
+    <loc>https://shika-b.github.io/categories/</loc>
   </url>
 </urlset>
