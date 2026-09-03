@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>Tags on Slow Data</title>
-		<link>https://shika-b.github.io/tags/</link>
+		<link>http://localhost:1313/tags/</link>
 		<description>Recent content in Tags on Slow Data</description>
 		<generator>Hugo</generator>
 		<language>en-us</language>
@@ -12,131 +12,131 @@
 		
 			<lastBuildDate>Wed, 27 May 2026 13:44:57 +0100</lastBuildDate>
 		
-			<atom:link href="https://shika-b.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>Computer Science</title>
-				<link>https://shika-b.github.io/tags/computer-science/</link>
+				<link>http://localhost:1313/tags/computer-science/</link>
 				<pubDate>Wed, 27 May 2026 13:44:57 +0100</pubDate>
-				<guid>https://shika-b.github.io/tags/computer-science/</guid>
+				<guid>http://localhost:1313/tags/computer-science/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Foundation Models</title>
-				<link>https://shika-b.github.io/tags/foundation-models/</link>
+				<link>http://localhost:1313/tags/foundation-models/</link>
 				<pubDate>Wed, 27 May 2026 13:44:57 +0100</pubDate>
-				<guid>https://shika-b.github.io/tags/foundation-models/</guid>
+				<guid>http://localhost:1313/tags/foundation-models/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Machine Learning</title>
-				<link>https://shika-b.github.io/tags/machine-learning/</link>
+				<link>http://localhost:1313/tags/machine-learning/</link>
 				<pubDate>Wed, 27 May 2026 13:44:57 +0100</pubDate>
-				<guid>https://shika-b.github.io/tags/machine-learning/</guid>
+				<guid>http://localhost:1313/tags/machine-learning/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Tabular Prediction</title>
-				<link>https://shika-b.github.io/tags/tabular-prediction/</link>
+				<link>http://localhost:1313/tags/tabular-prediction/</link>
 				<pubDate>Wed, 27 May 2026 13:44:57 +0100</pubDate>
-				<guid>https://shika-b.github.io/tags/tabular-prediction/</guid>
+				<guid>http://localhost:1313/tags/tabular-prediction/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Bot</title>
-				<link>https://shika-b.github.io/tags/bot/</link>
+				<link>http://localhost:1313/tags/bot/</link>
 				<pubDate>Sat, 18 Apr 2026 06:08:29 +0100</pubDate>
-				<guid>https://shika-b.github.io/tags/bot/</guid>
+				<guid>http://localhost:1313/tags/bot/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>LLMs</title>
-				<link>https://shika-b.github.io/tags/llms/</link>
+				<link>http://localhost:1313/tags/llms/</link>
 				<pubDate>Sat, 18 Apr 2026 06:08:29 +0100</pubDate>
-				<guid>https://shika-b.github.io/tags/llms/</guid>
+				<guid>http://localhost:1313/tags/llms/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Algorithm</title>
-				<link>https://shika-b.github.io/tags/algorithm/</link>
+				<link>http://localhost:1313/tags/algorithm/</link>
 				<pubDate>Sat, 20 Dec 2025 12:30:29 +0100</pubDate>
-				<guid>https://shika-b.github.io/tags/algorithm/</guid>
+				<guid>http://localhost:1313/tags/algorithm/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Engineering</title>
-				<link>https://shika-b.github.io/tags/engineering/</link>
+				<link>http://localhost:1313/tags/engineering/</link>
 				<pubDate>Sat, 20 Dec 2025 12:30:29 +0100</pubDate>
-				<guid>https://shika-b.github.io/tags/engineering/</guid>
+				<guid>http://localhost:1313/tags/engineering/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Hashing</title>
-				<link>https://shika-b.github.io/tags/hashing/</link>
+				<link>http://localhost:1313/tags/hashing/</link>
 				<pubDate>Sat, 20 Dec 2025 12:30:29 +0100</pubDate>
-				<guid>https://shika-b.github.io/tags/hashing/</guid>
+				<guid>http://localhost:1313/tags/hashing/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Math</title>
-				<link>https://shika-b.github.io/tags/math/</link>
+				<link>http://localhost:1313/tags/math/</link>
 				<pubDate>Sat, 20 Dec 2025 12:30:29 +0100</pubDate>
-				<guid>https://shika-b.github.io/tags/math/</guid>
+				<guid>http://localhost:1313/tags/math/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Music</title>
-				<link>https://shika-b.github.io/tags/music/</link>
+				<link>http://localhost:1313/tags/music/</link>
 				<pubDate>Sat, 20 Dec 2025 12:30:29 +0100</pubDate>
-				<guid>https://shika-b.github.io/tags/music/</guid>
+				<guid>http://localhost:1313/tags/music/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Signal Analysis</title>
-				<link>https://shika-b.github.io/tags/signal-analysis/</link>
+				<link>http://localhost:1313/tags/signal-analysis/</link>
 				<pubDate>Sat, 20 Dec 2025 12:30:29 +0100</pubDate>
-				<guid>https://shika-b.github.io/tags/signal-analysis/</guid>
+				<guid>http://localhost:1313/tags/signal-analysis/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Tokenizers</title>
-				<link>https://shika-b.github.io/tags/tokenizers/</link>
+				<link>http://localhost:1313/tags/tokenizers/</link>
 				<pubDate>Sat, 29 Nov 2025 18:08:29 +0100</pubDate>
-				<guid>https://shika-b.github.io/tags/tokenizers/</guid>
+				<guid>http://localhost:1313/tags/tokenizers/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Convex Optimization</title>
-				<link>https://shika-b.github.io/tags/convex-optimization/</link>
+				<link>http://localhost:1313/tags/convex-optimization/</link>
 				<pubDate>Sun, 09 Nov 2025 13:44:57 +0100</pubDate>
-				<guid>https://shika-b.github.io/tags/convex-optimization/</guid>
+				<guid>http://localhost:1313/tags/convex-optimization/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>KKT</title>
-				<link>https://shika-b.github.io/tags/kkt/</link>
+				<link>http://localhost:1313/tags/kkt/</link>
 				<pubDate>Sun, 09 Nov 2025 13:44:57 +0100</pubDate>
-				<guid>https://shika-b.github.io/tags/kkt/</guid>
+				<guid>http://localhost:1313/tags/kkt/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Linear Programming</title>
-				<link>https://shika-b.github.io/tags/linear-programming/</link>
+				<link>http://localhost:1313/tags/linear-programming/</link>
 				<pubDate>Sun, 09 Nov 2025 13:44:57 +0100</pubDate>
-				<guid>https://shika-b.github.io/tags/linear-programming/</guid>
+				<guid>http://localhost:1313/tags/linear-programming/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Mathematics</title>
-				<link>https://shika-b.github.io/tags/mathematics/</link>
+				<link>http://localhost:1313/tags/mathematics/</link>
 				<pubDate>Sun, 09 Nov 2025 13:44:57 +0100</pubDate>
-				<guid>https://shika-b.github.io/tags/mathematics/</guid>
+				<guid>http://localhost:1313/tags/mathematics/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Optimization</title>
-				<link>https://shika-b.github.io/tags/optimization/</link>
+				<link>http://localhost:1313/tags/optimization/</link>
 				<pubDate>Sun, 09 Nov 2025 13:44:57 +0100</pubDate>
-				<guid>https://shika-b.github.io/tags/optimization/</guid>
+				<guid>http://localhost:1313/tags/optimization/</guid>
 				<description></description>
 			</item>
 	</channel>
