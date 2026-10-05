@@ -39,7 +39,7 @@
 	<meta itemprop="description" content="I’m currently taking a deep learning course and I have an assignment that is basically: write a Google Trad/DeepL for French to English translation with minimal data (130k paired sentences) and training time (we need to make it trainable on a laptop). The goal of the assignment is to learn about modern LLMs architectures, specifically about attention and transformers, the deep learning part really. Naturally, this is not what I did: this blog post recounts my wanderings.">
 	<meta itemprop="datePublished" content="2025-11-29T18:08:29+01:00">
 	<meta itemprop="dateModified" content="2025-11-29T18:08:29+01:00">
-	<meta itemprop="wordCount" content="3988">
+	<meta itemprop="wordCount" content="3979">
 	<meta itemprop="keywords" content="Computer Science,Machine Learning,LLMs,Tokenizers">
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
@@ -286,7 +286,7 @@
 <li>The preceding point is also true across languages especially when working with Romance languages! Words like &ldquo;attack&rdquo; in English and &ldquo;attaque&rdquo; in French mean the same thing and have an obvious common root.</li>
 </ul>
 <p>In an ideal world, we would thus break sentences into words and words themselves into <a href="https://en.wikipedia.org/wiki/Lexeme">lexemes</a>. It turns out the second task is extremely hard even in reasonable generality, and there is a lot of research going on in the machine learning community to solve it, even among Romance languages.</p>
-<p>Conclusion: we need to compromise on our goals. What is the middle ground between splitting on whitespaces and a full linguistics lexeme split, you ask? A compression algorithm obviously!</p>
+<p>What is the middle ground between splitting on whitespaces and a full linguistics lexeme split ? A compression algorithm obviously!</p>
 <h2 id="byte-pair-encoding">Byte-Pair encoding</h2>
 <p>Consider the following string <code>s = &quot;aaabdaaabace&quot;</code> and imagine a perfect world where all the data is perfectly packed into memory. As the string is formed over an alphabet of 5 tokens, every character can be coded on 3 bits, and we actually get an extra 3 unused token values. Let&rsquo;s use them to compress the string:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>VOCAB <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;a&#39;</span>: <span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#39;b&#39;</span>: <span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#39;c&#39;</span>: <span style="color:#ae81ff">2</span>, <span style="color:#e6db74">&#39;d&#39;</span>: <span style="color:#ae81ff">3</span>, <span style="color:#e6db74">&#39;e&#39;</span>: <span style="color:#ae81ff">4</span>, <span style="color:#e6db74">&#39;aaabdaaabace&#39;</span>: <span style="color:#ae81ff">5</span>}
