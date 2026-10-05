@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Learning with infinitely many features | Slow Data</title>
+<meta name="title" content="Learning with infinitely many features" />
+<meta name="description" content="Learning with infinitely many features
+Okay so the title is a bit catchy but we&rsquo;re going to take a walk around some theory on kernels, Reproducing Kernel Hilbert Spaces (that we will abreviate RKHS for the sake of my fingers) and some learning algorithms relying on that theory.
+Features and Kernels
+Given a set of points $X$, we can describe a feature of each point using a map $\phi:X\to Y$, where $Y$ is the feature space, typically a vector space. For example, if $X$ is a set of strings of arbitrary length, we may define
+" />
+<meta name="keywords" content="" />
+
+
+<meta property="og:url" content="http://localhost:1313/drafts/rkhs/">
+	<meta property="og:site_name" content="Slow Data">
+	<meta property="og:title" content="Learning with infinitely many features">
+	<meta property="og:description" content="Learning with infinitely many features Okay so the title is a bit catchy but we’re going to take a walk around some theory on kernels, Reproducing Kernel Hilbert Spaces (that we will abreviate RKHS for the sake of my fingers) and some learning algorithms relying on that theory.
+Features and Kernels Given a set of points $X$, we can describe a feature of each point using a map $\phi:X\to Y$, where $Y$ is the feature space, typically a vector space. For example, if $X$ is a set of strings of arbitrary length, we may define">
+	<meta property="og:locale" content="en_us">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="drafts">
+		<meta property="article:published_time" content="2026-09-29T10:17:29+02:00">
+		<meta property="article:modified_time" content="2026-09-29T10:17:29+02:00">
+
+
+
+
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Learning with infinitely many features">
+	<meta name="twitter:description" content="Learning with infinitely many features Okay so the title is a bit catchy but we’re going to take a walk around some theory on kernels, Reproducing Kernel Hilbert Spaces (that we will abreviate RKHS for the sake of my fingers) and some learning algorithms relying on that theory.
+Features and Kernels Given a set of points $X$, we can describe a feature of each point using a map $\phi:X\to Y$, where $Y$ is the feature space, typically a vector space. For example, if $X$ is a set of strings of arbitrary length, we may define">
+
+
+
+
+	<meta itemprop="name" content="Learning with infinitely many features">
+	<meta itemprop="description" content="Learning with infinitely many features Okay so the title is a bit catchy but we’re going to take a walk around some theory on kernels, Reproducing Kernel Hilbert Spaces (that we will abreviate RKHS for the sake of my fingers) and some learning algorithms relying on that theory.
+Features and Kernels Given a set of points $X$, we can describe a feature of each point using a map $\phi:X\to Y$, where $Y$ is the feature space, typically a vector space. For example, if $X$ is a set of strings of arbitrary length, we may define">
+	<meta itemprop="datePublished" content="2026-09-29T10:17:29+02:00">
+	<meta itemprop="dateModified" content="2026-09-29T10:17:29+02:00">
+	<meta itemprop="wordCount" content="174">
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  :root {
+    --width: 1024px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #01242e;
+    --heading-color: #eee;
+    --text-color: #ddd;
+    --link-color: #8cc2dd;
+    --visited-color: #8b6fcb;
+    --blockquote-color: #ccc;
+
+
+  }
+
+  @media (prefers-color-scheme: white) {
+    :root {
+      --background-color: #fff;
+      --heading-color: #222;
+      --text-color: #444;
+      --link-color: #3273dc;
+      --visited-color: #8b6fcb;
+      --blockquote-color: #222;
+    }
+  }
+
+  body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+  }
+
+  a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  nav a {
+    margin-right: 8px;
+  }
+
+  strong,
+  b {
+    color: var(--heading-color);
+  }
+
+  button {
+    margin: 0;
+    cursor: pointer;
+  }
+
+  time {
+    font-family: monospace;
+    font-style: normal;
+    font-size: 15px;
+  }
+
+  main {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px dashed;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    font-family: monospace;
+    padding: 2px;
+    border-radius: 3px;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: var(--blockquote-color);
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px 0;
+    text-align: center;
+  }
+
+  .title:hover {
+    text-decoration: none;
+  }
+
+  .title h1 {
+    font-size: 1.5em;
+  }
+
+  .inline {
+    width: auto !important;
+  }
+
+  .highlight,
+  .code {
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+  }
+
+  .highlight pre,
+  .code pre {
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 5px;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: var(--visited-color);
+  }
+</style>
+
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+
+<script>
+  MathJax = {
+    tex: {
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],  
+      inlineMath: [['$', '$']]                  
+    },
+    loader:{
+      load: ['ui/safe']
+    },
+  };
+</script>
+  
+</head>
+
+<body>
+  <header><a href="/" class="title">
+  <h2>Slow Data</h2>
+</a>
+<nav>
+<a href="/">About</a>
+
+<a href="/blog/">Blog</a>
+
+<a href="/drafts/">Drafts</a>
+
+<a href="/research/">Research</a>
+
+</nav>
+</header>
+  <main>
+
+<content>
+  <h1 id="learning-with-infinitely-many-features">Learning with infinitely many features</h1>
+<p>Okay so the title is a bit catchy but we&rsquo;re going to take a walk around some theory on kernels, Reproducing Kernel Hilbert Spaces (that we will abreviate RKHS for the sake of my fingers) and some learning algorithms relying on that theory.</p>
+<h2 id="features-and-kernels">Features and Kernels</h2>
+<p>Given a set of points $X$, we can describe a feature of each point using a map $\phi:X\to Y$, where $Y$ is the feature space, typically a vector space. For example, if $X$ is a set of strings of arbitrary length, we may define
+</p>
+$$
+\phi:X\to\mathbb{R},\qquad (c_0,\ldots,c_n)\mapsto n,
+$$<p>
+which maps each string to its length. As another example, let $X$ be a set of finite samples drawn from various probability distributions on $\mathbb{R}$. We can represent each sample by its empirical mean and variance:
+</p>
+$$
+\phi:X\to\mathbb{R}^2,\qquad
+s\mapsto\bigl(\widetilde{\mathbb{E}}(s),\widetilde{\mathbb{V}}(s)\bigr).
+$$<p>More generally, we&rsquo;ll call a feature map any function $\phi: X \to \cal{H}$ where $\cal{H}$ is a Hilbert space. It&rsquo;s associated <em>kernel</em> will be
+$k(x, x') = \langle \phi(x), \phi(x') \rangle$</p>
+<p>Coming back to our</p>
+
+</content>
+
+
+
+<p>
+  
+</p>
+
+  </main>
+  <footer>Made with <a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ Bear</a>
+</footer>
+
+  
+</body>
+
+</html>

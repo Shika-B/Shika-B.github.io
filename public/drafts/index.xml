@@ -10,9 +10,23 @@
 		
 		
 		
-			<lastBuildDate>Mon, 24 Aug 2026 13:37:29 +0200</lastBuildDate>
+			<lastBuildDate>Tue, 29 Sep 2026 10:17:29 +0200</lastBuildDate>
 		
 			<atom:link href="http://localhost:1313/drafts/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Learning with infinitely many features</title>
+				<link>http://localhost:1313/drafts/rkhs/</link>
+				<pubDate>Tue, 29 Sep 2026 10:17:29 +0200</pubDate>
+				<guid>http://localhost:1313/drafts/rkhs/</guid>
+				<description>&lt;h1 id=&#34;learning-with-infinitely-many-features&#34;&gt;Learning with infinitely many features&lt;/h1&gt;&#xA;&lt;p&gt;Okay so the title is a bit catchy but we&amp;rsquo;re going to take a walk around some theory on kernels, Reproducing Kernel Hilbert Spaces (that we will abreviate RKHS for the sake of my fingers) and some learning algorithms relying on that theory.&lt;/p&gt;&#xA;&lt;h2 id=&#34;features-and-kernels&#34;&gt;Features and Kernels&lt;/h2&gt;&#xA;&lt;p&gt;Given a set of points $X$, we can describe a feature of each point using a map $\phi:X\to Y$, where $Y$ is the feature space, typically a vector space. For example, if $X$ is a set of strings of arbitrary length, we may define&#xA;&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Questions</title>
+				<link>http://localhost:1313/drafts/questions/</link>
+				<pubDate>Sat, 19 Sep 2026 17:17:29 +0200</pubDate>
+				<guid>http://localhost:1313/drafts/questions/</guid>
+				<description>&lt;h1 id=&#34;questions&#34;&gt;Questions&lt;/h1&gt;&#xA;&lt;p&gt;Here&amp;rsquo;s a list of questions I like, in no particular order. Some have clear answers I know about, some have less clear answers I know about (half-open) and some are open questions (to me, of course). Please reach out if you feel you have any interesting comment to make on them!&lt;/p&gt;&#xA;&lt;h2 id=&#34;closed-questions&#34;&gt;Closed questions&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;Why is logistics regression a thing ? Why not use (continuous) linear regression via $y = \cases{1 \text{ if } y_\mathrm{pred} &gt; 0.5 \\ 0 \text{ otherwise}}$&#xA;&lt;details style=&#34;opacity: 0.8;&#34;&gt;&#xA;    &lt;summary&gt;Answer&lt;/summary&gt;&#xA;    &lt;div&gt;&lt;p&gt;Such a process will be extremely sensitive to outliers.&#xA;Indeed, consider the following case:&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>Inference_engineering</title>
 				<link>http://localhost:1313/drafts/inference_engineering/</link>
